@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
             isFabOpen = false;
 
         } else {
-
             plusFAB.startAnimation(rotate_forward);
             clientFAB.startAnimation(fab_open);
             invoiceFAB.startAnimation(fab_open);
