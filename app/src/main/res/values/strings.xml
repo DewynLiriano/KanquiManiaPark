@@ -2,4 +2,11 @@
     <string name="app_name">KanquiManiaPark</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
+
+    <string name="nombre">Nombre:</string>
+    <string name="apellido">Apellido:</string>
+    <string name="sexo">Sexo:</string>
+    <string name="correo">Correo:</string>
+    <string name="id">ID:</string>
+
 </resources>

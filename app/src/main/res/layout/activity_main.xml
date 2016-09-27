@@ -21,7 +21,14 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="400dp"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/content_main" />
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabSendMail"
@@ -35,7 +42,6 @@
         app:pressedTranslationZ="12dp"
         app:backgroundTint="@color/blue"
         android:src="@drawable/ic_email_white_48dp"/>
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabCreateInvoice"
         android:layout_width="wrap_content"
@@ -71,13 +77,11 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_plus_white_48dp"/>
 
-    <android.support.v7.widget.RecyclerView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/my_recycler_view"
-        android:clipToPadding="false"
-        android:paddingBottom="16dp"
-        android:paddingTop="60dp"
-        android:scrollbars="vertical"/>
+        android:layout_marginLeft="400dp">
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

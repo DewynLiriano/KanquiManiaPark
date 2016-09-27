@@ -70,10 +70,10 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> data = new ArrayList<>();
 
         for(int i = 0; i < 30; i++) {
-            data.add("Test " + i);
+            data.add("Panita " + i);
         }
 
-        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         RecyclerAdapter adapter = new RecyclerAdapter(this, data);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
