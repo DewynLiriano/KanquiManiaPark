@@ -1,5 +1,6 @@
 package com.example.djc.kanquimaniapark.MainActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,53 +14,71 @@ import android.view.animation.AnimationUtils;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.Toast;
 
+import com.example.djc.kanquimaniapark.CrearClientes.CrearCliente;
 import com.example.djc.kanquimaniapark.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MainActivity extends AppCompatActivity {
 
+    private FloatingActionButton plusFAB;
+    private FloatingActionButton invoiceFAB;
+    private FloatingActionButton clientFAB;
+    private FloatingActionButton mailFAB;
+
+
     private Boolean isFabOpen = false;
-    FloatingActionButton plusFAB, clientFAB, invoiceFAB, mailFAB;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     public RecyclerView recyclerView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        plusFAB = (FloatingActionButton)findViewById(R.id.plusFAB);
+        clientFAB = (FloatingActionButton)findViewById(R.id.fabAddClient);
+        invoiceFAB = (FloatingActionButton)findViewById(R.id.fabCreateInvoice);
+        mailFAB = (FloatingActionButton)findViewById(R.id.fabSendMail);
+
+
+        clientFAB = (FloatingActionButton)findViewById(R.id.fabAddClient);
+
+
         //Manejo de los Floating Buttons
-        fabController();
+        fabAnimator();
         //Manejo de Recycler View
         recyclerViewController();
-
     }
 
-
     //FUNCION DONDE SE ANIMAN Y SE MANEJA EL CLICK DE LOS FLOATING BUTTONS.
-    public void fabController(){
-        //Control de FABs
-        plusFAB = (FloatingActionButton) findViewById(R.id.plusFAB);
-        clientFAB = (FloatingActionButton) findViewById(R.id.fabAddClient);
-        invoiceFAB = (FloatingActionButton) findViewById(R.id.fabCreateInvoice);
-        mailFAB = (FloatingActionButton) findViewById(R.id.fabSendMail);
-
+    public void fabAnimator(){
         //Animaciones de los FABs
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
         rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_forward);
         rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_backward);
 
-        plusFAB = (FloatingActionButton) findViewById(R.id.plusFAB);
         plusFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 animateFAB();
+            }
+        });
+
+        clientFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CrearCliente.class);
+                startActivity(intent);
             }
         });
     }
@@ -103,5 +122,6 @@ public class MainActivity extends AppCompatActivity {
             isFabOpen = true;
         }
     }
+
 
 }

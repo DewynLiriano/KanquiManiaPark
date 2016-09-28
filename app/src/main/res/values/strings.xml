@@ -3,10 +3,13 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
 
-    <string name="nombre">Nombre:</string>
-    <string name="apellido">Apellido:</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellido">Apellido</string>
     <string name="sexo">Sexo:</string>
-    <string name="correo">Correo:</string>
-    <string name="id">ID:</string>
-
+    <string name="correo">Correo</string>
+    <string name="fechaNacimiento">Fecha de Nacimiento</string>
+    <string name="id">ID</string>
+    <string name="varon">Varon</string>
+    <string name="hembra">hembra</string>
+    <string name="registrar">Registrar Cliente</string>
 </resources>
