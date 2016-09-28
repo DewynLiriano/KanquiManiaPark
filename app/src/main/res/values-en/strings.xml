@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KanquiManiaPark</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="nombre">Name</string>
+    <string name="apellido">Last Name</string>
+    <string name="sexo">Sex:</string>
+    <string name="correo">E-mail</string>
+    <string name="fechaNacimiento">Birthday</string>
+    <string name="id">ID</string>
+    <string name="varon">Male</string>
+    <string name="hembra">Female</string>
+    <string name="registrar">Register Client</string>
+</resources>

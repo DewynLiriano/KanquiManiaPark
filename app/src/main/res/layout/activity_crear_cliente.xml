@@ -21,7 +21,8 @@
             android:layout_height="match_parent"
             android:src="@drawable/camera_azul"
             android:clickable="true"
-            android:layout_marginStart="5dp"/>
+            android:layout_marginStart="5dp"
+            android:id="@+id/foto"/>
     </LinearLayout>
 
     <LinearLayout
@@ -82,7 +83,8 @@
                 android:inputType="date"
                 android:hint="@string/fechaNacimiento"
                 android:id="@+id/cumpleET"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:onClick="setBD"/>
 
         </android.support.design.widget.TextInputLayout>
 
