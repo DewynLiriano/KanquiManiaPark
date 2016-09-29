@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -49,15 +48,14 @@ public class MainActivity extends AppCompatActivity {
         invoiceFAB = (FloatingActionButton)findViewById(R.id.fabCreateInvoice);
         mailFAB = (FloatingActionButton)findViewById(R.id.fabSendMail);
 
-
-        clientFAB = (FloatingActionButton)findViewById(R.id.fabAddClient);
-
-
         //Manejo de los Floating Buttons
         fabAnimator();
         //Manejo de Recycler View
         recyclerViewController();
     }
+
+
+    //--------------------------------------FUNCIONES----------------------------------------
 
     //FUNCION DONDE SE ANIMAN Y SE MANEJA EL CLICK DE LOS FLOATING BUTTONS.
     public void fabAnimator(){
@@ -66,21 +64,6 @@ public class MainActivity extends AppCompatActivity {
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
         rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_forward);
         rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_backward);
-
-        plusFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                animateFAB();
-            }
-        });
-
-        clientFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CrearCliente.class);
-                startActivity(intent);
-            }
-        });
     }
 
     //FUNCION SE MANEJA EL RECYCLERVIEW
@@ -123,5 +106,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //RENGLON DE OnClicks
+    public void plusFabOnClick(View v){
+        animateFAB();
+    }
+
+    public void clientFabOnClick(View v){
+        Intent intent = new Intent(getApplicationContext(), CrearCliente.class);
+        startActivity(intent);
+    }
 
 }

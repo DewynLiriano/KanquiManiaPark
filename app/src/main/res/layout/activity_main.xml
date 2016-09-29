@@ -65,7 +65,8 @@
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"
         app:backgroundTint="@color/blue"
-        android:src="@drawable/ic_account_plus_white_48dp"/>
+        android:src="@drawable/ic_account_plus_white_48dp"
+        android:onClick="clientFabOnClick"/>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/plusFAB"
         android:layout_width="wrap_content"
@@ -75,7 +76,8 @@
         app:backgroundTint="@color/red"
         app:pressedTranslationZ="12dp"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_plus_white_48dp"/>
+        android:src="@drawable/ic_plus_white_48dp"
+        android:onClick="plusFabOnClick"/>
 
     <LinearLayout
         android:layout_width="match_parent"

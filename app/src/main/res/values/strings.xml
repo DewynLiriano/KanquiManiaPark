@@ -12,4 +12,7 @@
     <string name="varon">Hombre</string>
     <string name="hembra">Mujer</string>
     <string name="registrar">Registrar Cliente</string>
+
+    <string name="fechaInvalida">Fecha no valida.</string>
+    <string name="correoInvalido">Correo no valido.</string>
 </resources>

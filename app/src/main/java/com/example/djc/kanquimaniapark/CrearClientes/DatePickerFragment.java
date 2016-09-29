@@ -24,13 +24,17 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), R.style.style_date_picker_dialog, this, year, month, day);
+
+        DatePicker picker = datePickerDialog.getDatePicker();
+        picker.setMaxDate(c.getTimeInMillis());
+
         // CREA INSTANCIA DEL DIALOGO Y SE DEVUELVE
-        return new DatePickerDialog(getActivity(), R.style.style_date_picker_dialog, this, year, month, day);
+        return datePickerDialog;
     }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
         EditText et = (EditText)getActivity().findViewById(R.id.cumpleET);
         //CUANDO SE SELECCIONA UNA FECHA, SE ACTUALIZA EN EL EDITTEXT.
         String FECHA = dayOfMonth + "/" + month + "/" + year;
