@@ -15,4 +15,13 @@
 
     <string name="fechaInvalida">Fecha no valida.</string>
     <string name="correoInvalido">Correo no valido.</string>
+    <string name="clienteAgregado">Cliente Agregado</string>
+    <string name="sexo_invalido">Debe seleccionar un sexo</string>
+    <string name="foto_invalido">La foto del cliente es necesaria.</string>
+    <string name="vacio">Debe ingresar un  </string>
+    <string name="si">Si</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="error">ERROR</string>
+
 </resources>

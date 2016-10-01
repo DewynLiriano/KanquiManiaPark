@@ -7,18 +7,19 @@ import android.graphics.Bitmap;
  */
 
 public class Cliente {
-    private int _id;
+    private long _id;
     private String _nombre;
     private String _apellido;
     private String _sexo;
     private String _correo;
+    private String _fechaCumpleAnos;
     private Bitmap _bitmapFoto;
 
-    public int get_id() {
+    public long get_id() {
         return _id;
     }
 
-    public void set_id(int _id) {
+    public void set_id(long _id) {
         this._id = _id;
     }
 
@@ -54,6 +55,14 @@ public class Cliente {
         this._correo = _correo;
     }
 
+    public String get_fechaCumpleAnos() {
+        return _fechaCumpleAnos;
+    }
+
+    public void set_fechaCumpleAnos(String _fechaCumpleAnos) {
+        this._fechaCumpleAnos = _fechaCumpleAnos;
+    }
+
     public Bitmap get_bitmapFoto() {
         return _bitmapFoto;
     }
@@ -63,12 +72,13 @@ public class Cliente {
     }
 
 
-    public Cliente(int _id, String _nombre, String _apellido, String _sexo, String _correo, Bitmap _bitmapFoto) {
+    public Cliente(long _id, String _nombre, String _apellido, String _sexo, String _correo, String cumple, Bitmap _bitmapFoto) {
         set_id(_id);
         set_nombre(_nombre);
         set_apellido(_apellido);
         set_sexo(_sexo);
         set_correo(_correo);
+        set_fechaCumpleAnos(cumple);
         set_bitmapFoto(_bitmapFoto);
     }
 

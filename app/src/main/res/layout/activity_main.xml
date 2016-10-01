@@ -41,7 +41,8 @@
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"
         app:backgroundTint="@color/blue"
-        android:src="@drawable/ic_email_white_48dp"/>
+        android:src="@drawable/ic_email_white_48dp"
+        android:onClick="mailFabOnClick"/>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabCreateInvoice"
         android:layout_width="wrap_content"
