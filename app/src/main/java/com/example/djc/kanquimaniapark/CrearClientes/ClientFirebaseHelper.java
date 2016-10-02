@@ -1,27 +1,14 @@
 package com.example.djc.kanquimaniapark.CrearClientes;
 
-import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.util.Base64;
-import android.widget.Toast;
 
 import com.example.djc.kanquimaniapark.Clases.Cliente;
-import com.example.djc.kanquimaniapark.CrearClientes.CrearCliente;
 import com.example.djc.kanquimaniapark.Helpers.BitMapHelper;
-import com.google.android.gms.common.api.BooleanResult;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 

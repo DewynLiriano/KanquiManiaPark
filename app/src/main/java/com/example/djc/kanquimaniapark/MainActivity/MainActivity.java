@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewController();
     }
 
-
     //--------------------------------------FUNCIONES----------------------------------------
 
     //FUNCION DONDE SE ANIMAN Y SE MANEJA EL CLICK DE LOS FLOATING BUTTONS.
