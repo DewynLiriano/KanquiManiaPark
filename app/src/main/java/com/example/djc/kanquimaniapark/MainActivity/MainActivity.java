@@ -114,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void mailFabOnClick(View v){
-
         Toast.makeText(this, String.valueOf(helper.count), Toast.LENGTH_SHORT).show();
     }
 

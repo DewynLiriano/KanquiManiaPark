@@ -40,7 +40,6 @@ public class ClientFirebaseHelper {
     private String FOTO = "Foto";
 
     private DatabaseReference database;
-    private StorageReference storage;
 
     public long count = 0;
     public ArrayList<Cliente> clientes = new ArrayList<>();
@@ -48,11 +47,6 @@ public class ClientFirebaseHelper {
 
     public ClientFirebaseHelper(){
         database = FirebaseDatabase.getInstance().getReference(CLIENTS_CHILD);
-        storage = FirebaseStorage.getInstance().getReference(CLIENTS_CHILD);
-
-        path = storage.getPath();
-
-
         //CONTADOR DE CLIENTES EXISTENTES
         database.addValueEventListener(new ValueEventListener() {
             @Override
@@ -65,12 +59,9 @@ public class ClientFirebaseHelper {
 
             }
         });
-        //EVENTO PARA REFRESCAR LISTA CUANDO SE AGREGUE NUEVO CLIENTE.
-
     }
 
     public void addClient(Cliente cliente){
-
         database.child(String.valueOf(cliente.get_id())).child(NOMBRE).setValue(cliente.get_nombre());
         database.child(String.valueOf(cliente.get_id())).child(APELLIDO).setValue(cliente.get_apellido());
         database.child(String.valueOf(cliente.get_id())).child(CORREO).setValue(cliente.get_correo());
