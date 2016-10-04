@@ -1,22 +1,33 @@
 package com.example.djc.kanquimaniapark.MainActivity;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.djc.kanquimaniapark.CrearClientes.CrearCliente;
 import com.example.djc.kanquimaniapark.CrearClientes.ClientFirebaseHelper;
+import com.example.djc.kanquimaniapark.CrearProductos.CrearProducto;
 import com.example.djc.kanquimaniapark.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,10 +37,13 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton mailFAB;
 
     private ClientFirebaseHelper helper;
+    private LogInFireBaseHelper logInHelper;
 
     private Boolean isFabOpen = false;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
-    public RecyclerView recyclerView;
+    private RecyclerView recyclerView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         helper = new ClientFirebaseHelper();
+        logInHelper = new LogInFireBaseHelper();
 
         plusFAB = (FloatingActionButton)findViewById(R.id.plusFAB);
         clientFAB = (FloatingActionButton)findViewById(R.id.fabAddClient);
@@ -51,8 +66,27 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewController();
     }
 
-    //--------------------------------------FUNCIONES----------------------------------------
+    //Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.option_menu, menu);
 
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        switch (item.getItemId()){
+            case R.id.crear_producto:
+                logIn_alertBuilder().show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //--------------------------------------FUNCIONES----------------------------------------
     //FUNCION DONDE SE ANIMAN Y SE MANEJA EL CLICK DE LOS FLOATING BUTTONS.
     public void fabAnimator(){
         //Animaciones de los FABs
@@ -78,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    //FUNCION DONDE SE ANIMAN LOS BOTONES AL DAR CLICK
     public void animateFAB(){
 
         if(isFabOpen){
@@ -116,5 +151,65 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, String.valueOf(helper.count), Toast.LENGTH_SHORT).show();
     }
 
+    private AlertDialog logIn_alertBuilder(){
+        final View[] focusView = {null};
+        final String[] usuario = new String[1];
+        final String[] contrasena = new String[1];
+        final boolean[] cancel = {false};
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final Context context = builder.getContext();
+        final LayoutInflater inflater = LayoutInflater.from(context);
+        final View view = inflater.inflate(R.layout.login_dialog, null, false);
+
+
+        builder.setView(view)
+                .setTitle(getString(R.string.login_title))
+                .setCancelable(false)
+                .setMessage(getString(R.string.login_info))
+                .setNegativeButton(getString(R.string.cancelar), null);
+
+
+        builder.setPositiveButton(getString(R.string.login), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final EditText usuarioET = (EditText)view.findViewById(R.id.login_name);
+                final EditText passwordET = (EditText)view.findViewById(R.id.login_password);
+
+                if (Objects.equals(usuarioET.getText().toString(), "")){
+                    usuarioET.setError(getString(R.string.vacio));
+                    focusView[0] = usuarioET;
+                    cancel[0] = true;
+                } else if (Objects.equals(passwordET.getText().toString(), "")){
+                    passwordET.setError(getString(R.string.vacio));
+                    focusView[0] = passwordET;
+                    cancel[0] = true;
+                }
+
+
+
+                if (cancel[0]){
+                    focusView[0].requestFocus();
+                } else {
+                    usuario[0] = usuarioET.getText().toString();
+                    contrasena[0] = passwordET.getText().toString();
+                    boolean success = logInHelper.signIn(usuario[0], contrasena[0]);
+
+                    if (success){
+                        Intent intent = new Intent(getApplicationContext(), CrearProducto.class);
+                        startActivity(intent);
+                    }
+                    else{
+                        Toast.makeText(MainActivity.this, "No se ha podido iniciar sesion", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                //Toast.makeText(getApplicationContext(), "adf", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+
+        return builder.create();
+    }
 }

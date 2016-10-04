@@ -30,22 +30,12 @@ public class ClientFirebaseHelper {
 
     public long count = 0;
     public ArrayList<Cliente> clientes = new ArrayList<>();
-    public String path;
 
     public ClientFirebaseHelper(){
         database = FirebaseDatabase.getInstance().getReference(CLIENTS_CHILD);
+
         //CONTADOR DE CLIENTES EXISTENTES
-        database.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                count = dataSnapshot.getChildrenCount();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        setCounter();
     }
 
     public void addClient(Cliente cliente){
@@ -57,5 +47,18 @@ public class ClientFirebaseHelper {
         byte[] data = BitMapHelper.getBytes(cliente.get_bitmapFoto());
         String fotoBase64 = Base64.encodeToString(data, Base64.DEFAULT);
         database.child(String.valueOf(cliente.get_id())).child(FOTO).setValue(fotoBase64);
+    }
+
+    private void setCounter(){
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                count = dataSnapshot.getChildrenCount();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

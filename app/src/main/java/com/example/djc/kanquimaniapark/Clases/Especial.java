@@ -1,6 +1,7 @@
 package com.example.djc.kanquimaniapark.Clases;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class Especial {
     private int _id;
     private String _nombre;
     private float _porciento;
-    private List<Producto> _productos;
+    private ArrayList<Producto> _productos;
     private Date _fechaInicio;
     private Date _fechaFin;
 
@@ -40,11 +41,11 @@ public class Especial {
         this._porciento = _porciento;
     }
 
-    public List<Producto> get_productos() {
+    public ArrayList<Producto> get_productos() {
         return _productos;
     }
 
-    public void set_productos(List<Producto> _productos) {
+    public void set_productos(ArrayList<Producto> _productos) {
         this._productos = _productos;
     }
 
@@ -65,7 +66,7 @@ public class Especial {
     }
 
 
-    public Especial(int _id, String _nombre, float _porciento, List<Producto> _productos, Date _fechaInicio, Date _fechaFin) {
+    public Especial(int _id, String _nombre, float _porciento, ArrayList<Producto> _productos, Date _fechaInicio, Date _fechaFin) {
         set_id(_id);
         set_nombre(_nombre);
         set_porciento(_porciento);

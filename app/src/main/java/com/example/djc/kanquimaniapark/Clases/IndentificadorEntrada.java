@@ -7,9 +7,18 @@ import java.text.SimpleDateFormat;
  */
 
 public class IndentificadorEntrada {
+    private int _id;
     private Boleta _boleta;
     private int _color;
     private SimpleDateFormat _fecha;
+
+    public int get_id(){
+        return _id;
+    }
+
+    public void set_id(int _id){
+        this._id = _id;
+    }
 
     public Boleta get_boleta() {
         return _boleta;
@@ -35,7 +44,8 @@ public class IndentificadorEntrada {
         this._fecha = _fecha;
     }
 
-    public IndentificadorEntrada(Boleta _boleta, int _color, SimpleDateFormat _fecha) {
+    public IndentificadorEntrada(int _id, Boleta _boleta, int _color, SimpleDateFormat _fecha) {
+        set_id(_id);
         set_boleta(_boleta);
         set_color(_color);
         set_fecha(_fecha);

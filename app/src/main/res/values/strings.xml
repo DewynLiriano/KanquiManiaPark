@@ -3,12 +3,12 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
 
-    <string name="nombre">Nombre</string>
+    <string name="nombre">Nombre:</string>
     <string name="apellido">Apellido</string>
     <string name="sexo">Sexo:</string>
     <string name="correo">Correo</string>
     <string name="fechaNacimiento">Fecha de Nacimiento</string>
-    <string name="id">ID</string>
+    <string name="id">ID:</string>
     <string name="varon">Hombre</string>
     <string name="hembra">Mujer</string>
     <string name="registrar">Registrar Cliente</string>
@@ -16,12 +16,26 @@
     <string name="fechaInvalida">Fecha no valida.</string>
     <string name="correoInvalido">Correo no valido.</string>
     <string name="clienteAgregado">Cliente Agregado</string>
+    <string name="producto_agregado">Producto Agregado</string>
     <string name="sexo_invalido">Debe seleccionar un sexo</string>
     <string name="foto_invalido">La foto del cliente es necesaria.</string>
-    <string name="vacio">Debe ingresar un  </string>
+    <string name="vacio">Campo no puede estar vacio</string>
     <string name="si">Si</string>
     <string name="no">No</string>
     <string name="ok">OK</string>
+    <string name="aceptar">Aceptar</string>
     <string name="error">ERROR</string>
+
+    <string name="precio">Precio:</string>
+    <string name="titulo">Titulo:</string>
+
+    <string name="crear_producto">Crear nuevo producto</string>
+    <string name="set_colores">Identidficar boletas</string>
+
+    <string name="login_title">Inicio de Sesion</string>
+    <string name="login_info">Debe iniciar sesion para continuar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="login">Iniciar de Sesion</string>
+
 
 </resources>

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.djc.kanquimaniapark.Clases.Cliente;
@@ -23,10 +24,11 @@ import java.util.Objects;
 public class CrearCliente extends AppCompatActivity {
 
     private EditText nombreET, apellidoET, correoET, cumpleET;
+    private TextView idET;
 
     private ImageView fotoIV;
     private Bitmap bitmapFoto;
-    private ClientFirebaseHelper clientFirebaseHelper = new ClientFirebaseHelper();
+    private ClientFirebaseHelper clientFirebaseHelper;
 
     private String DATEFORMAT = "dd/MM/yyyy";
     private String sexo = "";
@@ -38,11 +40,16 @@ public class CrearCliente extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_cliente);
 
+        clientFirebaseHelper = new ClientFirebaseHelper();
+
+        idET = (TextView)findViewById(R.id.idET);
         fotoIV = (ImageView) findViewById(R.id.foto);
         nombreET = (EditText) findViewById(R.id.nombreET);
         apellidoET = (EditText) findViewById(R.id.apellidoET);
         correoET = (EditText) findViewById(R.id.correoET);
         cumpleET = (EditText) findViewById(R.id.cumpleET);
+
+        idET.setText(String.valueOf(clientFirebaseHelper.count+1));
     }
 
     //DATEPICKER DIALOG
@@ -142,7 +149,7 @@ public class CrearCliente extends AppCompatActivity {
                 .setTitle(getString(R.string.error))
                 .setMessage(getString(R.string.sexo_invalido));
 
-        alertBuilder.setPositiveButton(getString(R.string.ok), null);
+        alertBuilder.setNeutralButton(getString(R.string.ok), null);
 
         return alertBuilder;
     }
@@ -153,7 +160,7 @@ public class CrearCliente extends AppCompatActivity {
                 .setTitle(getString(R.string.error))
                 .setMessage(getString(R.string.foto_invalido));
 
-        alertBuilder.setPositiveButton(getString(R.string.ok), null);
+        alertBuilder.setNeutralButton(getString(R.string.ok), null);
 
         return alertBuilder;
     }
