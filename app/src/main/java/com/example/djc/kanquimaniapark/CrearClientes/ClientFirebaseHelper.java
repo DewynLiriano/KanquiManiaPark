@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class ClientFirebaseHelper {
 
     private String CLIENTS_CHILD = "Clientes";
+    private String ID = "ID";
     private String NOMBRE = "Nombre";
     private String APELLIDO = "Apellido";
     private String CORREO = "Correo";
@@ -39,6 +40,7 @@ public class ClientFirebaseHelper {
     }
 
     public void addClient(Cliente cliente){
+        database.child(String.valueOf(cliente.get_id())).child(ID).setValue(String.valueOf(cliente.get_id()));
         database.child(String.valueOf(cliente.get_id())).child(NOMBRE).setValue(cliente.get_nombre());
         database.child(String.valueOf(cliente.get_id())).child(APELLIDO).setValue(cliente.get_apellido());
         database.child(String.valueOf(cliente.get_id())).child(CORREO).setValue(cliente.get_correo());

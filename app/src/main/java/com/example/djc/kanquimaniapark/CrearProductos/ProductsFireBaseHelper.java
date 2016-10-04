@@ -12,6 +12,7 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class ProductsFireBaseHelper {
     private String PRODUCTOS = "Productos";
+    private String ID = "ID";
     private String NOMBRE = "Titulo";
     private String PRECIO = "Precio";
     private String ESPECIALES = "Especiales";
@@ -27,12 +28,13 @@ public class ProductsFireBaseHelper {
     }
 
     public void addProduct(Producto producto){
-        database.child(String.valueOf(producto.get_id())).child(NOMBRE).setValue(producto.get_titulo());
-        database.child(String.valueOf(producto.get_id())).child(PRECIO).setValue(producto.get_precio());
+        database.child(String.valueOf(String.valueOf(producto.get_id()))).child(NOMBRE).setValue(producto.get_titulo());
+        database.child(String.valueOf(String.valueOf(producto.get_id()))).child(PRECIO).setValue(producto.get_precio());
+        database.child(String.valueOf(String.valueOf(producto.get_id()))).child(ID).setValue(String.valueOf(producto.get_id()));
 
         if (producto.get_especiales() != null){
             for (int especial : producto.get_especiales()){
-                database.child(String.valueOf(producto.get_id())).child(ESPECIALES).push().setValue(especial);
+                database.child(String.valueOf(String.valueOf(producto.get_id()))).child(ESPECIALES).push().setValue(especial);
             }
         }
     }
