@@ -17,6 +17,8 @@ import java.util.Objects;
 
 public class LogInFireBaseHelper {
     private String USUARIOS = "Usuarios";
+    private String NOMBRE = "Nombre";
+    private String CONTRASENA = "Contrasena";
     private DatabaseReference dataRef;
     private Map<String, Map<String, String>> map;
 
@@ -26,7 +28,7 @@ public class LogInFireBaseHelper {
     }
 
     private void getUsuarios() {
-        dataRef.addValueEventListener(new ValueEventListener() {
+        dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 GenericTypeIndicator<Map<String, Map<String, String>>> genin = new GenericTypeIndicator<Map<String, Map<String, String>>>() {};
@@ -34,18 +36,16 @@ public class LogInFireBaseHelper {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
     }
 
     public boolean signIn(String username, String contrasena){
         boolean success = false;
-
         for (Map.Entry<String, Map<String, String>> entry : map.entrySet()){
             HashMap value = (HashMap) entry.getValue();
-            if ((Objects.equals(value.get("Nombre"), username))){
-                if (Objects.equals(value.get("Contrasena"), contrasena)){
+            if ((Objects.equals(value.get(NOMBRE), username))){
+                if (Objects.equals(value.get(CONTRASENA), contrasena)){
                     success = true;
                 }
             }
