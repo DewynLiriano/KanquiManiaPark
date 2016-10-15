@@ -43,12 +43,14 @@ public class LogInFireBaseHelper {
     public boolean signIn(String username, String contrasena){
         boolean success = false;
         for (Map.Entry<String, Map<String, String>> entry : map.entrySet()){
-            HashMap value = (HashMap) entry.getValue();
-            if ((Objects.equals(value.get(NOMBRE), username))){
-                if (Objects.equals(value.get(CONTRASENA), contrasena)){
-                    success = true;
-                }
-            }
+           if (entry != null){
+               HashMap value = (HashMap) entry.getValue();
+               if ((Objects.equals(value.get(NOMBRE), username))){
+                   if (Objects.equals(value.get(CONTRASENA), contrasena)){
+                       success = true;
+                   }
+               }
+           } else { success = false; }
         }
         return success;
     }
