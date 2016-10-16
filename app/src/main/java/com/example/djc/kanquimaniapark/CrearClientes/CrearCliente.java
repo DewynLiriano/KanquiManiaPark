@@ -23,7 +23,7 @@ import java.util.Objects;
 
 public class CrearCliente extends AppCompatActivity {
 
-    private EditText nombreET, apellidoET, correoET, cumpleET;
+    private EditText nombreET, apellidoET, correoET, cumpleET, numeroET;
     private TextView idET;
 
     private ImageView fotoIV;
@@ -48,6 +48,7 @@ public class CrearCliente extends AppCompatActivity {
         apellidoET = (EditText) findViewById(R.id.apellidoET);
         correoET = (EditText) findViewById(R.id.correoET);
         cumpleET = (EditText) findViewById(R.id.cumpleET);
+        numeroET = (EditText)findViewById(R.id.numeroET);
 
         idET.setText(String.valueOf(clientFirebaseHelper.count+1));
     }
@@ -79,7 +80,7 @@ public class CrearCliente extends AppCompatActivity {
 
     public void registrarCliente(View v) {
         boolean cancel = false;
-        String nombre, apellido, correo, cumple;
+        String nombre, apellido, correo, cumple, numero;
 
 
         //CONTROL DE ENTRADA DE DATOS
@@ -107,6 +108,10 @@ public class CrearCliente extends AppCompatActivity {
         } else if (bitmapFoto == null){
             photo_alertBuilder().show();
             cancel = true;
+        } else if (numeroET.getText().toString().length() < 10) {
+            numeroET.setError(getString(R.string.numeroInvalido));
+            focusView = numeroET;
+            cancel = true;
         }
 
 
@@ -117,9 +122,10 @@ public class CrearCliente extends AppCompatActivity {
             apellido = apellidoET.getText().toString();
             correo = correoET.getText().toString();
             cumple = cumpleET.getText().toString();
+            numero = numeroET.getText().toString();
 
-            Cliente cliente = new Cliente(clientFirebaseHelper.count + 1, nombre, apellido, correo,
-                    sexo, cumple, bitmapFoto);
+            Cliente cliente = new Cliente((int)clientFirebaseHelper.count + 1, nombre, apellido, correo,
+                    numero, sexo, cumple, bitmapFoto);
 
             clientFirebaseHelper.addClient(cliente);
             Toast.makeText(this, getString(R.string.clienteAgregado), Toast.LENGTH_SHORT).show();

@@ -8,7 +8,7 @@
     <string name="sexo">Sexo:</string>
     <string name="correo">Correo</string>
     <string name="fechaNacimiento">Fecha de Nacimiento</string>
-    <string name="id">ID:</string>
+    <string name="id">ID: </string>
     <string name="varon">Hombre</string>
     <string name="hembra">Mujer</string>
     <string name="registrar">Registrar Cliente</string>
@@ -19,6 +19,7 @@
     <string name="producto_agregado">Producto Agregado</string>
     <string name="sexo_invalido">Debe seleccionar un sexo</string>
     <string name="foto_invalido">La foto del cliente es necesaria.</string>
+    <string name="numeroInvalido">Numero Invalido</string>
     <string name="vacio">Campo no puede estar vacio</string>
     <string name="si">Si</string>
     <string name="no">No</string>
@@ -36,6 +37,13 @@
     <string name="login_info">Debe iniciar sesion para continuar</string>
     <string name="cancelar">Cancelar</string>
     <string name="login">Iniciar de Sesion</string>
+
+    <string name="numero">Numero de telefono</string>
+    <string name="gestion_empleados">Gestionar Empleados</string>
+    <string name="gestion_atracciones">Gestionar Atracciones</string>
+    <string name="gestion_especiales">Gestionar Especiales</string>
+    <string name="gestion_productos">Gestionar Empleados</string>
+    <string name="generar_reporte">Generar Reporte</string>
 
 
 </resources>
