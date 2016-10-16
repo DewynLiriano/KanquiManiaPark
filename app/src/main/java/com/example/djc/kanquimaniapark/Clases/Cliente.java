@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
  */
 
 public class Cliente extends Persona {
+    private String _correo;
     private String _fechaCumpleAnos;
     private Bitmap _bitmapFoto;
 
@@ -26,16 +27,19 @@ public class Cliente extends Persona {
         this._bitmapFoto = _bitmapFoto;
     }
 
-    public Cliente(int _id, String _nombre, String _apellido, String _fechaNacimiento, String _sexo, String _fechaCumpleAnos, Bitmap _bitmapFoto) {
+    public String get_correo() {
+        return _correo;
+    }
+
+    public void set_correo(String _correo) {
+        this._correo = _correo;
+    }
+
+    public Cliente(int _id, String _nombre, String _apellido, String _fechaNacimiento, String _sexo, String _correo, String _fechaCumpleAnos, Bitmap _bitmapFoto) {
         super(_id, _nombre, _apellido, _fechaNacimiento, _sexo);
+        this._correo = _correo;
         this._fechaCumpleAnos = _fechaCumpleAnos;
         this._bitmapFoto = _bitmapFoto;
     }
-
-    public Cliente(String _fechaCumpleAnos, Bitmap _bitmapFoto) {
-        this._fechaCumpleAnos = _fechaCumpleAnos;
-        this._bitmapFoto = _bitmapFoto;
-    }
-
     public Cliente(){}
 }
