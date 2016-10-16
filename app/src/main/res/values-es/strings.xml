@@ -13,4 +13,5 @@
     <string name="varon">Hombre</string>
     <string name="hembra">Mujer</string>
     <string name="registrar">Registrar Cliente</string>
+    <string name="cancelar">Cancelar</string>
 </resources>

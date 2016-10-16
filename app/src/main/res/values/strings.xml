@@ -8,7 +8,7 @@
     <string name="sexo">Sexo:</string>
     <string name="correo">Correo</string>
     <string name="fechaNacimiento">Fecha de Nacimiento</string>
-    <string name="id">ID:</string>
+    <string name="id">ID: </string>
     <string name="varon">Hombre</string>
     <string name="hembra">Mujer</string>
     <string name="registrar">Registrar Cliente</string>
@@ -39,7 +39,11 @@
     <string name="login">Iniciar de Sesion</string>
 
     <string name="numero">Numero de telefono</string>
-
+    <string name="gestion_empleados">Gestionar Empleados</string>
+    <string name="gestion_atracciones">Gestionar Atracciones</string>
+    <string name="gestion_especiales">Gestionar Especiales</string>
+    <string name="gestion_productos">Gestionar Empleados</string>
+    <string name="generar_reporte">Generar Reporte</string>
 
 
 </resources>
