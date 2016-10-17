@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.example.djc.kanquimaniapark.Clases.Producto;
 import com.example.djc.kanquimaniapark.R;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.Objects;
 
@@ -24,6 +23,7 @@ public class CrearProducto extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_producto);
+
 
         nombreET = (EditText)findViewById(R.id.nombre_producto);
         precioET = (EditText)findViewById(R.id.precio_producto);

@@ -19,11 +19,15 @@ public class LogInFireBaseHelper {
     private String USUARIOS = "Usuarios";
     private String NOMBRE = "Nombre";
     private String CONTRASENA = "Contrasena";
+    private FirebaseDatabase firebaseDatabase;
     private DatabaseReference dataRef;
     private Map<String, Map<String, String>> map;
 
     public LogInFireBaseHelper(){
-        dataRef = FirebaseDatabase.getInstance().getReference(USUARIOS);
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        //firebaseDatabase.setPersistenceEnabled(true);
+        dataRef = firebaseDatabase.getReference(USUARIOS);
+        dataRef.keepSynced(true);
         getUsuarios();
     }
 

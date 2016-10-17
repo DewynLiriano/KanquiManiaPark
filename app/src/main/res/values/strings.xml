@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KanquiManiaPark</string>
+    <string name="app_name">KanquiMania Park</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
 
@@ -45,5 +45,8 @@
     <string name="gestion_productos">Gestionar Productos</string>
     <string name="generar_reporte">Generar Reporte</string>
 
-
+    <string name="crear_empleado">Crear nuevo empleado</string>
+    <string name="username">Username</string>
+    <string name="pass">Contraseña</string>
+    <string name="posicion">Posicion: </string>
 </resources>

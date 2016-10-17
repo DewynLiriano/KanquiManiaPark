@@ -1,4 +1,4 @@
-package com.example.djc.kanquimaniapark.MainActivity;
+package com.example.djc.kanquimaniapark.Admin.GestionEmpleados;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -11,37 +11,36 @@ import com.example.djc.kanquimaniapark.R;
 
 import java.util.List;
 
-public class RecyclerAdapter extends  RecyclerView.Adapter<RecyclerViewHolder> {
+public class EmployeeRecyclerAdapter extends  RecyclerView.Adapter<EmployeeRecyclerViewHolder> {
 
     List<String> list;
     Context context;
     LayoutInflater inflater;
 
-    public RecyclerAdapter (Context context, List<String> list) {
+    public EmployeeRecyclerAdapter(Context context, List<String> list) {
         this.context = context;
         this.list = list;
         inflater =  LayoutInflater.from(context);
     }
 
     @Override
-    public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = inflater.inflate(R.layout.client_list, parent, false);
-        return new RecyclerViewHolder(v);
+    public EmployeeRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = inflater.inflate(R.layout.empleados_list, parent, false);
+        return new EmployeeRecyclerViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(EmployeeRecyclerViewHolder holder, int position) {
         holder.tv1.setText(list.get(position));
-        holder.imageView.setOnClickListener(clickListener);
-        holder.imageView.setTag(holder);
+        holder.tv1.setOnClickListener(clickListener);
     }
 
     View.OnClickListener clickListener=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            RecyclerViewHolder vholder = (RecyclerViewHolder) v.getTag();
+            EmployeeRecyclerViewHolder vholder = (EmployeeRecyclerViewHolder) v.getTag();
             int position = vholder.getAdapterPosition();
-            Toast.makeText(context,"Panita numero " + position, Toast.LENGTH_LONG ).show();
+            Toast.makeText(context,"Pana numero " + position, Toast.LENGTH_LONG ).show();
         }
     };
     @Override

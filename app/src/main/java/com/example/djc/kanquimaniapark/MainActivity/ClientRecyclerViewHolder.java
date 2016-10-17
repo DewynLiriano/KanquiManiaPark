@@ -7,12 +7,12 @@ import android.widget.TextView;
 
 import com.example.djc.kanquimaniapark.R;
 
-public class RecyclerViewHolder extends RecyclerView.ViewHolder {
+public class ClientRecyclerViewHolder extends RecyclerView.ViewHolder {
 
     TextView tv1,tv2;
     ImageView imageView;
 
-    public RecyclerViewHolder(View itemView) {
+    public ClientRecyclerViewHolder(View itemView) {
         super(itemView);
 
         tv1= (TextView) itemView.findViewById(R.id.list_title);

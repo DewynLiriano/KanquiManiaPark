@@ -165,7 +165,6 @@
             android:layout_marginStart="180dp"
             android:onClick="registrarCliente"/>
 
-
     </LinearLayout>
 
 </RelativeLayout>

@@ -25,7 +25,7 @@
             android:id='@+id/login_password'
             android:layout_width='match_parent'
             android:layout_height='wrap_content'
-            android:hint="Password"
+            android:hint="@string/pass"
             android:ems='10'
             android:inputType='textPassword' >
         </EditText>

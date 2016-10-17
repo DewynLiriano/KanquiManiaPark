@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.example.djc.kanquimaniapark.Admin.fragments.GestionAtracciones;
-import com.example.djc.kanquimaniapark.Admin.fragments.GestionEmpleados;
+import com.example.djc.kanquimaniapark.Admin.GestionEmpleados.GestionEmpleados;
 import com.example.djc.kanquimaniapark.Admin.fragments.GestionEspeciales;
 import com.example.djc.kanquimaniapark.Admin.fragments.GestionProductos;
 import com.example.djc.kanquimaniapark.R;
@@ -35,7 +35,7 @@ public class SimpleTabsActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (ViewPager) findViewById(       R.id.viewpager);
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);

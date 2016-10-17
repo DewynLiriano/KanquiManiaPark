@@ -2,19 +2,109 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.djc.kanquimaniapark.Admin.fragments.GestionEmpleados"
+    tools:context="com.example.djc.kanquimaniapark.Admin.GestionEmpleados.GestionEmpleados"
     android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="200dp"
+        android:layout_width="300dp"
         android:layout_height="match_parent">
         <include layout="@layout/content_empleados"/>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/crear_empleado"
+            android:textSize="30sp"
+            />
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal">
+
+             <android.support.design.widget.TextInputLayout
+                 android:layout_width="300dp"
+                 android:layout_height="wrap_content">
+                 <EditText
+                     android:id="@+id/empleado_nombre"
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+                     android:hint="@string/nombre"
+                     android:layout_marginTop="10dp"/>
+             </android.support.design.widget.TextInputLayout>
+
+             <android.support.design.widget.TextInputLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent">
+                 <EditText
+                     android:id="@+id/empleado_apellido"
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+                     android:hint="@string/apellido"/>
+             </android.support.design.widget.TextInputLayout>
+         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="300dp"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/empleado_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/username"
+                    android:layout_marginTop="10dp"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <EditText
+                    android:id="@+id/empleado_pass"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/pass"
+                    android:inputType="textPassword"/>
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/posicion"
+                android:textSize="20sp"/>
+
+            <Spinner
+                android:id="@+id/spinner_posiciones"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </Spinner>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/empleado_crear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/aceptar"
+            android:layout_gravity="center"
+            android:layout_marginTop="80dp"/>
+
 
     </LinearLayout>
 

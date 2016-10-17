@@ -10,10 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -23,10 +21,10 @@ import android.widget.Toast;
 
 import com.example.djc.kanquimaniapark.Admin.SimpleTabsActivity;
 import com.example.djc.kanquimaniapark.CrearClientes.CrearCliente;
-import com.example.djc.kanquimaniapark.CrearClientes.ClientFirebaseHelper;
-import com.example.djc.kanquimaniapark.CrearProductos.CrearProducto;
 
 import com.example.djc.kanquimaniapark.R;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -37,14 +35,13 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton clientFAB;
     private FloatingActionButton mailFAB;
 
-    private ClientFirebaseHelper helper;
     private LogInFireBaseHelper logInHelper;
 
     private Boolean isFabOpen = false;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     private RecyclerView recyclerView;
 
-
+    static boolean calledAlready = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +50,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        helper = new ClientFirebaseHelper();
+        if  (!calledAlready){
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            calledAlready = true;
+        }
+
         logInHelper = new LogInFireBaseHelper();
 
         plusFAB = (FloatingActionButton)findViewById(R.id.plusFAB);
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
-        RecyclerAdapter adapter = new RecyclerAdapter(this, data);
+        ClientRecyclerAdapter adapter = new ClientRecyclerAdapter(this, data);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -149,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void mailFabOnClick(View v){
-        Toast.makeText(this, String.valueOf(helper.count), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, String.valueOf(helper.count), Toast.LENGTH_SHORT).show();
     }
 
     private AlertDialog logIn_alertBuilder(){
