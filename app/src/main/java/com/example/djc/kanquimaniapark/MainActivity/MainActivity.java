@@ -21,11 +21,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.djc.kanquimaniapark.Admin.SimpleTabsActivity;
 import com.example.djc.kanquimaniapark.CrearClientes.CrearCliente;
 import com.example.djc.kanquimaniapark.CrearClientes.ClientFirebaseHelper;
 import com.example.djc.kanquimaniapark.CrearProductos.CrearProducto;
-import com.example.djc.kanquimaniapark.R;
 
+import com.example.djc.kanquimaniapark.R;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -186,8 +187,6 @@ public class MainActivity extends AppCompatActivity {
                     cancel[0] = true;
                 }
 
-
-
                 if (cancel[0]){
                     focusView[0].requestFocus();
                 } else {
@@ -196,20 +195,15 @@ public class MainActivity extends AppCompatActivity {
                     boolean success = logInHelper.signIn(usuario[0], contrasena[0]);
 
                     if (success){
-                        Intent intent = new Intent(getApplicationContext(), CrearProducto.class);
+                        Intent intent = new Intent(getApplicationContext(), SimpleTabsActivity.class);
                         startActivity(intent);
                     }
                     else{
                         Toast.makeText(MainActivity.this, "No se ha podido iniciar sesion", Toast.LENGTH_SHORT).show();
                     }
                 }
-                //Toast.makeText(getApplicationContext(), "adf", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-
         return builder.create();
     }
 }

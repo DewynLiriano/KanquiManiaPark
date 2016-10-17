@@ -124,8 +124,8 @@ public class CrearCliente extends AppCompatActivity {
             cumple = cumpleET.getText().toString();
             numero = numeroET.getText().toString();
 
-            Cliente cliente = new Cliente((int)clientFirebaseHelper.count + 1, nombre, apellido, correo,
-                    numero, sexo, cumple, bitmapFoto);
+            Cliente cliente = new Cliente((int)clientFirebaseHelper.count +1, nombre, apellido,
+                    sexo, correo, cumple, numero, bitmapFoto);
 
             clientFirebaseHelper.addClient(cliente);
             Toast.makeText(this, getString(R.string.clienteAgregado), Toast.LENGTH_SHORT).show();

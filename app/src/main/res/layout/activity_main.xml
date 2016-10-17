@@ -73,18 +73,18 @@
         android:onClick="plusFabOnClick"/>
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="400dp">
+
+    </LinearLayout>
+
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="400dp"
         android:layout_height="match_parent">
 
         <include layout="@layout/content_main" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="400dp">
-
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

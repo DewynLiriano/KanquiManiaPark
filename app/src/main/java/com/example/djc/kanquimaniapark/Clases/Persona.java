@@ -8,14 +8,12 @@ public class Persona {
     private int _id;
     private String _nombre;
     private String _apellido;
-    private String _fechaNacimiento;
     private String _sexo;
 
-    public Persona(int _id, String _nombre, String _apellido, String _fechaNacimiento, String _sexo) {
+    public Persona(int _id, String _nombre, String _apellido, String _sexo) {
         this._id = _id;
         this._nombre = _nombre;
         this._apellido = _apellido;
-        this._fechaNacimiento = _fechaNacimiento;
         this._sexo = _sexo;
     }
 
@@ -43,14 +41,6 @@ public class Persona {
 
     public void set_apellido(String _apellido) {
         this._apellido = _apellido;
-    }
-
-    public String get_fechaNacimiento() {
-        return _fechaNacimiento;
-    }
-
-    public void set_fechaNacimiento(String _fechaNacimiento) {
-        this._fechaNacimiento = _fechaNacimiento;
     }
 
     public String get_sexo() {

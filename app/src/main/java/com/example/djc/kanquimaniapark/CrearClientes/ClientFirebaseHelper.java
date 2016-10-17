@@ -23,6 +23,7 @@ public class ClientFirebaseHelper {
     private String NOMBRE = "Nombre";
     private String APELLIDO = "Apellido";
     private String CORREO = "Correo";
+    private String NUMERO = "Numero";
     private String SEXO = "Sexo";
     private String CUMPLE = "Cumpleanos";
     private String FOTO = "Foto";
@@ -44,6 +45,7 @@ public class ClientFirebaseHelper {
         database.child(String.valueOf(cliente.get_id())).child(NOMBRE).setValue(cliente.get_nombre());
         database.child(String.valueOf(cliente.get_id())).child(APELLIDO).setValue(cliente.get_apellido());
         database.child(String.valueOf(cliente.get_id())).child(CORREO).setValue(cliente.get_correo());
+        database.child(String.valueOf(cliente.get_id())).child(NUMERO).setValue(cliente.get_numero());
         database.child(String.valueOf(cliente.get_id())).child(SEXO).setValue(cliente.get_sexo());
         database.child(String.valueOf(cliente.get_id())).child(CUMPLE).setValue(cliente.get_fechaCumpleAnos());
         byte[] data = BitMapHelper.getBytes(cliente.get_bitmapFoto());
