@@ -5,12 +5,12 @@ package com.example.djc.kanquimaniapark.Clases;
  */
 
 public class Persona {
-    private int _id;
+    private long _id;
     private String _nombre;
     private String _apellido;
     private String _sexo;
 
-    public Persona(int _id, String _nombre, String _apellido, String _sexo) {
+    public Persona(long _id, String _nombre, String _apellido, String _sexo) {
         this._id = _id;
         this._nombre = _nombre;
         this._apellido = _apellido;
@@ -19,11 +19,11 @@ public class Persona {
 
     public Persona() {}
 
-    public int get_id() {
+    public long get_id() {
         return _id;
     }
 
-    public void set_id(int _id) {
+    public void set_id(long _id) {
         this._id = _id;
     }
 

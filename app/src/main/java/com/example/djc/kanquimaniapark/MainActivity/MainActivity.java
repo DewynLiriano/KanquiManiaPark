@@ -23,6 +23,7 @@ import com.example.djc.kanquimaniapark.Admin.SimpleTabsActivity;
 import com.example.djc.kanquimaniapark.CrearClientes.CrearCliente;
 
 import com.example.djc.kanquimaniapark.R;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -50,9 +51,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if  (!calledAlready){
+        /*if  (!calledAlready){
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
             calledAlready = true;
+        }*/
+        if (FirebaseApp.getApps(this).isEmpty()) {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         }
 
         logInHelper = new LogInFireBaseHelper();

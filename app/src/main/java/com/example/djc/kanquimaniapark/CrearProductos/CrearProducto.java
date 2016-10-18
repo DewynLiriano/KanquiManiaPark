@@ -31,7 +31,6 @@ public class CrearProducto extends AppCompatActivity {
     }
 
     public void crearProductoOnClick(View view) {
-
         boolean cancel = false;
 
         if (Objects.equals(nombreET.getText().toString(), "")) {
@@ -46,7 +45,6 @@ public class CrearProducto extends AppCompatActivity {
 
         if (cancel){
             focusView.requestFocus();
-
         }else {
             Producto producto = new Producto((int)database.count+1, nombreET.getText().toString(),
                     Float.parseFloat(precioET.getText().toString()), null);

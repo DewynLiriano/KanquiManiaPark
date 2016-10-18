@@ -95,6 +95,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             </Spinner>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sexo"
+                android:textSize="20sp"/>
+            <RadioGroup
+                android:id="@+id/empleado_sexo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/empleado_varon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/varon"/>
+
+                <RadioButton
+                    android:id="@+id/empleado_hembra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hembra"/>
+            </RadioGroup>
         </LinearLayout>
 
         <Button

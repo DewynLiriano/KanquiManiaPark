@@ -28,9 +28,9 @@ public class ProductsFireBaseHelper {
     }
 
     public void addProduct(Producto producto){
-        database.child(String.valueOf(String.valueOf(producto.get_id()))).child(NOMBRE).setValue(producto.get_titulo());
-        database.child(String.valueOf(String.valueOf(producto.get_id()))).child(PRECIO).setValue(producto.get_precio());
-        database.child(String.valueOf(String.valueOf(producto.get_id()))).child(ID).setValue(String.valueOf(producto.get_id()));
+        database.child(String.valueOf(producto.get_id())).child(NOMBRE).setValue(producto.get_titulo());
+        database.child(String.valueOf(producto.get_id())).child(PRECIO).setValue(producto.get_precio());
+        database.child(String.valueOf(producto.get_id())).child(ID).setValue(String.valueOf(producto.get_id()));
 
         if (producto.get_especiales() != null){
             for (int especial : producto.get_especiales()){

@@ -9,7 +9,7 @@ public class Empleado extends Persona {
     private String _contrasena;
     private String _tipo;
 
-    public Empleado(int _id, String _nombre, String _apellido, String _sexo, String _userName, String _contrasena, String _tipo) {
+    public Empleado(long _id, String _nombre, String _apellido, String _sexo, String _userName, String _contrasena, String _tipo) {
         super(_id, _nombre, _apellido, _sexo);
         this._userName = _userName;
         this._contrasena = _contrasena;
