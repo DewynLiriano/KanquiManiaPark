@@ -5,13 +5,13 @@ package com.example.djc.kanquimaniapark.Clases;
  */
 
 public class Persona {
-    //private long _id;
+    private String _id;
     private String _nombre;
     private String _apellido;
     private String _sexo;
 
-    public Persona(String _nombre, String _apellido, String _sexo) {
-        //set_id(_id);
+    public Persona(String _id, String _nombre, String _apellido, String _sexo) {
+        set_id(_id);
         set_nombre(_nombre);
         set_apellido(_apellido);
         set_sexo(_sexo);
@@ -19,13 +19,13 @@ public class Persona {
 
     public Persona() {}
 
-    /*public String get_id() {
+    public String get_id() {
         return String.valueOf(_id);
     }
 
     public void set_id(String _id) {
-        this._id = Long.parseLong(_id);
-    }*/
+        this._id = _id;
+    }
 
     public String get_nombre() {
         return _nombre;

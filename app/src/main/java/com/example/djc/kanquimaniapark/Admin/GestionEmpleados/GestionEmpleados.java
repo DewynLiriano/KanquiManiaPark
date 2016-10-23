@@ -29,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -155,7 +156,7 @@ public class GestionEmpleados extends Fragment {
                 } else if (radioHembra.isChecked()){
                     sexo = "F";
                 }
-                Empleado empleado = new Empleado(nombre, apellido,
+                Empleado empleado = new Empleado("", nombre, apellido,
                         sexo, username, pass, posicion);
                 addEmployee(empleado);
             }
@@ -293,6 +294,7 @@ public class GestionEmpleados extends Fragment {
                     if (entry != null){
                         HashMap value = (HashMap) entry.getValue();
                         Empleado e = new Empleado();
+                        e.set_id((String)value.get(ID));
                         e.set_nombre((String)value.get(NOMBRE));
                         e.set_apellido((String)value.get(APELLIDO));
                         e.set_userName((String)value.get(USERNAME));
@@ -304,7 +306,7 @@ public class GestionEmpleados extends Fragment {
                 }
             }
 
-            Collections.reverse(empleados);
+            sortEmpleados();
             adapter.notifyDataSetChanged();
             recyclerView.setAdapter(adapter);
         }
@@ -315,9 +317,18 @@ public class GestionEmpleados extends Fragment {
         }
     };
 
+    private void sortEmpleados() {
+        Collections.sort(empleados, new Comparator<Empleado>() {
+            @Override
+            public int compare(Empleado o1, Empleado o2) {
+                return o2.get_id().compareTo(o1.get_id());
+            }
+        });
+    }
+
     public void addEmployee(Empleado empleado){
         DatabaseReference dRef = FirebaseDatabase.getInstance().getReference(EMPLEADOS).push();
-        //dRef.child(ID).setValue(empleado.get_id());
+        dRef.child(ID).setValue(dRef.getKey());
         dRef.child(NOMBRE).setValue(empleado.get_nombre());
         dRef.child(APELLIDO).setValue(empleado.get_apellido());
         dRef.child(SEXO).setValue(empleado.get_sexo());

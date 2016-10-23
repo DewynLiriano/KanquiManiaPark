@@ -7,7 +7,7 @@ import android.graphics.Bitmap;
  */
 
 public class Cliente extends Persona {
-    private long _id;
+    //private long _id;
     private String _correo;
     private String _fechaCumpleAnos;
     private String _numero;
@@ -45,17 +45,17 @@ public class Cliente extends Persona {
         this._numero = _numero;
     }
 
-    public long get_id() {
+    /*public long get_id() {
         return _id;
     }
 
     public void set_id(String _id) {
         this._id = Long.parseLong(_id);
-    }
+    }*/
 
     public Cliente(String _id, String _nombre, String _apellido, String _sexo, String _correo,
                    String _fechaCumpleAnos, String _numero, Bitmap _bitmapFoto) {
-        super(_nombre, _apellido, _sexo);
+        super(_id, _nombre, _apellido, _sexo);
         set_id(_id);
         set_correo(_correo);
         set_fechaCumpleAnos(_fechaCumpleAnos);
