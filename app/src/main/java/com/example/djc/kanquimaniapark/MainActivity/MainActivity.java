@@ -51,13 +51,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*if  (!calledAlready){
+        /*if (FirebaseApp.getApps(this).isEmpty()) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-            calledAlready = true;
         }*/
-        if (FirebaseApp.getApps(this).isEmpty()) {
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        }
 
         logInHelper = new LogInFireBaseHelper();
 
@@ -76,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.option_menu, menu);
-
         return true;
     }
 

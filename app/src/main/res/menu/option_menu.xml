@@ -5,7 +5,7 @@
     tools:context=".MainActivity.MainActivity">
 
     <item android:id="@+id/crear_producto"
-        android:title="@string/crear_producto"
+        android:title="@string/admin"
         app:showAsAction="never"/>
 
 </menu>

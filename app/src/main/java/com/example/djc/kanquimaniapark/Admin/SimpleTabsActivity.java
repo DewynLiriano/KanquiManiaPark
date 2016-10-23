@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.example.djc.kanquimaniapark.Admin.fragments.GenerarReporte;
 import com.example.djc.kanquimaniapark.Admin.fragments.GestionAtracciones;
 import com.example.djc.kanquimaniapark.Admin.GestionEmpleados.GestionEmpleados;
 import com.example.djc.kanquimaniapark.Admin.fragments.GestionEspeciales;
@@ -35,9 +36,10 @@ public class SimpleTabsActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        viewPager = (ViewPager) findViewById(       R.id.viewpager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
+        viewPager.setOffscreenPageLimit(6);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
@@ -48,6 +50,7 @@ public class SimpleTabsActivity extends AppCompatActivity {
         adapter.addFragment(new GestionProductos(), getString(R.string.gestion_productos));
         adapter.addFragment(new GestionEspeciales(), getString(R.string.gestion_especiales));
         adapter.addFragment(new GestionAtracciones(), getString(R.string.gestion_atracciones));
+        adapter.addFragment(new GenerarReporte(), getString(R.string.generar_reporte));
         viewPager.setAdapter(adapter);
     }
 

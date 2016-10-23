@@ -1,14 +1,128 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.djc.kanquimaniapark.Admin.fragments.GestionEspeciales">
+    tools:context="com.example.djc.kanquimaniapark.Admin.fragments.GestionEspeciales"
+    android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="40dp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true"/>
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="match_parent">
+        <include layout="@layout/content_especiales"/>
+    </LinearLayout>
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/crear_especial"
+            android:textSize="30sp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/especial_nombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:hint="@string/nombre"
+                    android:layout_marginTop="10dp"/>
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="300dp"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/empleado_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/username"
+                    android:layout_marginTop="10dp"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <EditText
+                    android:id="@+id/empleado_pass"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/pass"
+                    android:inputType="textPassword"/>
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/posicion"
+                android:textSize="20sp"/>
+
+            <Spinner
+                android:id="@+id/spinner_posiciones"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </Spinner>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sexo"
+                android:textSize="20sp"/>
+            <RadioGroup
+                android:id="@+id/empleado_sexo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/empleado_varon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/varon"/>
+
+                <RadioButton
+                    android:id="@+id/empleado_hembra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hembra"/>
+            </RadioGroup>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/empleado_crear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/aceptar"
+            android:layout_gravity="center"
+            android:layout_marginTop="80dp"/>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

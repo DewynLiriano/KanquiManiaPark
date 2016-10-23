@@ -46,7 +46,9 @@
     <string name="generar_reporte">Generar Reporte</string>
 
     <string name="crear_empleado">Crear nuevo empleado</string>
+    <string name="crear_especial">Crear nuevo especial</string>
     <string name="username">Username</string>
     <string name="pass">Contraseña</string>
     <string name="posicion">Posicion: </string>
+    <string name="admin">Opciones Administrador</string>
 </resources>

@@ -9,17 +9,11 @@ public class Empleado extends Persona {
     private String _contrasena;
     private String _tipo;
 
-    public Empleado(long _id, String _nombre, String _apellido, String _sexo, String _userName, String _contrasena, String _tipo) {
-        super(_id, _nombre, _apellido, _sexo);
-        this._userName = _userName;
-        this._contrasena = _contrasena;
-        this._tipo = _tipo;
-    }
-
-    public Empleado(String _userName, String _contrasena, String _tipo) {
-        this._userName = _userName;
-        this._contrasena = _contrasena;
-        this._tipo = _tipo;
+    public Empleado(String _nombre, String _apellido, String _sexo, String _userName, String _contrasena, String _tipo) {
+        super(_nombre, _apellido, _sexo);
+        set_userName(_userName);
+        set_contrasena(_contrasena);
+        set_tipo(_tipo);
     }
 
     public Empleado(){}

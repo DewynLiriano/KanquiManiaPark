@@ -1,5 +1,6 @@
 package com.example.djc.kanquimaniapark.MainActivity;
 
+import com.example.djc.kanquimaniapark.Clases.Empleado;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -7,6 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -25,7 +27,6 @@ public class LogInFireBaseHelper {
 
     public LogInFireBaseHelper(){
         firebaseDatabase = FirebaseDatabase.getInstance();
-        //firebaseDatabase.setPersistenceEnabled(true);
         dataRef = firebaseDatabase.getReference(USUARIOS);
         dataRef.keepSynced(true);
         getUsuarios();
@@ -46,15 +47,19 @@ public class LogInFireBaseHelper {
 
     public boolean signIn(String username, String contrasena){
         boolean success = false;
-        for (Map.Entry<String, Map<String, String>> entry : map.entrySet()){
-           if (entry != null){
-               HashMap value = (HashMap) entry.getValue();
-               if ((Objects.equals(value.get(NOMBRE), username))){
-                   if (Objects.equals(value.get(CONTRASENA), contrasena)){
-                       success = true;
-                   }
-               }
-           } else { success = false; }
+
+        if (map != null){
+            for (Map.Entry<String, Map<String, String>> entry : map.entrySet()){
+                if (entry != null){
+                    HashMap value = (HashMap) entry.getValue();
+
+                    if ((Objects.equals(value.get(NOMBRE), username))){
+                        if (Objects.equals(value.get(CONTRASENA), contrasena)){
+                            success = true;
+                        }
+                    }
+                } else { success = false; }
+            }
         }
         return success;
     }

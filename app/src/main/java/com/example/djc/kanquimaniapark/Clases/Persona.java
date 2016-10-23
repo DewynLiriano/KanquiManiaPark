@@ -5,27 +5,27 @@ package com.example.djc.kanquimaniapark.Clases;
  */
 
 public class Persona {
-    private long _id;
+    //private long _id;
     private String _nombre;
     private String _apellido;
     private String _sexo;
 
-    public Persona(long _id, String _nombre, String _apellido, String _sexo) {
-        this._id = _id;
-        this._nombre = _nombre;
-        this._apellido = _apellido;
-        this._sexo = _sexo;
+    public Persona(String _nombre, String _apellido, String _sexo) {
+        //set_id(_id);
+        set_nombre(_nombre);
+        set_apellido(_apellido);
+        set_sexo(_sexo);
     }
 
     public Persona() {}
 
-    public long get_id() {
-        return _id;
+    /*public String get_id() {
+        return String.valueOf(_id);
     }
 
-    public void set_id(long _id) {
-        this._id = _id;
-    }
+    public void set_id(String _id) {
+        this._id = Long.parseLong(_id);
+    }*/
 
     public String get_nombre() {
         return _nombre;
