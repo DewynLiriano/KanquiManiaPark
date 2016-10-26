@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="600sp"
+    android:minHeight="150dp"
+    android:layout_marginStart="0sp" android:layout_marginEnd="0sp"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:textSize="20sp"
+        android:text="@string/info_editar"
+        android:background="@color/red"
+        android:textColor="@color/white"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="15sp"
+        android:layout_marginEnd="15sp"
+        android:layout_marginTop="10sp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="300dp"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/show_empname"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/nombre"
+                    android:layout_marginTop="10dp"
+                    android:enabled="false"
+                    android:textColor="@color/black"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <EditText
+                    android:id="@+id/show_emplast"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/apellido"
+                    android:enabled="false"
+                    android:textColor="@color/black"/>
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="300dp"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/show_empusername"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/username"
+                    android:layout_marginTop="10dp"
+                    android:enabled="false"
+                    android:textColor="@color/black"/>
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <EditText
+                android:id="@+id/edit_empleado_pass"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/pass"
+                android:inputType="textPassword"
+                android:enabled="false"
+                android:textColor="@color/black"/>
+            </android.support.design.widget.TextInputLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/posicion"
+                android:layout_marginTop="10sp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/edit_posicion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/posicion"
+                android:layout_marginTop="10sp"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:paddingStart="70sp"
+                android:paddingEnd="70sp"/>
+
+            <Spinner
+                android:visibility="gone"
+                android:id="@+id/show_spinner_posiciones"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+            </Spinner>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sexo"
+                android:textSize="20sp"
+                android:layout_marginStart="0sp"/>
+            <RadioGroup
+                android:id="@+id/edit_radiogroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="0dp">
+
+                <RadioButton
+                    android:id="@+id/show_male_empsex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/varon"
+                    android:clickable="false"/>
+
+                <RadioButton
+                    android:id="@+id/show_female_empsex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hembra"
+                    android:clickable="false"/>
+            </RadioGroup>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="end">
+
+        <Button
+            android:id="@+id/edit_empleado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/editar_empleado"
+            android:layout_gravity="bottom"
+            android:background="#ffff"
+            android:textColor="@color/colorAccent"
+            />
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/aceptar_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/aceptar"
+            android:background="#ffff"
+            android:textColor="@color/colorAccent"/>
+        <Button
+            android:id="@+id/delete_empleado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/borrar_empleado"
+            android:layout_gravity="bottom"
+            android:background="#ffff"
+            android:textColor="@color/colorAccent"/>
+
+    </LinearLayout>
+
+</LinearLayout>

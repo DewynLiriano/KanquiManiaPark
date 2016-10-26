@@ -14,8 +14,8 @@ import java.util.List;
 public class ClientRecyclerAdapter extends  RecyclerView.Adapter<ClientRecyclerViewHolder> {
 
     List<String> list;
-    Context context;
-    LayoutInflater inflater;
+    private Context context;
+    private LayoutInflater inflater;
 
     public ClientRecyclerAdapter(Context context, List<String> list) {
         this.context = context;

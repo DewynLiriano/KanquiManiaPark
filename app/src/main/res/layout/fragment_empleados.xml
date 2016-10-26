@@ -93,7 +93,8 @@
             <Spinner
                 android:id="@+id/spinner_posiciones"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:clickable="false">
             </Spinner>
 
             <TextView
@@ -102,10 +103,11 @@
                 android:text="@string/sexo"
                 android:textSize="20sp"/>
             <RadioGroup
-                android:id="@+id/empleado_sexo"
+                android:id="@+id/edit_radiogroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
 
                 <RadioButton
                     android:id="@+id/empleado_varon"
@@ -128,8 +130,6 @@
             android:text="@string/aceptar"
             android:layout_gravity="center"
             android:layout_marginTop="80dp"/>
-
-
     </LinearLayout>
 
 

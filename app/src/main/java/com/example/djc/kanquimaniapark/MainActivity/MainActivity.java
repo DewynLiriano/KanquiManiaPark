@@ -51,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*if (FirebaseApp.getApps(this).isEmpty()) {
+        if (FirebaseApp.getApps(this).isEmpty()) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        }*/
+        }
 
         logInHelper = new LogInFireBaseHelper();
 

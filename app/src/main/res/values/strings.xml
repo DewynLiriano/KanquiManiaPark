@@ -47,8 +47,15 @@
 
     <string name="crear_empleado">Crear nuevo empleado</string>
     <string name="crear_especial">Crear nuevo especial</string>
-    <string name="username">Username</string>
+    <string name="username">Username:</string>
     <string name="pass">Contraseña</string>
     <string name="posicion">Posicion: </string>
     <string name="admin">Opciones Administrador</string>
+
+    <string name="editar_empleado">Editar</string>
+    <string name="borrar_empleado">Eliminar</string>
+
+    <string name="gestionar_empleados">Manejo de empleado</string>
+    <string name="info_editar">Informaciones del empleado</string>
+    <string name="cambiar_contrasena">Cambiar Contraseña</string>
 </resources>
