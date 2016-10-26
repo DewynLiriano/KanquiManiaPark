@@ -155,6 +155,15 @@ public class GestionEmpleados extends Fragment {
                 sex_alertBuilder().show();
             }
 
+            for (Empleado e : empleados){
+                if (e.get_userName().equals(usernameET.getText().toString())){
+                    cancel = true;
+                    usernameET.setError("El usuario ya existe, elja otro");
+                    focusView = usernameET;
+                }
+            }
+
+
             if (cancel){
                 focusView.requestFocus();
             } else {
@@ -171,6 +180,9 @@ public class GestionEmpleados extends Fragment {
                 }
                 Empleado empleado = new Empleado("", nombre, apellido,
                         sexo, username, pass, posicion);
+
+
+
                 crudEmployee.addEmployee(empleado);
 
                 nombreET.setText("");
