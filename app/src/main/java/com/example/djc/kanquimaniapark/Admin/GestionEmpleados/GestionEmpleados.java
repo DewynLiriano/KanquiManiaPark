@@ -111,8 +111,6 @@ public class GestionEmpleados extends Fragment {
         dRef = FirebaseDatabase.getInstance().getReference(POSICIONES);
         dRef.addChildEventListener(getPos);
 
-        //String posiciones[] = {"Cajero", "Control Atracciones"};
-
         adapterPosiciones = new ArrayAdapter<>(getContext(),
                 R.layout.support_simple_spinner_dropdown_item, posiciones);
         adapterPosiciones.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -121,12 +119,12 @@ public class GestionEmpleados extends Fragment {
 
     public void recyclerViewController(View view){
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerEmpleados);
-        EmployeeRecyclerAdapter adapter = new EmployeeRecyclerAdapter(getContext(), empleados);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
+    //<editor-fold desc="Listener de agregar cliente">
     View.OnClickListener addClientOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -158,11 +156,10 @@ public class GestionEmpleados extends Fragment {
             for (Empleado e : empleados){
                 if (e.get_userName().equals(usernameET.getText().toString())){
                     cancel = true;
-                    usernameET.setError("El usuario ya existe, elja otro");
+                    usernameET.setError(getString(R.string.usuario_existe));
                     focusView = usernameET;
                 }
             }
-
 
             if (cancel){
                 focusView.requestFocus();
@@ -181,10 +178,7 @@ public class GestionEmpleados extends Fragment {
                 Empleado empleado = new Empleado("", nombre, apellido,
                         sexo, username, pass, posicion);
 
-
-
                 crudEmployee.addEmployee(empleado);
-
                 nombreET.setText("");
                 apellidoET.setText("");
                 usernameET.setText("");
@@ -194,6 +188,7 @@ public class GestionEmpleados extends Fragment {
             }
         }
     };
+    //</editor-fold>
 
     public AlertDialog.Builder sex_alertBuilder(){
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getContext())

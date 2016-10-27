@@ -9,16 +9,15 @@ import java.util.ArrayList;
  */
 
 public class Producto {
-    private int _id;
+    private String _id;
     private String _titulo;
-    private double _precio;
-    private ArrayList<Integer> _especiales;
+    private String _precio;
 
-    public int get_id() {
+    public String get_id() {
         return _id;
     }
 
-    public void set_id(int _id) {
+    public void set_id(String _id) {
         this._id = _id;
     }
 
@@ -30,27 +29,18 @@ public class Producto {
         this._titulo = _nombre;
     }
 
-    public double get_precio() {
+    public String get_precio() {
         return _precio;
     }
 
-    public void set_precio(double _precio) {
+    public void set_precio(String _precio) {
         this._precio = _precio;
     }
 
-    public ArrayList<Integer> get_especiales() {
-        return _especiales;
-    }
-
-    public void set_especiales(ArrayList<Integer> especiales) {
-        this._especiales = especiales;
-    }
-
-    public Producto(int id, String nombre, double precio, ArrayList<Integer> especiales) {
+    public Producto(String id, String nombre, String precio) {
         set_id(id);
         set_titulo(nombre);
         set_precio(precio);
-        set_especiales(especiales);
     }
 
     public Producto(){}

@@ -1,4 +1,4 @@
-package com.example.djc.kanquimaniapark.Admin.GestionEmpleados;
+package com.example.djc.kanquimaniapark.Admin.GestionProductos;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -8,16 +8,16 @@ import com.example.djc.kanquimaniapark.Admin.ItemClickListener;
 import com.example.djc.kanquimaniapark.R;
 
 /**
- * Created by dewyn on 10/25/2016.
+ * Created by dewyn on 10/26/2016.
  */
-public class EmpViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-    TextView tv1, tv2;
-    ItemClickListener itemClickListener;
+public class ProductsVH extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public TextView tPrecio, tTitulo;
+    public ItemClickListener itemClickListener;
 
-    EmpViewHolder(View v){
+    ProductsVH(View v) {
         super(v);
-        tv1 = (TextView)v.findViewById(R.id.list_name);
-        tv2 = (TextView)v.findViewById(R.id.list_posicion);
+        tTitulo = (TextView)v.findViewById(R.id.product_name);
+        tPrecio = (TextView)v.findViewById(R.id.product_price);
         v.setOnClickListener(this);
     }
 

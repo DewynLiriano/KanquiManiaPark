@@ -20,8 +20,8 @@ public class Boleta extends Producto {
 
     public Boleta(int _tiempo) {}
 
-    public Boleta(int id, String nombre, double precio, int _tiempo, ArrayList<Integer> especiales) {
-        super(id, nombre, precio, especiales);
+    public Boleta(String id, String nombre, String precio, int _tiempo) {
+        super(id, nombre, precio);
         set_tiempo(_tiempo);
     }
 }

@@ -2,28 +2,21 @@ package com.example.djc.kanquimaniapark.Admin.GestionEmpleados;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
-import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.djc.kanquimaniapark.Admin.SimpleTabsActivity;
+import com.example.djc.kanquimaniapark.Admin.ItemClickListener;
 import com.example.djc.kanquimaniapark.Clases.Empleado;
-import com.example.djc.kanquimaniapark.MainActivity.MainActivity;
 import com.example.djc.kanquimaniapark.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -31,14 +24,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
-public class EmployeeRecyclerAdapter extends  RecyclerView.Adapter<EmpViewHolder> {
+public class EmployeeRecyclerAdapter extends RecyclerView.Adapter<EmpViewHolder> {
 
     public String POSICIONES = "Posiciones";
 
@@ -60,7 +49,7 @@ public class EmployeeRecyclerAdapter extends  RecyclerView.Adapter<EmpViewHolder
 
     @Override
     public EmpViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.empleados_list, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_empleados_list, parent, false);
         dRef = FirebaseDatabase.getInstance().getReference(POSICIONES);
         dRef.keepSynced(true);
         return new EmpViewHolder(v);
@@ -75,7 +64,7 @@ public class EmployeeRecyclerAdapter extends  RecyclerView.Adapter<EmpViewHolder
             @Override
             public void OnItemClickListener(View v, final int pos) {
                 dialog = new Dialog(context);
-                dialog.setContentView(R.layout.edit_empleado);
+                dialog.setContentView(R.layout.edit_empleado_dialog);
                 dialog.setTitle(context.getString(R.string.gestionar_empleados));
 
                 crudEmployee = new CRUDEmployeeFireBHelper();
@@ -193,7 +182,7 @@ public class EmployeeRecyclerAdapter extends  RecyclerView.Adapter<EmpViewHolder
                                     sexo, username, pass, posicion);
                             crudEmployee.updateEmployee(empleado);
                             dialog.dismiss();
-                            Toast.makeText(context, "Cambios realizados", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, context.getString(R.string.cambio_realizado), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -229,7 +218,6 @@ public class EmployeeRecyclerAdapter extends  RecyclerView.Adapter<EmpViewHolder
 
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
-            //posicionesKeys.remove(dataSnapshot.getKey());
             posiciones.remove(dataSnapshot.getValue());
             spinnerAdapter.notifyDataSetChanged();
         }

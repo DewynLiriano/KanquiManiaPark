@@ -30,7 +30,6 @@
     <string name="precio">Precio:</string>
     <string name="titulo">Titulo:</string>
 
-    <string name="crear_producto">Crear nuevo producto</string>
     <string name="set_colores">Identidficar boletas</string>
 
     <string name="login_title">Inicio de Sesion</string>
@@ -47,6 +46,8 @@
 
     <string name="crear_empleado">Crear nuevo empleado</string>
     <string name="crear_especial">Crear nuevo especial</string>
+    <string name="crear_producto">Crear nuevo producto</string>
+
     <string name="username">Username:</string>
     <string name="pass">Contraseña</string>
     <string name="posicion">Posicion: </string>
@@ -57,5 +58,9 @@
 
     <string name="gestionar_empleados">Manejo de empleado</string>
     <string name="info_editar">Informaciones del empleado</string>
+    <string name="info_producto">Informaciones del producto</string>
     <string name="cambiar_contrasena">Cambiar Contraseña</string>
+    <string name="usuario_existe">Este username ya existe, elija otro.</string>
+
+    <string name="cambio_realizado">Los cambios se han realizados</string>
 </resources>

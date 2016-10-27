@@ -25,7 +25,7 @@ public class ClientRecyclerAdapter extends  RecyclerView.Adapter<ClientRecyclerV
 
     @Override
     public ClientRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = inflater.inflate(R.layout.client_list, parent, false);
+        View v = inflater.inflate(R.layout.card_client_list, parent, false);
         return new ClientRecyclerViewHolder(v);
     }
 

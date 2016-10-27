@@ -1,4 +1,4 @@
-package com.example.djc.kanquimaniapark.Admin.GestionEmpleados;
+package com.example.djc.kanquimaniapark.Admin;
 
 import android.view.View;
 

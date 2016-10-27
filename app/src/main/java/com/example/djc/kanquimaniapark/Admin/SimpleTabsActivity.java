@@ -10,10 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.example.djc.kanquimaniapark.Admin.fragments.GenerarReporte;
-import com.example.djc.kanquimaniapark.Admin.fragments.GestionAtracciones;
+import com.example.djc.kanquimaniapark.Admin.GestionAtracciones.GestionAtracciones;
 import com.example.djc.kanquimaniapark.Admin.GestionEmpleados.GestionEmpleados;
 import com.example.djc.kanquimaniapark.Admin.fragments.GestionEspeciales;
-import com.example.djc.kanquimaniapark.Admin.fragments.GestionProductos;
+import com.example.djc.kanquimaniapark.Admin.GestionProductos.GestionProductos;
 import com.example.djc.kanquimaniapark.R;
 
 import java.util.ArrayList;
