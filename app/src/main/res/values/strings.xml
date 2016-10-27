@@ -13,14 +13,14 @@
     <string name="hembra">Mujer</string>
     <string name="registrar">Registrar Cliente</string>
 
-    <string name="fechaInvalida">Fecha no valida.</string>
+    <string name="fechaInvalida">Fecha no válida.</string>
     <string name="correoInvalido">Correo no valido.</string>
     <string name="clienteAgregado">Cliente Agregado</string>
     <string name="producto_agregado">Producto Agregado</string>
     <string name="sexo_invalido">Debe seleccionar un sexo</string>
     <string name="foto_invalido">La foto del cliente es necesaria.</string>
-    <string name="numeroInvalido">Numero Invalido</string>
-    <string name="vacio">Campo no puede estar vacio</string>
+    <string name="numeroInvalido">Número Invalido</string>
+    <string name="vacio">Este campo no puede estar vacio</string>
     <string name="si">Si</string>
     <string name="no">No</string>
     <string name="ok">OK</string>
@@ -32,12 +32,11 @@
 
     <string name="set_colores">Identidficar boletas</string>
 
-    <string name="login_title">Inicio de Sesion</string>
-    <string name="login_info">Debe iniciar sesion para continuar</string>
+    <string name="login_title">Inicio de Sesión</string>
+    <string name="login_info">Debe iniciar sesión para continuar</string>
     <string name="cancelar">Cancelar</string>
-    <string name="login">Iniciar de Sesion</string>
 
-    <string name="numero">Numero de telefono</string>
+    <string name="numero">Número de teléfono</string>
     <string name="gestion_empleados">Gestionar Empleados</string>
     <string name="gestion_atracciones">Gestionar Atracciones</string>
     <string name="gestion_especiales">Gestionar Especiales</string>
@@ -47,11 +46,12 @@
     <string name="crear_empleado">Crear nuevo empleado</string>
     <string name="crear_especial">Crear nuevo especial</string>
     <string name="crear_producto">Crear nuevo producto</string>
+    <string name="crear_atraccion">Crear nueva atracción</string>
 
     <string name="username">Username:</string>
     <string name="pass">Contraseña</string>
     <string name="posicion">Posicion: </string>
-    <string name="admin">Opciones Administrador</string>
+    <string name="admin">Opciones  del administrador</string>
 
     <string name="editar_empleado">Editar</string>
     <string name="borrar_empleado">Eliminar</string>
@@ -59,8 +59,10 @@
     <string name="gestionar_empleados">Manejo de empleado</string>
     <string name="info_editar">Informaciones del empleado</string>
     <string name="info_producto">Informaciones del producto</string>
+    <string name="info_atracciones">Informaciones de la atracción</string>
     <string name="cambiar_contrasena">Cambiar Contraseña</string>
     <string name="usuario_existe">Este username ya existe, elija otro.</string>
-
+    <string name="nombre_existe">Este producto ya existe, elija otro.</string>
+    <string name="time">Tiempo</string>
     <string name="cambio_realizado">Los cambios se han realizados</string>
 </resources>

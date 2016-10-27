@@ -53,16 +53,21 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter <ProductsVH> {
                 dialog.setContentView(R.layout.edit_product_dialog);
                 dialog.setTitle("Manejo de productos");
 
+                //<editor-fold desc="Initialize Widgets">
                 crudProducts = new CRUDProductsFireBaseHelper();
                 final EditText tituloET = (EditText)dialog.findViewById(R.id.show_prodname);
                 final EditText precioET = (EditText)dialog.findViewById(R.id.show_prodprice);
                 final Button editButton = (Button)dialog.findViewById(R.id.edit_product);
                 final Button deleteButton = (Button)dialog.findViewById(R.id.delete_product);
                 final Button acceptButton = (Button)dialog.findViewById(R.id.aceptar_product);
+                //</editor-fold>
 
+                //<editor-fold desc="Seeting Values">
                 tituloET.setText(productos.get(position).get_titulo());
                 precioET.setText(productos.get(position).get_precio());
+                //</editor-fold>
 
+                //<editor-fold desc="Edit Button Listener">
                 editButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -72,7 +77,9 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter <ProductsVH> {
                         acceptButton.setVisibility(View.VISIBLE);
                     }
                 });
+                //</editor-fold>
 
+                //<editor-fold desc="Delete Button Listener">
                 deleteButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -80,7 +87,9 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter <ProductsVH> {
                         dialog.dismiss();
                     }
                 });
+                //</editor-fold>
 
+                //<editor-fold desc="Accept Button Listener">
                 acceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -98,7 +107,7 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter <ProductsVH> {
                         }
 
                         for (Producto p : productos){
-                            if (!p.equals(productos.get(position))){
+                            if (!p.get_id().equals(productos.get(position).get_id())){
                                 if (p.get_titulo().equals(tituloET.getText().toString())){
                                     cancel = true;
                                     tituloET.setError(context.getString(R.string.usuario_existe));
@@ -120,6 +129,7 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter <ProductsVH> {
                         }
                     }
                 });
+                //</editor-fold>
                 dialog.show();
             }
         });

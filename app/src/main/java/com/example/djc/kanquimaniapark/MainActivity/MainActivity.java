@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton(getString(R.string.cancelar), null);
 
 
-        builder.setPositiveButton(getString(R.string.login), new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.login_title), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 final EditText usuarioET = (EditText)view.findViewById(R.id.login_name);

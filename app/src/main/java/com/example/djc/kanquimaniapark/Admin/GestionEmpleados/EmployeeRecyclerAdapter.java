@@ -96,6 +96,7 @@ public class EmployeeRecyclerAdapter extends RecyclerView.Adapter<EmpViewHolder>
                 passTV.setText(list.get(position).get_contrasena());
                 posicionTV.setText(list.get(position).get_tipo());
                 //</editor-fold>
+
                 //<editor-fold desc="FILTRANDO SEXO">
                 switch (list.get(position).get_sexo()){
                     case "M":

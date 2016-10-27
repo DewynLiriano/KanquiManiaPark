@@ -22,31 +22,32 @@
             android:text="@string/crear_producto"
             android:textSize="30sp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/titulo"
-            android:textSize="30sp"
-            android:layout_marginTop="10dp"/>
-
-        <EditText
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/nombre_producto"
-            android:inputType="text"/>
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/nombre_producto"
+                android:inputType="text"
+                android:hint="@string/titulo"
+                android:textSize="25sp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/precio"
-            android:textSize="30sp"
-            />
+        </android.support.design.widget.TextInputLayout>
 
-        <EditText
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:id="@+id/precio_producto"/>
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:id="@+id/precio_producto"
+                android:hint="@string/precio"
+                android:textSize="25sp"/>
+
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:layout_width="wrap_content"
