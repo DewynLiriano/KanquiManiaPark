@@ -65,4 +65,12 @@
     <string name="nombre_existe">Este producto ya existe, elija otro.</string>
     <string name="time">Tiempo</string>
     <string name="cambio_realizado">Los cambios se han realizados</string>
+    <string name="espcial_porciento">Porciento a aplicar:</string>
+
+    <string name="atracciones">Atracciones</string>
+    <string name="productos">Productos</string>
+    <string name="tipo_especial">Tipo: </string>
+    <string name="agregar">Agregar</string>
+    <string name="fecha_inicio">Fecha de inicio:</string>
+    <string name="fecha_fin">Fecha fin:</string>
 </resources>

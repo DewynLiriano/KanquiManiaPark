@@ -2,11 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.djc.kanquimaniapark.Admin.fragments.GestionEspeciales"
+    tools:context="com.example.djc.kanquimaniapark.Admin.GestionEspeciales.GestionEspeciales"
     android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="300dp"
+        android:layout_width="200dp"
         android:layout_height="match_parent">
         <include layout="@layout/content_especiales"/>
     </LinearLayout>
@@ -22,13 +22,14 @@
             android:text="@string/crear_especial"
             android:textSize="30sp"
             />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
+                android:layout_width="400dp"
                 android:layout_height="wrap_content">
                 <EditText
                     android:id="@+id/especial_nombre"
@@ -39,90 +40,138 @@
                     android:layout_marginTop="10dp"/>
             </android.support.design.widget.TextInputLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
-
             <android.support.design.widget.TextInputLayout
                 android:layout_width="300dp"
                 android:layout_height="wrap_content">
                 <EditText
-                    android:id="@+id/empleado_username"
+                    android:id="@+id/especial_porciento"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="@string/username"
-                    android:layout_marginTop="10dp"/>
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <EditText
-                    android:id="@+id/empleado_pass"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="@string/pass"
-                    android:inputType="textPassword"/>
+                    android:hint="@string/espcial_porciento"
+                    android:layout_marginTop="10dp"
+                    android:inputType="number"/>
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
-
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/posicion"
-                android:textSize="20sp"/>
+                android:text="@string/tipo_especial"
+                android:textSize="25sp"/>
 
-            <Spinner
-                android:id="@+id/spinner_posiciones"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Spinner>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sexo"
-                android:textSize="20sp"/>
             <RadioGroup
-                android:id="@+id/empleado_sexo"
+                android:layout_marginStart="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/empleado_varon"
+                    android:id="@+id/especial_atracciones_rb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/varon"/>
+                    android:text="@string/atracciones"/>
 
                 <RadioButton
-                    android:id="@+id/empleado_hembra"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/hembra"/>
+                    android:text="@string/productos"
+                    android:id="@+id/especial_productos_rb"/>
+
             </RadioGroup>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/empleado_crear"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/aceptar"
-            android:layout_gravity="center"
-            android:layout_marginTop="80dp"/>
+            android:orientation="horizontal">
 
+
+            <Spinner
+                android:id="@+id/tipo_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/add_product_especiales"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/agregar"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ListView
+                        android:id="@+id/productos_agregados"
+                        android:layout_width="200dp"
+                        android:layout_height="match_parent"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:id="@+id/fecha_inicio_especial"
+                                android:layout_width="250dp"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/fecha_inicio"/>
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:id="@+id/fecha_fin_especial"
+                                android:layout_width="250dp"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/fecha_fin"/>
+
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@id/aceptar_atraction"
+                        android:text="@string/aceptar"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="30dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
-
 
 </LinearLayout>

@@ -24,7 +24,7 @@ public class AtractionsVH extends RecyclerView.ViewHolder implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        itemClickListener.OnItemClickListener(v, getLayoutPosition());
+        this.itemClickListener.OnItemClickListener(v, getLayoutPosition());
     }
 
     public void setItemClickListener(ItemClickListener itemClickListener){
