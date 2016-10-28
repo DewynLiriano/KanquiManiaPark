@@ -44,8 +44,7 @@ public class AtractionsRecyclerAdapter extends RecyclerView.Adapter<AtractionsVH
     @Override
     public void onBindViewHolder(AtractionsVH holder, final int position) {
         holder.nombreET.setText(list.get(position).get_titulo());
-        final String precio = "RD$ " + list.get(position).get_precio();
-        holder.precioET.setText(precio);
+        holder.precioET.setText(list.get(position).get_precio());
 
         holder.setItemClickListener(new ItemClickListener() {
             @Override
@@ -66,9 +65,8 @@ public class AtractionsRecyclerAdapter extends RecyclerView.Adapter<AtractionsVH
                 //</editor-fold>
 
                 tituloET.setText(list.get(position).get_titulo());
-                String price = "RD$ " + list.get(position).get_precio();
-                precioET.setText(price);
-                String time = list.get(position).get_tiempo() + " minutos";
+                precioET.setText(list.get(position).get_precio());
+                String time = list.get(position).get_tiempo();
                 tiempoET.setText(time);
 
                 editButton.setOnClickListener(new View.OnClickListener() {
@@ -132,11 +130,8 @@ public class AtractionsRecyclerAdapter extends RecyclerView.Adapter<AtractionsVH
                             dialog.dismiss();
                             Toast.makeText(context, context.getString(R.string.cambio_realizado), Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 });
-
-
                 dialog.show();
             }
         });

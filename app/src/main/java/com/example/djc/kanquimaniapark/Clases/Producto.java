@@ -44,4 +44,10 @@ public class Producto {
     }
 
     public Producto(){}
+
+    @Override
+    public String toString() {
+        return this.get_titulo();
+    }
+
 }

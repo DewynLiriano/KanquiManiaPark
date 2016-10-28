@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     private RecyclerView recyclerView;
 
-    static boolean calledAlready = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

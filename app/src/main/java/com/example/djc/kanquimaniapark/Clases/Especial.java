@@ -10,18 +10,18 @@ import java.util.List;
  */
 
 public class Especial {
-    private int _id;
+    private String _id;
     private String _nombre;
-    private float _porciento;
+    private String _porciento;
     private ArrayList<Producto> _productos;
-    private Date _fechaInicio;
-    private Date _fechaFin;
+    private String _fechaInicio;
+    private String _fechaFin;
 
-    public int get_id() {
+    public String get_id() {
         return _id;
     }
 
-    public void set_id(int _id) {
+    public void set_id(String _id) {
         this._id = _id;
     }
 
@@ -33,11 +33,11 @@ public class Especial {
         this._nombre = _nombre;
     }
 
-    public float get_porciento() {
+    public String get_porciento() {
         return _porciento;
     }
 
-    public void set_porciento(float _porciento) {
+    public void set_porciento(String _porciento) {
         this._porciento = _porciento;
     }
 
@@ -49,24 +49,25 @@ public class Especial {
         this._productos = _productos;
     }
 
-    public Date get_fechaInicio() {
+    public String get_fechaInicio() {
         return _fechaInicio;
     }
 
-    public void set_fechaInicio(Date _fechaInicio) {
+    public void set_fechaInicio(String _fechaInicio) {
         this._fechaInicio = _fechaInicio;
     }
 
-    public Date get_fechaFin() {
+    public String get_fechaFin() {
         return _fechaFin;
     }
 
-    public void set_fechaFin(Date _fechaFin) {
+    public void set_fechaFin(String _fechaFin) {
         this._fechaFin = _fechaFin;
     }
 
 
-    public Especial(int _id, String _nombre, float _porciento, ArrayList<Producto> _productos, Date _fechaInicio, Date _fechaFin) {
+    public Especial(String _id, String _nombre, String _porciento, ArrayList<Producto> _productos,
+                    String _fechaInicio, String _fechaFin) {
         set_id(_id);
         set_nombre(_nombre);
         set_porciento(_porciento);

@@ -22,4 +22,5 @@ public class Atraccion extends Producto {
     }
 
     public Atraccion(){}
+
 }

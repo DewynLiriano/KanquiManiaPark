@@ -27,7 +27,7 @@
     <string name="aceptar">Aceptar</string>
     <string name="error">ERROR</string>
 
-    <string name="precio">Precio:</string>
+    <string name="precio">Precio (RD$):</string>
     <string name="titulo">Titulo:</string>
 
     <string name="set_colores">Identidficar boletas</string>
@@ -60,10 +60,11 @@
     <string name="info_editar">Informaciones del empleado</string>
     <string name="info_producto">Informaciones del producto</string>
     <string name="info_atracciones">Informaciones de la atracción</string>
+    <string name="info_especiales">Informaciones del especial</string>
     <string name="cambiar_contrasena">Cambiar Contraseña</string>
     <string name="usuario_existe">Este username ya existe, elija otro.</string>
-    <string name="nombre_existe">Este producto ya existe, elija otro.</string>
-    <string name="time">Tiempo</string>
+    <string name="nombre_existe">Este producto ya existe.</string>
+    <string name="time">Tiempo (Minutos): </string>
     <string name="cambio_realizado">Los cambios se han realizados</string>
     <string name="espcial_porciento">Porciento a aplicar:</string>
 
@@ -73,4 +74,5 @@
     <string name="agregar">Agregar</string>
     <string name="fecha_inicio">Fecha de inicio:</string>
     <string name="fecha_fin">Fecha fin:</string>
+    <string name="productos_aplicados">Productos afectados</string>
 </resources>
