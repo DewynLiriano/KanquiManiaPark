@@ -97,7 +97,6 @@ public class GestionEspeciales extends Fragment {
         adapter = new SpecialsRecyclerAdapter(getContext(), especiales);
         recyclerViewController(view);
         initializeUtils(view);
-        spinnerCotroller();
         // Inflate the layout for this fragment
         return view;
     }
@@ -114,36 +113,14 @@ public class GestionEspeciales extends Fragment {
         porcientoET = (EditText)v.findViewById(R.id.especial_porciento);
         fechaInicioET = (EditText)v.findViewById(R.id.fecha_inicio_especial);
         fechaFinET = (EditText)v.findViewById(R.id.fecha_fin_especial);
-        listView = (ListView)v.findViewById(R.id.productos_agregados);
-        radios = (RadioGroup)v.findViewById(R.id.radiogroup);
-        atrRB = (RadioButton)v.findViewById(R.id.especial_atracciones_rb);
-        prodRB = (RadioButton)v.findViewById(R.id.especial_productos_rb);
-        addProduct = (Button)v.findViewById(R.id.add_product_especiales);
         acceptEspecial = (Button)v.findViewById(R.id.aceptar_especial);
-        spinner = (Spinner)v.findViewById(R.id.tipo_spinner);
         atrAdapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_dropdown_item, atracciones);
+                android.R.layout.simple_list_item_1, atracciones);
 
         prodAdapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_dropdown_item, productos);
+                android.R.layout.simple_list_item_1, productos);
     }
 
-    private void spinnerCotroller() {
-
-        atrRB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                spinner.setAdapter(atrAdapter);
-            }
-        });
-
-        prodRB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                spinner.setAdapter(prodAdapter);
-            }
-        });
-    }
 
     private ValueEventListener getAtr = new ValueEventListener() {
         @Override
