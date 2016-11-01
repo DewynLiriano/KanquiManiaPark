@@ -9,11 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.djc.kanquimaniapark.Clases.Atraccion;
-import com.example.djc.kanquimaniapark.Clases.Producto;
 import com.example.djc.kanquimaniapark.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,7 +30,6 @@ import java.util.Map;
 
 import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
-
 public class GestionAtracciones extends Fragment {
 
     private String ATRACCIONES = "Atracciones";
@@ -43,13 +41,12 @@ public class GestionAtracciones extends Fragment {
     private CRUDAtractionsFireBaseHelper crudAtractions;
     private RecyclerView recyclerView;
     private EditText tituloET, precioET, tiempoET;
+    private CheckBox checkIlimitado;
     private AtractionsRecyclerAdapter adapter;
     private DatabaseReference dRef;
     private List<Atraccion> atracciones;
     private Button crearAtractionButton;
     private View focusView = null;
-
-
 
     public GestionAtracciones() {
         // Required empty public constructor
@@ -72,6 +69,7 @@ public class GestionAtracciones extends Fragment {
         adapter = new AtractionsRecyclerAdapter(getContext(), atracciones);
         recyclerViewController(view);
         initializeUtils(view);
+        checkIlimitado.setOnClickListener(checktime);
         crearAtractionButton.setOnClickListener(addAtraction);
         dRef.addValueEventListener(getAtr);
 
@@ -83,6 +81,7 @@ public class GestionAtracciones extends Fragment {
         tituloET = (EditText)view.findViewById(R.id.nombre_atraccion);
         precioET = (EditText)view.findViewById(R.id.precio_atraccion);
         tiempoET = (EditText)view.findViewById(R.id.tiempo_atraccion);
+        checkIlimitado = (CheckBox)view.findViewById(R.id.check_ilimitado_atraccion);
         crearAtractionButton = (Button)view.findViewById(R.id.crear_atraccion_button);
     }
 
@@ -107,10 +106,12 @@ public class GestionAtracciones extends Fragment {
                 cancel = true;
                 precioET.setError(getString(R.string.vacio));
                 focusView = precioET;
-            } else if (tiempoET.getText().toString().equals("")){
-                cancel = true;
-                tiempoET.setError(getString(R.string.vacio));
-                focusView = tiempoET;
+            } else if (!checkIlimitado.isChecked()){
+                if (tiempoET.getText().toString().equals("")){
+                    cancel = true;
+                    tiempoET.setError(getString(R.string.vacio));
+                    focusView = tiempoET;
+                }
             }
 
             for (Atraccion a : atracciones){
@@ -130,10 +131,10 @@ public class GestionAtracciones extends Fragment {
 
                 Atraccion a = new Atraccion("", nombre, precio, tiempo);
                 crudAtractions.addAtraction(a);
-
                 tituloET.setText("");
                 precioET.setText("");
                 tiempoET.setText("");
+                checkIlimitado.setChecked(false);
                 focusView = tituloET;
                 focusView.requestFocus();
             }
@@ -179,4 +180,20 @@ public class GestionAtracciones extends Fragment {
             }
         });
     }
+
+    private View.OnClickListener checktime = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (checkIlimitado.isChecked()){
+                tiempoET.setClickable(false);
+                tiempoET.setEnabled(false);
+                tiempoET.setText(getText(R.string.ilimitado));
+            } else {
+                tiempoET.setEnabled(true);
+                tiempoET.setClickable(true);
+                tiempoET.setText("");
+            }
+        }
+    };
+
 }

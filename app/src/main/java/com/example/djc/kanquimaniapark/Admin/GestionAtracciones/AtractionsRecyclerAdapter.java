@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -62,7 +63,23 @@ public class AtractionsRecyclerAdapter extends RecyclerView.Adapter<AtractionsVH
                 final Button editButton = (Button)dialog.findViewById(R.id.edit_atraction);
                 final Button deleteButton = (Button)dialog.findViewById(R.id.delete_atraction);
                 final Button acceptButton = (Button)dialog.findViewById(R.id.aceptar_atraction);
+                final CheckBox checkIlimitado = (CheckBox)dialog.findViewById(R.id.edit_check_ilimitado_atraccion);
                 //</editor-fold>
+
+                checkIlimitado.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (checkIlimitado.isChecked()){
+                            tiempoET.setClickable(false);
+                            tiempoET.setEnabled(false);
+                            tiempoET.setText(context.getText(R.string.ilimitado));
+                        } else {
+                            tiempoET.setEnabled(true);
+                            tiempoET.setClickable(true);
+                            tiempoET.setText("");
+                        }
+                    }
+                });
 
                 tituloET.setText(list.get(position).get_titulo());
                 precioET.setText(list.get(position).get_precio());
@@ -77,6 +94,7 @@ public class AtractionsRecyclerAdapter extends RecyclerView.Adapter<AtractionsVH
                         tiempoET.setEnabled(true);
                         editButton.setVisibility(View.GONE);
                         acceptButton.setVisibility(View.VISIBLE);
+                        checkIlimitado.setVisibility(View.VISIBLE);
                     }
                 });
 
@@ -102,10 +120,12 @@ public class AtractionsRecyclerAdapter extends RecyclerView.Adapter<AtractionsVH
                             cancel = true;
                             precioET.setError(context.getString(R.string.vacio));
                             focusView = precioET;
-                        } else if (tiempoET.getText().toString().equals("")){
-                            cancel = true;
-                            tiempoET.setError(context.getString(R.string.vacio));
-                            focusView = tiempoET;
+                        } else if(!checkIlimitado.isChecked()) {
+                            if (tiempoET.getText().toString().equals("")) {
+                                cancel = true;
+                                tiempoET.setError(context.getString(R.string.vacio));
+                                focusView = tiempoET;
+                            }
                         }
 
                         for (Atraccion a : list){

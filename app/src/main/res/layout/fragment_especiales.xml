@@ -6,7 +6,7 @@
     android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="300dp"
+        android:layout_width="250dp"
         android:layout_height="match_parent"
         android:orientation="vertical">
         <include layout="@layout/content_especiales"/>
@@ -14,7 +14,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="700dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -31,7 +31,7 @@
             android:orientation="horizontal">
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="350dp"
+                android:layout_width="400dp"
                 android:layout_height="wrap_content">
                 <EditText
                     android:id="@+id/especial_nombre"
@@ -43,7 +43,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="350dp"
+                android:layout_width="400dp"
                 android:layout_height="wrap_content">
                 <EditText
                     android:maxLines="1"
@@ -56,7 +56,6 @@
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -68,7 +67,7 @@
                 android:orientation="horizontal">
 
                 <android.support.design.widget.TextInputLayout
-                    android:layout_width="350dp"
+                    android:layout_width="400dp"
                     android:layout_height="wrap_content">
 
                     <EditText
@@ -81,7 +80,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:layout_width="350dp"
+                    android:layout_width="400dp"
                     android:layout_height="wrap_content">
                      <EditText
                          android:maxLines="1"
@@ -93,6 +92,58 @@
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
+
+            <LinearLayout
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="350dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/productos"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:layout_gravity="center"/>
+
+                    <ListView
+                        android:id="@+id/especial_prod_lista"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:choiceMode="multipleChoice"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginStart="70dp"
+                    android:layout_gravity="end"
+                    android:layout_width="300dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/atracciones"
+                    android:textSize="30sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"/>
+
+                    <ListView
+                        android:id="@+id/especial_atr_lista"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:choiceMode="multipleChoice"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -100,40 +151,8 @@
                 android:text="@string/aceptar"
                 android:layout_gravity="center"
                 android:layout_marginTop="30dp"/>
+
         </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/productos"
-            android:textSize="30sp"
-            android:textColor="@color/black"
-            android:layout_gravity="center"/>
-
-        <ListView
-            android:id="@+id/prod_lista"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/atracciones"
-            android:textSize="30sp"
-            android:textColor="@color/black"
-            android:layout_gravity="center"/>
-
-        <ListView
-            android:id="@+id/atr_lista"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
 
     </LinearLayout>
 

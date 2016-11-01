@@ -1,20 +1,23 @@
 package com.example.djc.kanquimaniapark.Admin.GestionEspeciales;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.djc.kanquimaniapark.Clases.Atraccion;
 import com.example.djc.kanquimaniapark.Clases.Especial;
@@ -54,18 +57,16 @@ public class GestionEspeciales extends Fragment {
     private SpecialsRecyclerAdapter adapter;
     private ArrayAdapter<Atraccion> atrAdapter;
     private ArrayAdapter<Producto> prodAdapter;
+
     private DatabaseReference dRef, atrRef, prodRef;
     private List<Especial> especiales;
-    private List<Atraccion> atracciones;
-    private List<Producto> productos;
+    private List<Atraccion> atracciones, atr_seleccionadas;
+    private List<Producto> productos, prod_seleccionados;
     private View focusView;
 
     private EditText nombreET, porcientoET, fechaInicioET, fechaFinET;
-    private ListView listView;
-    private RadioGroup radios;
-    private RadioButton atrRB, prodRB;
-    private Button addProduct, acceptEspecial;
-    private Spinner spinner;
+    private ListView listProd, listAtr;
+    private Button acceptEspecial;
 
 
     public GestionEspeciales() {
@@ -85,6 +86,8 @@ public class GestionEspeciales extends Fragment {
         especiales = new ArrayList<>();
         atracciones = new ArrayList<>();
         productos = new ArrayList<>();
+        atr_seleccionadas = new ArrayList<>();
+        prod_seleccionados = new ArrayList<>();
         dRef = FirebaseDatabase.getInstance().getReference(ESPECIALES);
         dRef.keepSynced(true);
         atrRef = FirebaseDatabase.getInstance().getReference(ATRACCIONES);
@@ -97,6 +100,10 @@ public class GestionEspeciales extends Fragment {
         adapter = new SpecialsRecyclerAdapter(getContext(), especiales);
         recyclerViewController(view);
         initializeUtils(view);
+        listProd.setOnItemClickListener(launchProdDialog);
+        listAtr.setOnItemClickListener(launchAtrDialog);
+        acceptEspecial.setOnClickListener(addEspecial);
+
         // Inflate the layout for this fragment
         return view;
     }
@@ -114,14 +121,87 @@ public class GestionEspeciales extends Fragment {
         fechaInicioET = (EditText)v.findViewById(R.id.fecha_inicio_especial);
         fechaFinET = (EditText)v.findViewById(R.id.fecha_fin_especial);
         acceptEspecial = (Button)v.findViewById(R.id.aceptar_especial);
+        listProd = (ListView)v.findViewById(R.id.especial_prod_lista);
+        listAtr = (ListView)v.findViewById(R.id.especial_atr_lista);
+
+
         atrAdapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_list_item_1, atracciones);
+                android.R.layout.simple_list_item_multiple_choice, atracciones);
 
         prodAdapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_list_item_1, productos);
+                android.R.layout.simple_list_item_multiple_choice, productos);
+
+        listProd.setAdapter(prodAdapter);
+        listAtr.setAdapter(atrAdapter);
+
     }
 
+    //<editor-fold desc="OnItemClickListeners">
+    AdapterView.OnItemClickListener launchProdDialog = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, final int indice, long l) {
+            CheckedTextView checkedTextView = ((CheckedTextView)view);
+            checkedTextView.setChecked(!checkedTextView.isChecked());
 
+            if (!listProd.isItemChecked(indice)){
+                listProd.setItemChecked(indice, true);
+            } else{
+                listProd.setItemChecked(indice, false);
+            }
+
+        }
+    };
+
+    AdapterView.OnItemClickListener launchAtrDialog = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, final int indice, long l) {
+            CheckedTextView checkedTextView = ((CheckedTextView)view);
+            checkedTextView.setChecked(!checkedTextView.isChecked());
+        }
+    };
+    //</editor-fold>
+
+    View.OnClickListener addEspecial = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(view.getContext());
+            dialog.setTitle(getString(R.string.atencion));
+            dialog.setMessage(getString(R.string.desea_agregar_atraccion_especial));
+
+            dialog.setPositiveButton(getString(R.string.aceptar), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    SparseBooleanArray clickedAtrPositions = listAtr.getCheckedItemPositions();
+                    SparseBooleanArray clickedProdPositions = listProd.getCheckedItemPositions();
+
+                    for (int j=0; j < listProd.getCount(); j++){
+                        if (clickedProdPositions.get(j)){
+                            prod_seleccionados.add(productos.get(j));
+                        } else {
+                            Toast.makeText(getContext(), "false", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                   /* for (int j=0;j<atracciones.size();j++){
+                        if (clickedAtrPositions.valueAt(j)){
+                            atr_seleccionadas.add(atracciones.get(j));
+                        }
+                    }*/
+
+                    /*if (clickedProdPositions != null){
+                        Toast.makeText(getContext(), clickedProdPositions.size(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Null", Toast.LENGTH_SHORT).show();
+                    }*/
+                }
+            });
+
+            dialog.setNegativeButton(getString(R.string.cancelar), null);
+            dialog.show();
+        }
+    };
+
+    //<editor-fold desc="Value event listeners">
     private ValueEventListener getAtr = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -142,8 +222,8 @@ public class GestionEspeciales extends Fragment {
                     }
                 }
             }
-            //sortAtractions();
             atrAdapter.notifyDataSetChanged();
+            listAtr.setAdapter(atrAdapter);
         }
 
         @Override
@@ -171,8 +251,8 @@ public class GestionEspeciales extends Fragment {
                     }
                 }
             }
-            //sortProducts();
             prodAdapter.notifyDataSetChanged();
+            listProd.setAdapter(prodAdapter);
         }
 
         @Override
@@ -180,6 +260,7 @@ public class GestionEspeciales extends Fragment {
             Log.e(TAG, "Error occurred: " + databaseError.getMessage());
         }
     };
+    //</editor-fold>
 
 
 }

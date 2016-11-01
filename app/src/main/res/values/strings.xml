@@ -75,4 +75,16 @@
     <string name="fecha_inicio">Fecha de inicio:</string>
     <string name="fecha_fin">Fecha fin:</string>
     <string name="productos_aplicados">Productos afectados</string>
+
+    <string name="ilimitado">Ilimitado</string>
+    <string name="atencion">ATENCION!</string>
+
+    <string name="desea_agregar_producto_especial">Quiere agregar este producto al especial?</string>
+    <string name="desea_agregar_atraccion_especial">Quiere agregar esta atraccion al especial?</string>
+
+    <string name="atraccion_agrada">Atraccion agregada</string>
+
+    <string name="setting_boletas">Delimitando colores de las boletas</string>
+
+
 </resources>
