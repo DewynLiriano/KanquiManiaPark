@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minWidth="600sp"
-    android:minHeight="150dp"
+    android:minWidth="750sp"
+    android:minHeight="0dp"
     android:layout_marginStart="0sp" android:layout_marginEnd="0sp"
     android:weightSum="1">
 
@@ -17,14 +17,22 @@
             android:textColor="@color/white"
             android:gravity="center"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="300dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content">
+
                 <EditText
                     android:enabled="false"
                     android:id="@+id/edit_especial_nombre"
@@ -32,12 +40,15 @@
                     android:layout_height="match_parent"
                     android:maxLines="1"
                     android:hint="@string/nombre"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="300dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content">
+
                 <EditText
                     android:enabled="false"
                     android:id="@+id/edit_especial_porciento"
@@ -45,176 +56,122 @@
                     android:layout_height="match_parent"
                     android:hint="@string/espcial_porciento"
                     android:layout_marginTop="10dp"
-                    android:inputType="number"/>
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"/>
             </android.support.design.widget.TextInputLayout>
 
-            <LinearLayout
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:enabled="false"
+                    android:id="@+id/edit_fecha_inicio_especial"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:visibility="gone"
-                        android:id="@+id/texto_tipo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/tipo_especial"
-                        android:textSize="25sp"/>
+                    android:hint="@string/fecha_inicio"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"/>
+            </android.support.design.widget.TextInputLayout>
 
-                    <RadioGroup
-                        android:id="@+id/edit_radiogroup"
-                        android:visibility="gone"
-                        android:layout_marginStart="15sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <RadioButton
-                            android:id="@+id/edit_especial_atracciones_rb"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/atracciones"
-                            android:clickable="false"/>
-                        <RadioButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/productos"
-                            android:id="@+id/edit_especial_productos_rb"
-                            android:clickable="false"/>
-                    </RadioGroup>
-                </LinearLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:enabled="false"
+                    android:id="@+id/edit_fecha_fin_especial"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <Spinner
-                        android:visibility="gone"
-                        android:id="@+id/edit_tipo_spinner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <Button
-                        android:visibility="gone"
-                        android:id="@+id/edit_add_product_especiales"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/agregar"/>
-                </LinearLayout>
-            </LinearLayout>
-
+                    android:hint="@string/fecha_fin"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"/>
+            </android.support.design.widget.TextInputLayout>
         </LinearLayout>
-
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_width="530dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <LinearLayout
+                android:orientation="vertical"
+                android:paddingEnd="15dp">
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:text="@string/productos"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"/>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="@string/productos_aplicados"
-                        android:textSize="20sp"
-                        android:gravity="center"
-                        android:textStyle="bold"/>
-
-                    <ListView
-                        android:clickable="false"
-                        android:id="@+id/edit_productos_agregados"
-                        android:layout_width="250dp"
-                        android:layout_height="match_parent"/>
-                </LinearLayout>
-
-
-                <LinearLayout
+                <ListView
+                    android:id="@+id/edit_products_list_especial"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/custom_border"/>
+            </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="15dp">
 
-                        <android.support.design.widget.TextInputLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/atracciones"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:id="@+id/textView" />
 
-                            <EditText
-                                android:enabled="false"
-                                android:id="@+id/edit_fecha_inicio_especial"
-                                android:layout_width="250dp"
-                                android:layout_height="wrap_content"
-                                android:hint="@string/fecha_inicio"/>
-
-                        </android.support.design.widget.TextInputLayout>
-
-                        <android.support.design.widget.TextInputLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <EditText
-                                android:enabled="false"
-                                android:id="@+id/edit_fecha_fin_especial"
-                                android:layout_width="250dp"
-                                android:layout_height="wrap_content"
-                                android:hint="@string/fecha_fin"/>
-
-                        </android.support.design.widget.TextInputLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_gravity="end">
-
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/edit_especial_button"
-                            android:text="@string/editar_empleado"
-                            android:layout_marginTop="30dp"
-                            android:background="#ffff"
-                            android:textColor="@color/colorAccent"/>
-
-                        <Button
-                            android:visibility="gone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/accept_especial_button"
-                            android:text="@string/editar_empleado"
-                            android:layout_marginTop="30dp"
-                            android:background="#ffff"
-                            android:textColor="@color/colorAccent"/>
-
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/delete_especial_button"
-                            android:text="@string/borrar_empleado"
-                            android:layout_marginTop="30dp"
-                            android:background="#ffff"
-                            android:textColor="@color/colorAccent"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
+                <ListView
+                    android:background="@drawable/custom_border"
+                    android:id="@+id/edit_atr_list_especial"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
 
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_gravity="end">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_especial_button"
+            android:text="@string/editar_empleado"
+            android:layout_marginTop="30dp"
+            android:background="#ffff"
+            android:textColor="@color/colorAccent"/>
+         <Button
+             android:visibility="gone"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/accept_especial_button"
+             android:text="@string/aceptar"
+             android:layout_marginTop="30dp"
+             android:background="#ffff"
+             android:textColor="@color/colorAccent"/>
+         <Button
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/delete_especial_button"
+             android:text="@string/borrar_empleado"
+             android:layout_marginTop="30dp"
+             android:background="#ffff"
+             android:textColor="@color/colorAccent"/>
+    </LinearLayout>
+
 </LinearLayout>

@@ -55,7 +55,7 @@ public class CrearCliente extends AppCompatActivity {
 
     //DATEPICKER DIALOG
     public void getBirthday(View v) {
-        DialogFragment fragment = new DatePickerFragment();
+        DialogFragment fragment = new ClientDatePickerFragment();
         fragment.show(getFragmentManager(), "Date Picker");
     }
 

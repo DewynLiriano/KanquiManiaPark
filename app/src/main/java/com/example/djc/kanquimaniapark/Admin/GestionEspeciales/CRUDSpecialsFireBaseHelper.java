@@ -17,6 +17,7 @@ public class CRUDSpecialsFireBaseHelper {
     private String FECHA_INICIO = "Fecha_Inicio";
     private String FECHA_FIN = "Fecha_Fin";
     private String PRODUCTOS = "Productos";
+    private String ATRACCIONES = "Atracciones";
 
     private DatabaseReference dRef;
 
@@ -33,8 +34,12 @@ public class CRUDSpecialsFireBaseHelper {
         dRef.child(FECHA_INICIO).setValue(especial.get_fechaInicio());
         dRef.child(FECHA_FIN).setValue(especial.get_fechaFin());
 
-        for (Producto p : especial.get_productos()){
-            dRef.child(PRODUCTOS).push().setValue(p.get_id());
+        for (String p : especial.get_productos()){
+            dRef.child(PRODUCTOS).push().setValue(p);
+        }
+
+        for (String a : especial.get_atracciones()){
+            dRef.child(ATRACCIONES).push().setValue(a);
         }
     }
 
@@ -45,8 +50,12 @@ public class CRUDSpecialsFireBaseHelper {
         dRef.child(FECHA_INICIO).setValue(especial.get_fechaInicio());
         dRef.child(FECHA_FIN).setValue(especial.get_fechaFin());
 
-        for (Producto p : especial.get_productos()){
-            dRef.child(PRODUCTOS).push().setValue(p.get_id());
+        for (String p : especial.get_productos()){
+            dRef.child(PRODUCTOS).push().setValue(p);
+        }
+
+        for (String a : especial.get_atracciones()){
+            dRef.child(ATRACCIONES).push().setValue(a);
         }
     }
 

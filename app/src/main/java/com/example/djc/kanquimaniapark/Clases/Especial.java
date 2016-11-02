@@ -13,7 +13,8 @@ public class Especial {
     private String _id;
     private String _nombre;
     private String _porciento;
-    private ArrayList<Producto> _productos;
+    private List<String> _productosIDs;
+    private List<String> _atraccionesIDs;
     private String _fechaInicio;
     private String _fechaFin;
 
@@ -41,12 +42,20 @@ public class Especial {
         this._porciento = _porciento;
     }
 
-    public ArrayList<Producto> get_productos() {
-        return _productos;
+    public List<String> get_productos() {
+        return _productosIDs;
     }
 
-    public void set_productos(ArrayList<Producto> _productos) {
-        this._productos = _productos;
+    public void set_productos(List<String> _productos) {
+        this._productosIDs = _productos;
+    }
+
+    public List<String> get_atracciones() {
+        return _atraccionesIDs;
+    }
+
+    public void set_atracciones(List<String> _atracciones) {
+        this._atraccionesIDs = _atracciones;
     }
 
     public String get_fechaInicio() {
@@ -66,12 +75,13 @@ public class Especial {
     }
 
 
-    public Especial(String _id, String _nombre, String _porciento, ArrayList<Producto> _productos,
-                    String _fechaInicio, String _fechaFin) {
+    public Especial(String _id, String _nombre, String _porciento, ArrayList<String> _productos,
+                    ArrayList<String> _atracciones, String _fechaInicio, String _fechaFin) {
         set_id(_id);
         set_nombre(_nombre);
         set_porciento(_porciento);
         set_productos(_productos);
+        set_atracciones(_atracciones);
         set_fechaInicio(_fechaInicio);
         set_fechaFin(_fechaFin);
     }

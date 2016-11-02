@@ -115,8 +115,9 @@
                     <ListView
                         android:id="@+id/especial_prod_lista"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:choiceMode="multipleChoice"/>
+                        android:layout_height="wrap_content"
+                        android:choiceMode="multipleChoice"
+                        android:background="@drawable/custom_border"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -137,8 +138,9 @@
                     <ListView
                         android:id="@+id/especial_atr_lista"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:choiceMode="multipleChoice"/>
+                        android:layout_height="wrap_content"
+                        android:choiceMode="multipleChoice"
+                        android:background="@drawable/custom_border"/>
                 </LinearLayout>
 
 
@@ -150,7 +152,8 @@
                 android:id="@+id/aceptar_especial"
                 android:text="@string/aceptar"
                 android:layout_gravity="center"
-                android:layout_marginTop="30dp"/>
+                android:layout_marginTop="30dp"
+                android:background="@drawable/custom_border"/>
 
         </LinearLayout>
 

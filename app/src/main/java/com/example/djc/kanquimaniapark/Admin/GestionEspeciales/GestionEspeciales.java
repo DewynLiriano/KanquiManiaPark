@@ -1,5 +1,6 @@
 package com.example.djc.kanquimaniapark.Admin.GestionEspeciales;
 
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,14 +8,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -22,6 +20,7 @@ import android.widget.Toast;
 import com.example.djc.kanquimaniapark.Clases.Atraccion;
 import com.example.djc.kanquimaniapark.Clases.Especial;
 import com.example.djc.kanquimaniapark.Clases.Producto;
+import com.example.djc.kanquimaniapark.Helpers.DateValidator;
 import com.example.djc.kanquimaniapark.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +30,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +46,7 @@ public class GestionEspeciales extends Fragment {
     private String FECHA_INICIO = "Fecha_Inicio";
     private String FECHA_FIN = "Fecha_Fin";
     private String PRODUCTOS = "Productos";
+    private String DATEFORMAT = "dd/MM/yyyy";
 
     private String ATRACCIONES = "Atracciones";
     private String PRECIO = "Precio";
@@ -60,8 +61,8 @@ public class GestionEspeciales extends Fragment {
 
     private DatabaseReference dRef, atrRef, prodRef;
     private List<Especial> especiales;
-    private List<Atraccion> atracciones, atr_seleccionadas;
-    private List<Producto> productos, prod_seleccionados;
+    private List<Atraccion> atracciones;
+    private List<Producto> productos;
     private View focusView;
 
     private EditText nombreET, porcientoET, fechaInicioET, fechaFinET;
@@ -86,8 +87,6 @@ public class GestionEspeciales extends Fragment {
         especiales = new ArrayList<>();
         atracciones = new ArrayList<>();
         productos = new ArrayList<>();
-        atr_seleccionadas = new ArrayList<>();
-        prod_seleccionados = new ArrayList<>();
         dRef = FirebaseDatabase.getInstance().getReference(ESPECIALES);
         dRef.keepSynced(true);
         atrRef = FirebaseDatabase.getInstance().getReference(ATRACCIONES);
@@ -100,10 +99,10 @@ public class GestionEspeciales extends Fragment {
         adapter = new SpecialsRecyclerAdapter(getContext(), especiales);
         recyclerViewController(view);
         initializeUtils(view);
-        listProd.setOnItemClickListener(launchProdDialog);
-        listAtr.setOnItemClickListener(launchAtrDialog);
         acceptEspecial.setOnClickListener(addEspecial);
-
+        fechaInicioET.setOnFocusChangeListener(fechaInicioFocus);
+        fechaFinET.setOnFocusChangeListener(fechaFinFocus);
+        dRef.addValueEventListener(getEspeciales);
         // Inflate the layout for this fragment
         return view;
     }
@@ -124,7 +123,6 @@ public class GestionEspeciales extends Fragment {
         listProd = (ListView)v.findViewById(R.id.especial_prod_lista);
         listAtr = (ListView)v.findViewById(R.id.especial_atr_lista);
 
-
         atrAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_list_item_multiple_choice, atracciones);
 
@@ -133,73 +131,104 @@ public class GestionEspeciales extends Fragment {
 
         listProd.setAdapter(prodAdapter);
         listAtr.setAdapter(atrAdapter);
-
     }
 
-    //<editor-fold desc="OnItemClickListeners">
-    AdapterView.OnItemClickListener launchProdDialog = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, final int indice, long l) {
-            CheckedTextView checkedTextView = ((CheckedTextView)view);
-            checkedTextView.setChecked(!checkedTextView.isChecked());
 
-            if (!listProd.isItemChecked(indice)){
-                listProd.setItemChecked(indice, true);
-            } else{
-                listProd.setItemChecked(indice, false);
-            }
-
-        }
-    };
-
-    AdapterView.OnItemClickListener launchAtrDialog = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, final int indice, long l) {
-            CheckedTextView checkedTextView = ((CheckedTextView)view);
-            checkedTextView.setChecked(!checkedTextView.isChecked());
-        }
-    };
-    //</editor-fold>
-
+    //<editor-fold desc="On Click Listeners">
     View.OnClickListener addEspecial = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(view.getContext());
             dialog.setTitle(getString(R.string.atencion));
-            dialog.setMessage(getString(R.string.desea_agregar_atraccion_especial));
+            dialog.setMessage(getString(R.string.desea_agregar_productos_especial));
 
             dialog.setPositiveButton(getString(R.string.aceptar), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    SparseBooleanArray clickedAtrPositions = listAtr.getCheckedItemPositions();
-                    SparseBooleanArray clickedProdPositions = listProd.getCheckedItemPositions();
+                    boolean cancel = false;
+                    String nombre, porciento, fechaInicio, fechaFin;
+                    ArrayList<String> prod_seleccionados = new ArrayList<>();
+                    ArrayList<String> atr_seleccionadas = new ArrayList<>();
 
-                    for (int j=0; j < listProd.getCount(); j++){
-                        if (clickedProdPositions.get(j)){
-                            prod_seleccionados.add(productos.get(j));
+                    //<editor-fold desc="get Atrs and Prods">
+                    for (int j=0;j<listProd.getCount();j++){
+                        if (listProd.isItemChecked(j)){
+                           if (!prod_seleccionados.contains(productos.get(j).get_id())){
+                               prod_seleccionados.add(productos.get(j).get_id());
+                           }
                         } else {
-                            Toast.makeText(getContext(), "false", Toast.LENGTH_SHORT).show();
+                            if (prod_seleccionados.contains(productos.get(j).get_id())){
+                                prod_seleccionados.remove(j);
+                            }
                         }
                     }
 
-                   /* for (int j=0;j<atracciones.size();j++){
-                        if (clickedAtrPositions.valueAt(j)){
-                            atr_seleccionadas.add(atracciones.get(j));
+                    for (int j=0;j<listAtr.getCount();j++){
+                        if (listAtr.isItemChecked(j)){
+                            if (!atr_seleccionadas.contains(atracciones.get(j).get_id())){
+                                atr_seleccionadas.add(atracciones.get(j).get_id());
+                            }
+                        } else {
+                            if (atr_seleccionadas.contains(atracciones.get(j).get_id())){
+                                atr_seleccionadas.remove(j);
+                            }
                         }
-                    }*/
+                    }
+                    //</editor-fold>
 
-                    /*if (clickedProdPositions != null){
-                        Toast.makeText(getContext(), clickedProdPositions.size(), Toast.LENGTH_SHORT).show();
+                    if (nombreET.getText().toString().equals("")){
+                        cancel = true;
+                        nombreET.setError(getString(R.string.vacio));
+                        focusView = nombreET;
+                    } else if (porcientoET.getText().toString().equals("")){
+                        cancel = true;
+                        porcientoET.setError(getString(R.string.vacio));
+                        focusView = porcientoET;
+                    } else if (fechaInicioET.getText().toString().equals("")
+                            || !DateValidator.isDateValid(fechaInicioET.getText().toString(), DATEFORMAT)){
+                        cancel = true;
+                        fechaInicioET.setError(getString(R.string.fechaInvalida));
+                        focusView = fechaInicioET;
+                    } else if (fechaFinET.getText().toString().equals("")
+                            || !DateValidator.isDateValid(fechaFinET.getText().toString(), DATEFORMAT)){
+                        cancel = true;
+                        fechaFinET.setError(getString(R.string.fechaInvalida));
+                        focusView = fechaFinET;
+                    } else if (Integer.parseInt(porcientoET.getText().toString()) > 100
+                            || Integer.parseInt(porcientoET.getText().toString()) <= 0){
+                        cancel = true;
+                        porcientoET.setError(getString(R.string.porciento_invalido));
+                        focusView = porcientoET;
+                    }
+
+                    if (cancel){
+                        focusView.requestFocus();
                     } else {
-                        Toast.makeText(getContext(), "Null", Toast.LENGTH_SHORT).show();
-                    }*/
+                        nombre = nombreET.getText().toString();
+                        porciento = porcientoET.getText().toString();
+                        fechaInicio = fechaInicioET.getText().toString();
+                        fechaFin = fechaFinET.getText().toString();
+
+                        Especial e = new Especial("", nombre, porciento, prod_seleccionados, atr_seleccionadas, fechaInicio, fechaFin);
+                        crudSpecials.addSpecial(e);
+                        Toast.makeText(getContext(), getString(R.string.especial_creado), Toast.LENGTH_SHORT).show();
+
+                        nombreET.setText("");
+                        porcientoET.setText("");
+                        fechaInicioET.setText("");
+                        fechaFinET.setText("");
+                        listAtr.setAdapter(atrAdapter);
+                        listProd.setAdapter(prodAdapter);
+                        focusView = nombreET;
+                        focusView.requestFocus();
+                    }
                 }
             });
-
             dialog.setNegativeButton(getString(R.string.cancelar), null);
             dialog.show();
         }
     };
+    //</editor-fold>
 
     //<editor-fold desc="Value event listeners">
     private ValueEventListener getAtr = new ValueEventListener() {
@@ -254,7 +283,44 @@ public class GestionEspeciales extends Fragment {
             prodAdapter.notifyDataSetChanged();
             listProd.setAdapter(prodAdapter);
         }
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            Log.e(TAG, "Error occurred: " + databaseError.getMessage());
+        }
+    };
 
+    private ValueEventListener getEspeciales = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            especiales.clear();
+            Map<String, Object> rootMap = (HashMap<String, Object>)dataSnapshot.getValue();
+            if (rootMap != null){
+                Collection<Object> objects = rootMap.values();
+                for (Object o : objects){
+                    if (o instanceof Map){
+                        HashMap<String, Object> map = (HashMap<String, Object>) o;
+                        Especial e = new Especial();
+                        e.set_id((String) map.get(ID));
+                        e.set_nombre((String) map.get(NOMBRE));
+                        e.set_porciento((String) map.get(PORCIENTO));
+                        e.set_fechaInicio((String) map.get(FECHA_INICIO));
+                        e.set_fechaFin((String) map.get(FECHA_FIN));
+
+                        HashMap<String, String> productsMap = (HashMap<String, String>)map.get(PRODUCTOS);
+                        HashMap<String, String> atrsMap = (HashMap<String, String>)map.get(ATRACCIONES);
+                        if (productsMap != null){
+                            e.set_productos(new ArrayList<>(productsMap.values()));
+                        }
+                        if (atrsMap != null){
+                            e.set_atracciones(new ArrayList<>(atrsMap.values()));
+                        }
+                        especiales.add(e);
+                    }
+                }
+            }
+            adapter.notifyDataSetChanged();
+            recyclerView.setAdapter(adapter);
+        }
         @Override
         public void onCancelled(DatabaseError databaseError) {
             Log.e(TAG, "Error occurred: " + databaseError.getMessage());
@@ -262,5 +328,26 @@ public class GestionEspeciales extends Fragment {
     };
     //</editor-fold>
 
+    //<editor-fold desc="OnFocusChangeListeners">
+    View.OnFocusChangeListener fechaInicioFocus = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus){
+                DialogFragment fragment = new FechaInicioDatePickerFragment();
+                fragment.show(getActivity().getFragmentManager(), "Date Picker");
+            }
+        }
+    };
+
+    View.OnFocusChangeListener fechaFinFocus = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus){
+                DialogFragment fragment = new FechaFinDatePickerFragment();
+                fragment.show(getActivity().getFragmentManager(), "Date Picker");
+            }
+        }
+    };
+    //</editor-fold>
 
 }

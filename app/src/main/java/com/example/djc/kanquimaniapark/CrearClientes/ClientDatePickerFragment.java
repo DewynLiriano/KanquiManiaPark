@@ -15,7 +15,7 @@ import java.util.Calendar;
  * Created by dewyn on 9/28/2016.
  */
 
-public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+public class ClientDatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //INICIALIZA EL CALENDARIO CON LA FECHA ACTUAL

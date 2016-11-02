@@ -18,8 +18,8 @@ public class SpecialsVH extends RecyclerView.ViewHolder implements View.OnClickL
     public SpecialsVH(View v) {
         super(v);
         tvNombre = (TextView)v.findViewById(R.id.especial_nombre_card);
-        tvFechaInicio = (TextView)v.findViewById(R.id.fecha_inicio_especial);
-        tvFechaFin = (TextView)v.findViewById(R.id.fecha_fin_especial);
+        tvFechaInicio = (TextView)v.findViewById(R.id.especial_inicio_card);
+        tvFechaFin = (TextView)v.findViewById(R.id.especial_fin_card);
         v.setOnClickListener(this);
     }
 

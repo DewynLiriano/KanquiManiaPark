@@ -79,12 +79,11 @@
     <string name="ilimitado">Ilimitado</string>
     <string name="atencion">ATENCION!</string>
 
-    <string name="desea_agregar_producto_especial">Quiere agregar este producto al especial?</string>
-    <string name="desea_agregar_atraccion_especial">Quiere agregar esta atraccion al especial?</string>
+    <string name="desea_agregar_productos_especial">Esta seguro de quiere crear este especial?</string>
 
     <string name="atraccion_agrada">Atraccion agregada</string>
-
+    <string name="especial_creado">Especial creado</string>
     <string name="setting_boletas">Delimitando colores de las boletas</string>
 
-
+    <string name="porciento_invalido">El porcentaje debe de estar entre 1 y 100</string>
 </resources>
