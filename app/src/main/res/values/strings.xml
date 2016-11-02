@@ -72,7 +72,7 @@
     <string name="productos">Productos</string>
     <string name="tipo_especial">Tipo: </string>
     <string name="agregar">Agregar</string>
-    <string name="fecha_inicio">Fecha de inicio:</string>
+    <string name="fecha_inicio">Fecha inicio:</string>
     <string name="fecha_fin">Fecha fin:</string>
     <string name="productos_aplicados">Productos afectados</string>
 
@@ -83,6 +83,7 @@
 
     <string name="atraccion_agrada">Atraccion agregada</string>
     <string name="especial_creado">Especial creado</string>
+    <string name="especial_borrado">Especial borrado</string>
     <string name="setting_boletas">Delimitando colores de las boletas</string>
 
     <string name="porciento_invalido">El porcentaje debe de estar entre 1 y 100</string>

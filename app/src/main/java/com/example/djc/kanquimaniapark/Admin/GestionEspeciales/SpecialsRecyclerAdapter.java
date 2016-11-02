@@ -217,6 +217,7 @@ public class SpecialsRecyclerAdapter extends RecyclerView.Adapter<SpecialsVH> {
                     public void onClick(View v) {
                         crudSpecials.deleteSpecial(especiales.get(position));
                         dialog.dismiss();
+                        Toast.makeText(context, context.getString(R.string.especial_borrado), Toast.LENGTH_SHORT).show();
                     }
                 });
 

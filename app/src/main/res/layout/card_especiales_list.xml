@@ -9,6 +9,7 @@
     android:background="#C5CAE9"
     android:foreground="?attr/selectableItemBackground"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:gravity="center"
@@ -28,35 +29,56 @@
             android:textSize="16sp" />
 
         <LinearLayout
+            android:layout_marginStart="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fecha_inicio"
+                android:textColor="@color/black"/>
+
+            <TextView
                 android:id="@+id/especial_inicio_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
                 android:textColor="@color/black"
-                android:ellipsize="end"
                 android:maxLines="1"
                 android:text="Fecha Inicio"
-                android:textAppearance="?attr/textAppearanceListItem"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginStart="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fecha_fin"
+                android:textColor="@color/black"
+                />
 
             <TextView
                 android:id="@+id/especial_fin_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="27dp"
                 android:textColor="@color/black"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="Fecha Fin"
                 android:textAppearance="?attr/textAppearanceListItem"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textStyle="bold"/>
 
         </LinearLayout>
     </LinearLayout>
