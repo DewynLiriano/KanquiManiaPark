@@ -1,6 +1,8 @@
 package com.example.djc.kanquimaniapark.MainActivity;
 
+import com.example.djc.kanquimaniapark.Clases.Atraccion;
 import com.example.djc.kanquimaniapark.Clases.Empleado;
+import com.example.djc.kanquimaniapark.Clases.IdentificadorEntrada;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,9 +20,14 @@ import java.util.Objects;
  */
 
 public class LogInFireBaseHelper {
-    private String USUARIOS = "Usuarios";
-    private String NOMBRE = "Nombre";
-    private String CONTRASENA = "Contrasena";
+    private static final String IDENTIFICADOR = "Identificador";
+    private static final String ID = "ID";
+    private static final String FECHA = "Fecha";
+    private static final String COLORES = "Colores";
+    private static final String ATRACCIONES = "Atracciones";
+    private static final String NOMBRE = "Nombre";
+    private static final String USUARIOS = "Usuarios";
+    private static final String CONTRASENA = "Contrasena";
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference dataRef;
     private Map<String, Map<String, String>> map;
@@ -33,6 +40,7 @@ public class LogInFireBaseHelper {
     }
 
     private void getUsuarios() {
+        dataRef = firebaseDatabase.getReference(USUARIOS);
         dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -46,6 +54,7 @@ public class LogInFireBaseHelper {
     }
 
     public boolean signIn(String username, String contrasena){
+        dataRef = firebaseDatabase.getReference(USUARIOS);
         boolean success = false;
 
         if (map != null){
@@ -62,5 +71,19 @@ public class LogInFireBaseHelper {
             }
         }
         return success;
+    }
+
+    public void addIdentificator (IdentificadorEntrada iden){
+        dataRef = FirebaseDatabase.getInstance().getReference(IDENTIFICADOR).push();
+        dataRef.child(ID).setValue(dataRef.getKey());
+        dataRef.child(FECHA).setValue(iden.get_fecha());
+
+        for (String p : iden.get_colores()){
+            dataRef.child(COLORES).push().setValue(p);
+        }
+
+        for (HashMap.Entry<String, String> o : iden.get_atracciones().entrySet()){
+            dataRef.child(ATRACCIONES).child(o.getKey()).setValue(o.getValue());
+        }
     }
 }

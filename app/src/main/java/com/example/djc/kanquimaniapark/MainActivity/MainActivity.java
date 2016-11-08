@@ -1,46 +1,95 @@
 package com.example.djc.kanquimaniapark.MainActivity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.icu.text.SymbolTable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.djc.kanquimaniapark.Admin.SimpleTabsActivity;
+import com.example.djc.kanquimaniapark.Clases.Atraccion;
+import com.example.djc.kanquimaniapark.Clases.IdentificadorEntrada;
 import com.example.djc.kanquimaniapark.CrearClientes.CrearCliente;
 
 import com.example.djc.kanquimaniapark.R;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
+    private String INDICADORES = "Indicadores";
+    private String COLORES = "Colores";
+    private String ID = "ID";
+    private String COLOR = "Color";
+    private String FECHA = "Fecha";
+    private String ATRACCIONES_ID = "Atracciones";
+    private String ATRACCIONES = "Atracciones";
+    private String NOMBRE = "Nombre";
+    private String PRECIO = "Precio";
+    private String TIEMPO = "Tiempo";
+
+    private List<String> colores;
+    private List<Atraccion> atracciones, selected_atr;
+    private IdentificadorEntrada identificador;
+    private ListView list_atr;
+    private ArrayAdapter<Atraccion> atr_adapter;
+    private ArrayAdapter<String> color_adpt;
+
     private FloatingActionButton plusFAB;
-    private FloatingActionButton invoiceFAB;
     private FloatingActionButton clientFAB;
-    private FloatingActionButton mailFAB;
 
     private LogInFireBaseHelper logInHelper;
 
     private Boolean isFabOpen = false;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     private RecyclerView recyclerView;
+
+    private View focused = null;
+
+    private DatabaseReference mRef, cRef, atrRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +98,32 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        colores = new ArrayList<>();
+        atracciones = new ArrayList<>();
+        selected_atr = new ArrayList<>();
+        identificador = new IdentificadorEntrada();
+        atr_adapter =  new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, atracciones);
+        color_adpt = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, colores);
+
+
+        atrRef = FirebaseDatabase.getInstance().getReference(ATRACCIONES);
+        atrRef.addValueEventListener(getAtr);
+
+
+        cRef = FirebaseDatabase.getInstance().getReference(COLORES);
+        cRef.addChildEventListener(getColores);
+
+        mRef = FirebaseDatabase.getInstance().getReference(INDICADORES);
+        mRef.limitToLast(1).addListenerForSingleValueEvent(getIden);
+        mRef.keepSynced(true);
+
         if (FirebaseApp.getApps(this).isEmpty()) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         }
 
         logInHelper = new LogInFireBaseHelper();
-
         plusFAB = (FloatingActionButton)findViewById(R.id.plusFAB);
         clientFAB = (FloatingActionButton)findViewById(R.id.fabAddClient);
-        invoiceFAB = (FloatingActionButton)findViewById(R.id.fabCreateInvoice);
-        mailFAB = (FloatingActionButton)findViewById(R.id.fabSendMail);
 
         //Manejo de los Floating Buttons
         fabAnimator();
@@ -80,9 +145,92 @@ public class MainActivity extends AppCompatActivity {
             case R.id.crear_producto:
                 logIn_alertBuilder().show();
                 return true;
+            case R.id.menu_identificador:
+                set_colors().show();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private Dialog set_colors() {
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.setContentView(R.layout.inicio_jornada_dialog);
+        dialog.setTitle("Inicio de Jornada");
+        dialog.setCancelable(false);
+        list_atr = (ListView)dialog.findViewById(R.id.setting_lista_boletas);
+        list_atr.setAdapter(atr_adapter);
+        list_atr.setSelection(0);
+        list_atr.setSelected(true);
+        final Spinner spinner = (Spinner)dialog.findViewById(R.id.setting_ticket_color_spinner);
+        spinner.setAdapter(color_adpt);
+
+        final TextView nombreTV = (TextView)dialog.findViewById(R.id.setting_ticket_tipo);
+        final TextView tiempoTV = (TextView)dialog.findViewById(R.id.setting_ticket_time);
+
+        final int[] posAtr = {0};
+
+        list_atr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                posAtr[0] = position;
+                nombreTV.setText(atracciones.get(position).get_titulo());
+                tiempoTV.setText(atracciones.get(position).get_tiempo());
+                focused = view;
+            }
+        });
+
+
+        Button acceptCol = (Button)dialog.findViewById(R.id.setting_color_button);
+        final Button dismissButton = (Button)dialog.findViewById(R.id.setting_accept_idnt_button);
+
+
+        final HashMap<String, Atraccion> sel_atr= new HashMap<>();
+        final List<String> sel_col= new ArrayList<>();
+        acceptCol.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View v) {
+                String s  = spinner.getSelectedItem().toString();
+                sel_atr.put(s, atracciones.get(posAtr[0]));
+                sel_col.add(s);
+                color_adpt.remove(s);
+                color_adpt.notifyDataSetChanged();
+                focused.setBackgroundColor(getColor(R.color.silver));
+                focused.setEnabled(false);
+                focused.setClickable(false);
+
+                if (sel_atr.size() == atracciones.size()){
+                    dismissButton.setEnabled(true);
+                }
+            }
+        });
+
+        dismissButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IdentificadorEntrada ie = new IdentificadorEntrada();
+                ie.set_id("");
+                ie.set_colores(sel_col);
+
+                HashMap<String, String> ids = new HashMap<String, String>();
+                for (HashMap.Entry<String, Atraccion> o : sel_atr.entrySet()){
+                    ids.put(o.getKey(), o.getValue().get_id());
+                }
+
+                ie.set_atraccionesID(ids);
+
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                Calendar calendar = Calendar.getInstance();
+
+                ie.set_fecha(dateFormat.format(calendar.getTimeInMillis()));
+
+                logInHelper.addIdentificator(ie);
+                dialog.dismiss();
+            }
+        });
+
+        return dialog;
     }
 
     //--------------------------------------FUNCIONES----------------------------------------
@@ -117,25 +265,18 @@ public class MainActivity extends AppCompatActivity {
         if(isFabOpen){
             plusFAB.startAnimation(rotate_backward);
             clientFAB.startAnimation(fab_close);
-            invoiceFAB.startAnimation(fab_close);
-            mailFAB.startAnimation(fab_close);
             clientFAB.setClickable(false);
-            invoiceFAB.setClickable(false);
-            mailFAB.setClickable(false);
             isFabOpen = false;
 
         } else {
             plusFAB.startAnimation(rotate_forward);
             clientFAB.startAnimation(fab_open);
-            invoiceFAB.startAnimation(fab_open);
-            mailFAB.startAnimation(fab_open);
             clientFAB.setClickable(true);
-            invoiceFAB.setClickable(true);
-            mailFAB.setClickable(true);
             isFabOpen = true;
         }
     }
 
+    //<editor-fold desc="On Clicks">
     //RENGLON DE OnClicks
     public void plusFabOnClick(View v){
         animateFAB();
@@ -204,4 +345,89 @@ public class MainActivity extends AppCompatActivity {
         });
         return builder.create();
     }
+    //</editor-fold>
+
+
+    private ValueEventListener getAtr = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            GenericTypeIndicator<Map<String, Map<String, String>>> genin = new GenericTypeIndicator<Map<String, Map<String, String>>>() {};
+            Map<String, Map<String,String>> map = dataSnapshot.getValue(genin);
+            atracciones.clear();
+
+            if (map != null){
+                for (Map.Entry<String, Map<String, String>> entry : map.entrySet()){
+                    if (entry != null){
+                        HashMap value = (HashMap) entry.getValue();
+                        Atraccion a = new Atraccion();
+                        a.set_id((String)value.get(ID));
+                        a.set_titulo((String)value.get(NOMBRE));
+                        a.set_precio((String) value.get(PRECIO));
+                        a.set_tiempo((String) value.get(TIEMPO));
+                        atracciones.add(a);
+                    }
+                }
+            }
+            atr_adapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
+    private ChildEventListener getColores = new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            colores.add((String) dataSnapshot.getValue());
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
+    private ValueEventListener getIden = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            Map<String, Object> root = (HashMap<String, Object>)dataSnapshot.getValue();
+            if (root != null){
+                identificador.set_id((String) root.get(ID));
+                identificador.set_fecha((String) root.get(FECHA));
+
+                HashMap<String, String> map_atracciones = (HashMap<String, String>) root.get(ATRACCIONES_ID);
+                if (map_atracciones != null){
+                    identificador.set_atraccionesID(map_atracciones);
+                }
+
+                HashMap<String, String> lista_colores = (HashMap<String, String>) root.get(COLORES);
+                if (lista_colores != null){
+                    identificador.set_colores(new ArrayList<String>(lista_colores.values()));
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            Log.v("Error", databaseError.getMessage());
+
+        }
+    };
 }

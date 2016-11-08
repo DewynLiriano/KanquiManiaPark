@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minHeight="200dp"
-    android:minWidth="400dp">
+    android:minHeight="300dp"
+    android:minWidth="700dp">
 
     <TextView
         android:layout_width="match_parent"
@@ -33,22 +33,21 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="00dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tipo_especial"
-                    android:textSize="25sp"/>
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/setting_ticket_tipo"
                     android:layout_marginStart="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="Desde Codigo"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     android:textColor="@color/black"/>
 
             </LinearLayout>
@@ -62,15 +61,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/time"
-                    android:textSize="25sp"/>
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:layout_marginStart="20dp"
                     android:id="@+id/setting_ticket_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="Desde codigo"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     android:textColor="@color/black"/>
 
             </LinearLayout>
@@ -80,21 +78,34 @@
                 android:layout_height="wrap_content"
                 android:text="Color"
                 android:gravity="center"
-                android:textSize="30sp"
-                android:background="@color/shadowColor"/>
+                android:textSize="20sp"
+                android:textStyle="bold"/>
 
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/setting_ticket_color_spiner"/>
+           <LinearLayout
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal">
+               <Spinner
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/setting_ticket_color_spinner"/>
+
+               <Button
+                   android:id="@+id/setting_color_button"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="@string/choose_color"/>
+           </LinearLayout>
 
 
             <Button
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:text="@string/aceptar"
-                android:id="@+id/setting_accept_ticket_color"/>
+                android:id="@+id/setting_accept_idnt_button"
+                android:layout_gravity="bottom|center"/>
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -86,5 +86,8 @@
     <string name="especial_borrado">Especial borrado</string>
     <string name="setting_boletas">Delimitando colores de las boletas</string>
 
+    <string name="identificar_boletas">Identificar colores de cintillos</string>
     <string name="porciento_invalido">El porcentaje debe de estar entre 1 y 100</string>
+
+    <string name="choose_color">Seleccionar color</string>
 </resources>

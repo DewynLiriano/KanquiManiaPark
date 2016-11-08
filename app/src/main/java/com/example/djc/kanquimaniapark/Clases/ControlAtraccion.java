@@ -1,6 +1,5 @@
 package com.example.djc.kanquimaniapark.Clases;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -12,7 +11,7 @@ public class ControlAtraccion {
     private Cliente _cliente;
     private Boleta _boleta;
     private Date _horaSalida;
-    private IndentificadorEntrada _identificador;
+    private IdentificadorEntrada _identificador;
 
     public int get_id() {
         return _id;
@@ -46,15 +45,15 @@ public class ControlAtraccion {
         this._horaSalida = _horaSalida;
     }
 
-    public IndentificadorEntrada get_identificador() {
+    public IdentificadorEntrada get_identificador() {
         return _identificador;
     }
 
-    public void set_identificador(IndentificadorEntrada _identificador) {
+    public void set_identificador(IdentificadorEntrada _identificador) {
         this._identificador = _identificador;
     }
 
-    public ControlAtraccion(int _id, Cliente _cliente, Boleta _boleta, Date _horaSalida, IndentificadorEntrada _identificador) {
+    public ControlAtraccion(int _id, Cliente _cliente, Boleta _boleta, Date _horaSalida, IdentificadorEntrada _identificador) {
         set_id(_id);
         set_cliente(_cliente);
         set_boleta(_boleta);
