@@ -1,48 +1,66 @@
 package com.example.djc.kanquimaniapark.CrearClientes;
 
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.djc.kanquimaniapark.Clases.Cliente;
 import com.example.djc.kanquimaniapark.Helpers.DateValidator;
 import com.example.djc.kanquimaniapark.R;
 
-import java.util.Objects;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
+import java.util.Locale;
+import java.util.Objects;
 
 public class CrearCliente extends AppCompatActivity {
 
+    private static final String TAG = "Mensaje";
     private EditText nombreET, apellidoET, correoET, cumpleET, numeroET;
-    private TextView idET;
 
     private ImageView fotoIV;
-    private Bitmap bitmapFoto;
+    private Uri uriFoto = null;
     private ClientFirebaseHelper clientFirebaseHelper;
 
     private String DATEFORMAT = "dd/MM/yyyy";
     private String sexo = "";
     private View focusView = null;
+    private ProgressDialog progressDialog;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_cliente);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.client_toolbar);
+        setSupportActionBar(toolbar);
+        EventBus.getDefault().register(this);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Guardando Cliente");
+        progressDialog.setMessage("Guardando Cliente");
 
         clientFirebaseHelper = new ClientFirebaseHelper();
 
-        idET = (TextView)findViewById(R.id.idET);
         fotoIV = (ImageView) findViewById(R.id.foto);
         nombreET = (EditText) findViewById(R.id.nombreET);
         apellidoET = (EditText) findViewById(R.id.apellidoET);
@@ -50,10 +68,36 @@ public class CrearCliente extends AppCompatActivity {
         cumpleET = (EditText) findViewById(R.id.cumpleET);
         numeroET = (EditText)findViewById(R.id.numeroET);
 
-        idET.setText(String.valueOf(clientFirebaseHelper.count+1));
     }
 
-    //DATEPICKER DIALOG
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onEvent(SuccessEvent event){
+        Log.d(TAG, "Event triggered");
+        if (event.isOK()){
+            progressDialog.dismiss();
+            Toast.makeText(this, getString(R.string.clienteAgregado), Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     public void getBirthday(View v) {
         DialogFragment fragment = new ClientDatePickerFragment();
         fragment.show(getFragmentManager(), "Date Picker");
@@ -73,8 +117,8 @@ public class CrearCliente extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
-            bitmapFoto = (Bitmap) data.getExtras().get("data");
-            fotoIV.setImageBitmap(bitmapFoto);
+            uriFoto = data.getData();
+            fotoIV.setImageURI(uriFoto);
         }
     }
 
@@ -82,6 +126,7 @@ public class CrearCliente extends AppCompatActivity {
         boolean cancel = false;
         String nombre, apellido, correo, cumple, numero;
 
+         progressDialog.show();
 
         //CONTROL DE ENTRADA DE DATOS
         if (!DateValidator.isDateValid(cumpleET.getText().toString(), DATEFORMAT)) {
@@ -105,7 +150,7 @@ public class CrearCliente extends AppCompatActivity {
         } else if (Objects.equals(sexo, "")) {
             sex_alertBuilder().show();
             cancel = true;
-        } else if (bitmapFoto == null){
+        } else if (uriFoto == null){
             photo_alertBuilder().show();
             cancel = true;
         } else if (numeroET.getText().toString().length() < 10) {
@@ -124,12 +169,10 @@ public class CrearCliente extends AppCompatActivity {
             cumple = cumpleET.getText().toString();
             numero = numeroET.getText().toString();
 
-            Cliente cliente = new Cliente(String.valueOf(clientFirebaseHelper.count +1), nombre, apellido,
-                    sexo, correo, cumple, numero, bitmapFoto);
+            Cliente cliente = new Cliente(formatID() , nombre, apellido,
+                    sexo, correo, cumple, numero);
 
-            clientFirebaseHelper.addClient(cliente);
-            Toast.makeText(this, getString(R.string.clienteAgregado), Toast.LENGTH_SHORT).show();
-            finish();
+            clientFirebaseHelper.addClient(cliente, uriFoto);
         }
     }
 
@@ -170,5 +213,9 @@ public class CrearCliente extends AppCompatActivity {
 
         return alertBuilder;
     }
-}
 
+    private String formatID(){
+        String s = String.format(Locale.getDefault(), "%05d", clientFirebaseHelper.count + 1);
+        return "KPC" + String.valueOf(s);
+    }
+}

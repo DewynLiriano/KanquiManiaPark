@@ -4,40 +4,46 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.icu.text.SymbolTable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.model.stream.StreamByteArrayLoader;
+import com.bumptech.glide.load.resource.bitmap.StreamBitmapDecoder;
 import com.example.djc.kanquimaniapark.Admin.SimpleTabsActivity;
 import com.example.djc.kanquimaniapark.Clases.Atraccion;
+import com.example.djc.kanquimaniapark.Clases.Cliente;
 import com.example.djc.kanquimaniapark.Clases.IdentificadorEntrada;
-import com.example.djc.kanquimaniapark.CrearClientes.CrearCliente;
 
+import com.example.djc.kanquimaniapark.Helpers.BitMapHelper;
+import com.example.djc.kanquimaniapark.MainActivity.ClientsList.ClientRecyclerAdapter;
+import com.example.djc.kanquimaniapark.CrearClientes.CrearCliente;
 import com.example.djc.kanquimaniapark.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -46,30 +52,50 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
+
 public class MainActivity extends AppCompatActivity {
 
-    private String INDICADORES = "Indicadores";
-    private String COLORES = "Colores";
-    private String ID = "ID";
-    private String COLOR = "Color";
-    private String FECHA = "Fecha";
-    private String ATRACCIONES_ID = "Atracciones";
-    private String ATRACCIONES = "Atracciones";
-    private String NOMBRE = "Nombre";
-    private String PRECIO = "Precio";
-    private String TIEMPO = "Tiempo";
+    //<editor-fold desc="Constantes">
+    private static final String APELLIDO = "Apellido";
+    private static final String FECHA_CUMPLEANOS = "Fecha_Cumpleanos";
+    private static final String SEXO = "Sexo";
+    private static final String FOTO = "Foto";
+    private static final String NUMERO = "Numero_Telefono";
+    private static final String CORREO = "Correo_Electronico";
+    private static final String INDICADORES = "Indicadores";
+    private static final String COLORES = "Colores";
+    private static final String ID = "ID";
+    private static final String COLOR = "Color";
+    private static final String FECHA = "Fecha";
+    private static final String ATRACCIONES_ID = "Atracciones";
+    private static final String ATRACCIONES = "Atracciones";
+    private static final String NOMBRE = "Nombre";
+    private static final String PRECIO = "Precio";
+    private static final String TIEMPO = "Tiempo";
+    private static final String CLIENTES = "Clientes";
+    private static final String FOTOS_CLIENTES = "FOTOS_CLIENTES";
+    //</editor-fold>
 
+    private List<Cliente> clientes;
+    private ClientRecyclerAdapter adapter;
     private List<String> colores;
     private List<Atraccion> atracciones, selected_atr;
     private IdentificadorEntrada identificador;
@@ -77,18 +103,10 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<Atraccion> atr_adapter;
     private ArrayAdapter<String> color_adpt;
 
-    private FloatingActionButton plusFAB;
-    private FloatingActionButton clientFAB;
-
-    private LogInFireBaseHelper logInHelper;
-
-    private Boolean isFabOpen = false;
-    private Animation fab_open,fab_close,rotate_forward,rotate_backward;
+    private MainFireBaseHelper mainHelper;
     private RecyclerView recyclerView;
-
     private View focused = null;
-
-    private DatabaseReference mRef, cRef, atrRef;
+    private DatabaseReference mRef, cRef, atrRef, cliRef;
 
 
     @Override
@@ -98,6 +116,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        clientes = new ArrayList<>();
+        adapter = new ClientRecyclerAdapter(MainActivity.this, clientes);
         colores = new ArrayList<>();
         atracciones = new ArrayList<>();
         selected_atr = new ArrayList<>();
@@ -105,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         atr_adapter =  new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, atracciones);
         color_adpt = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, colores);
 
-
+        //<editor-fold desc="Firebase References">
         atrRef = FirebaseDatabase.getInstance().getReference(ATRACCIONES);
         atrRef.addValueEventListener(getAtr);
 
@@ -117,16 +137,16 @@ public class MainActivity extends AppCompatActivity {
         mRef.limitToLast(1).addListenerForSingleValueEvent(getIden);
         mRef.keepSynced(true);
 
+        cliRef = FirebaseDatabase.getInstance().getReference(CLIENTES);
+        cliRef.addValueEventListener(getClients);
+        cliRef.keepSynced(true);
+
         if (FirebaseApp.getApps(this).isEmpty()) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         }
+        //</editor-fold>
 
-        logInHelper = new LogInFireBaseHelper();
-        plusFAB = (FloatingActionButton)findViewById(R.id.plusFAB);
-        clientFAB = (FloatingActionButton)findViewById(R.id.fabAddClient);
-
-        //Manejo de los Floating Buttons
-        fabAnimator();
+        mainHelper = new MainFireBaseHelper();
         //Manejo de Recycler View
         recyclerViewController();
     }
@@ -135,18 +155,37 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.option_menu, menu);
-        return true;
+
+        MenuItem item = menu.findItem(R.id.menu_searcher_clients);
+        SearchView searchView = (SearchView)item.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-
         switch (item.getItemId()){
             case R.id.crear_producto:
                 logIn_alertBuilder().show();
                 return true;
             case R.id.menu_identificador:
                 set_colors().show();
+                return true;
+            case R.id.menu_add_cliente:
+                Intent intent = new Intent(getApplicationContext(), CrearCliente.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -187,21 +226,26 @@ public class MainActivity extends AppCompatActivity {
 
         final HashMap<String, Atraccion> sel_atr= new HashMap<>();
         final List<String> sel_col= new ArrayList<>();
+
         acceptCol.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-                String s  = spinner.getSelectedItem().toString();
-                sel_atr.put(s, atracciones.get(posAtr[0]));
-                sel_col.add(s);
-                color_adpt.remove(s);
-                color_adpt.notifyDataSetChanged();
-                focused.setBackgroundColor(getColor(R.color.silver));
-                focused.setEnabled(false);
-                focused.setClickable(false);
+                if (spinner.getSelectedItem().toString() != null || focused != null){
+                    String s  = spinner.getSelectedItem().toString();
+                    sel_atr.put(s, atracciones.get(posAtr[0]));
+                    sel_col.add(s);
+                    color_adpt.remove(s);
+                    color_adpt.notifyDataSetChanged();
+                    focused.setBackgroundColor(getColor(R.color.silver));
+                    focused.setEnabled(false);
+                    focused.setClickable(false);
 
-                if (sel_atr.size() == atracciones.size()){
-                    dismissButton.setEnabled(true);
+                    if (sel_atr.size() == atracciones.size()){
+                        dismissButton.setEnabled(true);
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "Debe seleccionar una atracción", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -225,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
 
                 ie.set_fecha(dateFormat.format(calendar.getTimeInMillis()));
 
-                logInHelper.addIdentificator(ie);
+                mainHelper.addIdentificator(ie);
                 dialog.dismiss();
             }
         });
@@ -234,62 +278,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //--------------------------------------FUNCIONES----------------------------------------
-    //FUNCION DONDE SE ANIMAN Y SE MANEJA EL CLICK DE LOS FLOATING BUTTONS.
-    public void fabAnimator(){
-        //Animaciones de los FABs
-        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
-        fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
-        rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_forward);
-        rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_backward);
-    }
 
     //FUNCION SE MANEJA EL RECYCLERVIEW
     public void recyclerViewController(){
         //Recycler view
-        ArrayList<String> data = new ArrayList<>();
-
-        for(int i = 0; i < 30; i++) {
-            data.add("Panita " + i);
-        }
-
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
-        ClientRecyclerAdapter adapter = new ClientRecyclerAdapter(this, data);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     //FUNCION DONDE SE ANIMAN LOS BOTONES AL DAR CLICK
-    public void animateFAB(){
-
-        if(isFabOpen){
-            plusFAB.startAnimation(rotate_backward);
-            clientFAB.startAnimation(fab_close);
-            clientFAB.setClickable(false);
-            isFabOpen = false;
-
-        } else {
-            plusFAB.startAnimation(rotate_forward);
-            clientFAB.startAnimation(fab_open);
-            clientFAB.setClickable(true);
-            isFabOpen = true;
-        }
-    }
 
     //<editor-fold desc="On Clicks">
-    //RENGLON DE OnClicks
-    public void plusFabOnClick(View v){
-        animateFAB();
-    }
-
-    public void clientFabOnClick(View v){
-        Intent intent = new Intent(getApplicationContext(), CrearCliente.class);
-        startActivity(intent);
-    }
-
-    public void mailFabOnClick(View v){
-        //Toast.makeText(this, String.valueOf(helper.count), Toast.LENGTH_SHORT).show();
-    }
 
     private AlertDialog logIn_alertBuilder(){
         final View[] focusView = {null};
@@ -331,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     usuario[0] = usuarioET.getText().toString();
                     contrasena[0] = passwordET.getText().toString();
-                    boolean success = logInHelper.signIn(usuario[0], contrasena[0]);
+                    boolean success = mainHelper.signIn(usuario[0], contrasena[0]);
 
                     if (success){
                         Intent intent = new Intent(getApplicationContext(), SimpleTabsActivity.class);
@@ -347,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
     }
     //</editor-fold>
 
-
+    //<editor-fold desc="Firebase Events">
     private ValueEventListener getAtr = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -370,7 +371,6 @@ public class MainActivity extends AppCompatActivity {
             }
             atr_adapter.notifyDataSetChanged();
         }
-
         @Override
         public void onCancelled(DatabaseError databaseError) {
 
@@ -430,4 +430,47 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
+    private ValueEventListener getClients = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            clientes.clear();
+            HashMap rootMap = (HashMap) dataSnapshot.getValue();
+
+            if (rootMap != null){
+                Collection<Object> objects = rootMap.values();
+                for (Object o : objects){
+                    if (o instanceof Map){
+                        HashMap<String, Object> map = (HashMap<String, Object>) o;
+                        final Cliente c = new Cliente();
+                        c.set_id( (String) map.get(ID));
+                        c.set_nombre((String) map.get(NOMBRE));
+                        c.set_apellido((String) map.get(APELLIDO));
+                        c.set_fechaCumpleAnos((String) map.get(FECHA_CUMPLEANOS));
+                        c.set_sexo((String) map.get(SEXO));
+                        c.set_numero((String) map.get(NUMERO));
+                        c.set_correo((String) map.get(CORREO));
+                        clientes.add(c);
+                    }
+                }
+            }
+            sortClientes();
+            adapter.notifyDataSetChanged();
+            recyclerView.setAdapter(adapter);
+        }
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            Log.e(TAG, "Error occurred: " + databaseError.getMessage());
+        }
+    };
+    //</editor-fold>
+
+    private void sortClientes() {
+        Collections.sort(clientes, new Comparator<Cliente>() {
+            @Override
+            public int compare(Cliente o1, Cliente o2) {
+                return o2.get_id().compareTo(o1.get_id());
+            }
+        });
+    }
 }

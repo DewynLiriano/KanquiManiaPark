@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.djc.kanquimaniapark.Admin.ItemClickListener;
+import com.example.djc.kanquimaniapark.Helpers.ItemClickListener;
 import com.example.djc.kanquimaniapark.R;
 
 /**

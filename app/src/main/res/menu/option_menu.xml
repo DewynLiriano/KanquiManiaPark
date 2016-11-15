@@ -4,6 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity.MainActivity">
 
+    <item android:id="@+id/menu_searcher_clients"
+        android:title="@string/search_clients"
+        android:icon="@android:drawable/ic_menu_search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/menu_add_cliente"
+        android:title="@string/add_clientes"
+        android:icon="@drawable/ic_account_plus_white_48dp"
+        app:showAsAction="always"/>
+
     <item android:id="@+id/crear_producto"
         android:title="@string/admin"
         app:showAsAction="never"/>

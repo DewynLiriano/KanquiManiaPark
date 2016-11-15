@@ -13,12 +13,12 @@ public abstract class BitMapHelper {
     public static byte[] getBytes(Bitmap bitmap)
     {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 
     // convierte de arreglo de bytes a bitmap.
-    public static Bitmap getImage(byte[] image) {
+    public static Bitmap getImage(byte[] image)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 }

@@ -293,7 +293,7 @@ public class GestionEspeciales extends Fragment {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             especiales.clear();
-            Map<String, Object> rootMap = (HashMap<String, Object>)dataSnapshot.getValue();
+            Map<String, Object> rootMap = (Map<String, Object>)dataSnapshot.getValue();
             if (rootMap != null){
                 Collection<Object> objects = rootMap.values();
                 for (Object o : objects){

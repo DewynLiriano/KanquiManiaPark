@@ -17,6 +17,7 @@ import com.example.djc.kanquimaniapark.Admin.GestionEmpleados.EmployeeRecyclerAd
 import com.example.djc.kanquimaniapark.BuildConfig;
 import com.example.djc.kanquimaniapark.Clases.Empleado;
 import com.example.djc.kanquimaniapark.Clases.Producto;
+import com.example.djc.kanquimaniapark.Eventos.ProductsEvent;
 import com.example.djc.kanquimaniapark.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,6 +25,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Collections;

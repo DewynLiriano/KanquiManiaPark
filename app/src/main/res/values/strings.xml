@@ -90,4 +90,10 @@
     <string name="porciento_invalido">El porcentaje debe de estar entre 1 y 100</string>
 
     <string name="choose_color">Seleccionar color</string>
+
+    <string name="search_clients">Busqueda clientes</string>
+    <string name="add_clientes">Agregar Cliente</string>
+    <string name="title_activity_probando">Probando</string>
+
+    <string name="crear_cliente">Crear Cliente</string>
 </resources>

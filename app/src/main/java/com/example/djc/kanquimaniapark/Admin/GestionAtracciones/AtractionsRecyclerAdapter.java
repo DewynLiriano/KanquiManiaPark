@@ -11,12 +11,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.djc.kanquimaniapark.Admin.ItemClickListener;
 import com.example.djc.kanquimaniapark.Clases.Atraccion;
+import com.example.djc.kanquimaniapark.Helpers.ItemClickListener;
 import com.example.djc.kanquimaniapark.R;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * Created by dewyn on 10/26/2016.

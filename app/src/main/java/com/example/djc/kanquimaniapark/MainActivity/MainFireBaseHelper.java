@@ -19,7 +19,7 @@ import java.util.Objects;
  * Created by dewyn on 10/3/2016.
  */
 
-public class LogInFireBaseHelper {
+public class MainFireBaseHelper {
     private static final String IDENTIFICADOR = "Identificador";
     private static final String ID = "ID";
     private static final String FECHA = "Fecha";
@@ -32,7 +32,7 @@ public class LogInFireBaseHelper {
     private DatabaseReference dataRef;
     private Map<String, Map<String, String>> map;
 
-    public LogInFireBaseHelper(){
+    public MainFireBaseHelper(){
         firebaseDatabase = FirebaseDatabase.getInstance();
         dataRef = firebaseDatabase.getReference(USUARIOS);
         dataRef.keepSynced(true);
