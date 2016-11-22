@@ -20,7 +20,7 @@ import java.util.Objects;
  */
 
 public class MainFireBaseHelper {
-    private static final String IDENTIFICADOR = "Identificador";
+    private static final String IDENTIFICADOR = "Identificadores";
     private static final String ID = "ID";
     private static final String FECHA = "Fecha";
     private static final String COLORES = "Colores";

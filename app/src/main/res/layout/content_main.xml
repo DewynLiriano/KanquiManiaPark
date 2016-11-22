@@ -19,7 +19,6 @@
         android:id="@+id/recyclerView"
         android:clipToPadding="false"
         android:paddingBottom="16dp"
-        android:paddingTop="60dp"
         android:scrollbars="vertical"/>
 
 </RelativeLayout>

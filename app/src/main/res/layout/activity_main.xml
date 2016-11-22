@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.djc.kanquimaniapark.MainActivity.MainActivity">
+    tools:context="com.example.djc.kanquimaniapark.MainActivity.MainActivity"
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -23,19 +24,129 @@
 
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="300dp"
-        android:layout_height="match_parent">
-        <include layout="@layout/content_main" />
-    </LinearLayout>
-
-    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="300dp"
-        android:gravity="end">
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="300dp"
+            android:layout_height="match_parent">
+            <include layout="@layout/content_main" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="1"
+            android:layout_marginStart="0dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/darkgray"
+                android:text="@string/facturacion"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <Spinner
+                    android:layout_width="500dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/facturacion_spinner"/>
+
+               <EditText
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/facturacion_products_counter"
+                   android:text="0"
+                   android:inputType="number"
+                   android:textSize="30sp"
+                   android:textAlignment="center"
+                   android:textColor="@color/black"
+                   android:padding="16dp"
+                   android:background="@drawable/custom_border"
+                   android:maxWidth="150dp"/>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/facturacion_products_counter_plus_fab"
+                    android:src="@drawable/ic_plus_white_48dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="10dp"
+                    android:onClick="increaseCounter"/>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/facturacion_products_counter_minus_fab"
+                    android:src="@drawable/ic_minus_white_48dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:onClick="decreaseCounter"/>
+
+                <Button
+                    android:id="@+id/facturacion_products_add_product_button"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/aceptar"
+                    android:background="@drawable/custom_border"
+                    android:onClick="addProduct"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/productos_agregados"
+                android:textSize="20sp"/>
+
+
+                <ListView
+                    android:layout_marginEnd="16dp"
+                    android:id="@+id/facturacion_products_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/custom_border"
+                    android:listSelector="@color/shadowColor"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/boletas_agregadas"
+                android:layout_marginTop="20dp"
+                android:textSize="20sp"/>
+
+
+            <ListView
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@drawable/custom_border"
+                android:layout_weight="0.44" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="20dp"
+                android:src="@drawable/ic_check_white_48dp"
+                android:id="@+id/facturacion_products_accept_fab"/>
+        </LinearLayout>
 
 
     </LinearLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

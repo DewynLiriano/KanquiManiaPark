@@ -91,6 +91,7 @@
                    android:id="@+id/setting_ticket_color_spinner"/>
 
                <Button
+                   android:enabled="false"
                    android:id="@+id/setting_color_button"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"

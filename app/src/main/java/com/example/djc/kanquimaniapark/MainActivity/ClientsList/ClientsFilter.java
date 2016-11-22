@@ -29,7 +29,9 @@ public class ClientsFilter extends Filter {
 
             ArrayList<Cliente> clientesFiltrados = new ArrayList<>();
             for (int i=0 ; i < list.size() ; i++){
-                if (list.get(i).get_nombre().toUpperCase().contains(constraint)){
+                if (list.get(i).get_nombre().toUpperCase().contains(constraint)
+                        || list.get(i).get_apellido().toUpperCase().contains(constraint)
+                        || list.get(i).get_id().toUpperCase().contains(constraint)){
                     clientesFiltrados.add(list.get(i));
                 }
             }

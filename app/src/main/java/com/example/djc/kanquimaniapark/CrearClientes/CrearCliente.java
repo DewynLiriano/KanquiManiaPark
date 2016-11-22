@@ -70,12 +70,6 @@ public class CrearCliente extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
     @Subscribe
     public void onEvent(SuccessEvent event){
         Log.d(TAG, "Event triggered");
@@ -125,6 +119,7 @@ public class CrearCliente extends AppCompatActivity {
     public void registrarCliente(View v) {
         boolean cancel = false;
         String nombre, apellido, correo, cumple, numero;
+
 
          progressDialog.show();
 

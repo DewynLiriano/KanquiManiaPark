@@ -96,4 +96,13 @@
     <string name="title_activity_probando">Probando</string>
 
     <string name="crear_cliente">Crear Cliente</string>
+    <string name="title_activity_color_setter">ColorSetter</string>
+
+    <string name="facturacion">Facturación</string>
+    <string name="productos_agregados">Productos Agregados: </string>
+    <string name="boletas_agregadas">Boletas Agregadas:</string>
+    <string name="seguro_borrar_item">Esta seguro de que quiere borrar este producto?</string>
+
+    <string name="info_cliente">Información del Cliente</string>
+    <string name="seleccione_tipo_ticket">Seleccione tipo de ticket:</string>
 </resources>

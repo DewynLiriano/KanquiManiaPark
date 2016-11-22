@@ -1,15 +1,10 @@
 package com.example.djc.kanquimaniapark.CrearClientes;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.Bitmap;
+
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.util.Base64;
 
 import com.example.djc.kanquimaniapark.Clases.Cliente;
-import com.example.djc.kanquimaniapark.Helpers.BitMapHelper;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -23,24 +18,20 @@ import com.google.firebase.storage.UploadTask;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-
 /**
  * Created by dewyn on 10/1/2016.
  */
 
 public class ClientFirebaseHelper {
 
-    private String CLIENTS_CHILD = "Clientes";
-    private String ID = "ID";
-    private String NOMBRE = "Nombre";
-    private String APELLIDO = "Apellido";
-    private String CORREO = "Correo";
-    private String NUMERO = "Numero";
-    private String SEXO = "Sexo";
-    private String CUMPLE = "Fecha_Cumpleanos";
-    private String FOTO = "Foto";
+    private static final String CLIENTS_CHILD = "Clientes";
+    private static final String ID = "ID";
+    private static final String NOMBRE = "Nombre";
+    private static final String APELLIDO = "Apellido";
+    private static final String CORREO = "Correo";
+    private static final String NUMERO = "Numero";
+    private static final String SEXO = "Sexo";
+    private static final String CUMPLE = "Fecha_Cumpleanos";
     private static final String FOTOS_CLIENTES = "FOTOS_CLIENTES";
 
     private DatabaseReference database;

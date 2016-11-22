@@ -1,5 +1,6 @@
 package com.example.djc.kanquimaniapark.MainActivity.ClientsList;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -51,7 +52,12 @@ public class ClientRecyclerAdapter extends  RecyclerView.Adapter<ClientRecyclerV
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void OnItemClickListener(View v, int pos) {
-               Snackbar.make(v, String.valueOf(list.get(position).get_fechaCumpleAnos()), Snackbar.LENGTH_SHORT).show();
+                Dialog dialog = new Dialog(context);
+                dialog.setTitle("Informacion del cliente");
+                dialog.setContentView(R.layout.select_client_ticket_dialog);
+
+
+                dialog.show();
             }
         });
     }

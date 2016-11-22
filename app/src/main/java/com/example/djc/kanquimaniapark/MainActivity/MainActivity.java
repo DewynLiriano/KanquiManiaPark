@@ -4,17 +4,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,20 +28,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.load.model.stream.StreamByteArrayLoader;
-import com.bumptech.glide.load.resource.bitmap.StreamBitmapDecoder;
 import com.example.djc.kanquimaniapark.Admin.SimpleTabsActivity;
 import com.example.djc.kanquimaniapark.Clases.Atraccion;
 import com.example.djc.kanquimaniapark.Clases.Cliente;
 import com.example.djc.kanquimaniapark.Clases.IdentificadorEntrada;
-
-import com.example.djc.kanquimaniapark.Helpers.BitMapHelper;
+import com.example.djc.kanquimaniapark.Clases.Producto;
+import com.example.djc.kanquimaniapark.Clases.SelectedProduct;
 import com.example.djc.kanquimaniapark.MainActivity.ClientsList.ClientRecyclerAdapter;
 import com.example.djc.kanquimaniapark.CrearClientes.CrearCliente;
 import com.example.djc.kanquimaniapark.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -52,9 +45,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -77,37 +67,45 @@ public class MainActivity extends AppCompatActivity {
     private static final String APELLIDO = "Apellido";
     private static final String FECHA_CUMPLEANOS = "Fecha_Cumpleanos";
     private static final String SEXO = "Sexo";
-    private static final String FOTO = "Foto";
     private static final String NUMERO = "Numero_Telefono";
     private static final String CORREO = "Correo_Electronico";
-    private static final String INDICADORES = "Indicadores";
+    private static final String INDICADORES = "Identificadores";
     private static final String COLORES = "Colores";
     private static final String ID = "ID";
-    private static final String COLOR = "Color";
     private static final String FECHA = "Fecha";
     private static final String ATRACCIONES_ID = "Atracciones";
     private static final String ATRACCIONES = "Atracciones";
+    private static final String PRODUCTOS = "Productos";
     private static final String NOMBRE = "Nombre";
+    private static final String TITULO = "Titulo";
     private static final String PRECIO = "Precio";
     private static final String TIEMPO = "Tiempo";
     private static final String CLIENTES = "Clientes";
-    private static final String FOTOS_CLIENTES = "FOTOS_CLIENTES";
     //</editor-fold>
 
+    //<editor-fold desc="Listas y Adaptadores">
     private List<Cliente> clientes;
     private ClientRecyclerAdapter adapter;
     private List<String> colores;
-    private List<Atraccion> atracciones, selected_atr;
-    private IdentificadorEntrada identificador;
-    private ListView list_atr;
+    private List<Atraccion> atracciones;
+    private List<Producto> productos;
     private ArrayAdapter<Atraccion> atr_adapter;
+    private ArrayAdapter<Producto> spinner_prod_adapter;
     private ArrayAdapter<String> color_adpt;
+
+    private List<SelectedProduct> selectedProducts;
+    private SelectedProductsAdapter selectedProductsAdapter;
+    //</editor-fold>
 
     private MainFireBaseHelper mainHelper;
     private RecyclerView recyclerView;
     private View focused = null;
-    private DatabaseReference mRef, cRef, atrRef, cliRef;
+    private DatabaseReference mRef, colorRef, atrRef, prodRef, clientRef;
 
+    private Spinner products_spinner;
+    private EditText counterET;
+
+    private ListView added_products_list, added_tickets_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,41 +114,86 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //<editor-fold desc="Inicializando">
         clientes = new ArrayList<>();
         adapter = new ClientRecyclerAdapter(MainActivity.this, clientes);
         colores = new ArrayList<>();
         atracciones = new ArrayList<>();
-        selected_atr = new ArrayList<>();
-        identificador = new IdentificadorEntrada();
+        productos = new ArrayList<>();
+        selectedProducts = new ArrayList<>();
         atr_adapter =  new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, atracciones);
-        color_adpt = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, colores);
+        spinner_prod_adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, productos);
+        color_adpt = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, colores);
+        color_adpt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        selectedProductsAdapter = new SelectedProductsAdapter(MainActivity.this, selectedProducts);
+        //</editor-fold>
 
         //<editor-fold desc="Firebase References">
         atrRef = FirebaseDatabase.getInstance().getReference(ATRACCIONES);
         atrRef.addValueEventListener(getAtr);
 
-
-        cRef = FirebaseDatabase.getInstance().getReference(COLORES);
-        cRef.addChildEventListener(getColores);
+        colorRef = FirebaseDatabase.getInstance().getReference(COLORES);
+        colorRef.addChildEventListener(getColores);
 
         mRef = FirebaseDatabase.getInstance().getReference(INDICADORES);
-        mRef.limitToLast(1).addListenerForSingleValueEvent(getIden);
+        mRef.limitToLast(1).addValueEventListener(getIden);
         mRef.keepSynced(true);
 
-        cliRef = FirebaseDatabase.getInstance().getReference(CLIENTES);
-        cliRef.addValueEventListener(getClients);
-        cliRef.keepSynced(true);
+        clientRef = FirebaseDatabase.getInstance().getReference(CLIENTES);
+        clientRef.addValueEventListener(getClients);
+        clientRef.keepSynced(true);
+
+        prodRef = FirebaseDatabase.getInstance().getReference(PRODUCTOS);
+        prodRef.addValueEventListener(getProd);
+        prodRef.keepSynced(true);
 
         if (FirebaseApp.getApps(this).isEmpty()) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         }
         //</editor-fold>
 
+        //<editor-fold desc="Facturacion Productos">
+        products_spinner = (Spinner)findViewById(R.id.facturacion_spinner);
+        products_spinner.setAdapter(atr_adapter);
+
+        counterET = (EditText)findViewById(R.id.facturacion_products_counter);
+        added_products_list = (ListView)findViewById(R.id.facturacion_products_list);
+        added_products_list.setOnItemLongClickListener(onItemLongClickListener);
+        //</editor-fold>
+
         mainHelper = new MainFireBaseHelper();
-        //Manejo de Recycler View
         recyclerViewController();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (isFirstLaunch()){
+            Dialog dialog = set_colors();
+            dialog.show();
+        }
+    }
+
+    private boolean isFirstLaunch() {
+        boolean isFirstLaunch;
+        SharedPreferences sharedPref = MainActivity.this.getSharedPreferences("FECHA_INDICADOR", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        String currentDate = sdf.format(Calendar.getInstance().getTimeInMillis());
+        String lastDate = sharedPref.getString("ULTIMA_FECHA_GUARDADA", "NO_HOY");
+
+        if (lastDate.equals(currentDate)){
+            isFirstLaunch = false;
+        } else {
+            editor.putString("ULTIMA_FECHA_GUARDADA", currentDate);
+            editor.apply();
+            isFirstLaunch = true;
+        }
+        return isFirstLaunch;
+    }
+
+    //<editor-fold desc="Menu">
     //Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -197,13 +240,19 @@ public class MainActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.inicio_jornada_dialog);
         dialog.setTitle("Inicio de Jornada");
         dialog.setCancelable(false);
-        list_atr = (ListView)dialog.findViewById(R.id.setting_lista_boletas);
+        ListView list_atr = (ListView) dialog.findViewById(R.id.setting_lista_boletas);
         list_atr.setAdapter(atr_adapter);
-        list_atr.setSelection(0);
         list_atr.setSelected(true);
+
+        final Button acceptCol = (Button)dialog.findViewById(R.id.setting_color_button);
+        final Button dismissButton = (Button)dialog.findViewById(R.id.setting_accept_idnt_button);
+
+
+        final HashMap<String, Atraccion> sel_atr= new HashMap<>();
+        final List<String> sel_col= new ArrayList<>();
+
         final Spinner spinner = (Spinner)dialog.findViewById(R.id.setting_ticket_color_spinner);
         spinner.setAdapter(color_adpt);
-
         final TextView nombreTV = (TextView)dialog.findViewById(R.id.setting_ticket_tipo);
         final TextView tiempoTV = (TextView)dialog.findViewById(R.id.setting_ticket_time);
 
@@ -216,22 +265,15 @@ public class MainActivity extends AppCompatActivity {
                 nombreTV.setText(atracciones.get(position).get_titulo());
                 tiempoTV.setText(atracciones.get(position).get_tiempo());
                 focused = view;
+                acceptCol.setEnabled(true);
             }
         });
-
-
-        Button acceptCol = (Button)dialog.findViewById(R.id.setting_color_button);
-        final Button dismissButton = (Button)dialog.findViewById(R.id.setting_accept_idnt_button);
-
-
-        final HashMap<String, Atraccion> sel_atr= new HashMap<>();
-        final List<String> sel_col= new ArrayList<>();
 
         acceptCol.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-                if (spinner.getSelectedItem().toString() != null || focused != null){
+                if (spinner.getSelectedItem() != null || focused != null){
                     String s  = spinner.getSelectedItem().toString();
                     sel_atr.put(s, atracciones.get(posAtr[0]));
                     sel_col.add(s);
@@ -244,8 +286,6 @@ public class MainActivity extends AppCompatActivity {
                     if (sel_atr.size() == atracciones.size()){
                         dismissButton.setEnabled(true);
                     }
-                } else {
-                    Toast.makeText(MainActivity.this, "Debe seleccionar una atracción", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -276,19 +316,7 @@ public class MainActivity extends AppCompatActivity {
 
         return dialog;
     }
-
-    //--------------------------------------FUNCIONES----------------------------------------
-
-    //FUNCION SE MANEJA EL RECYCLERVIEW
-    public void recyclerViewController(){
-        //Recycler view
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
-
-    //FUNCION DONDE SE ANIMAN LOS BOTONES AL DAR CLICK
+    //</editor-fold>
 
     //<editor-fold desc="On Clicks">
 
@@ -346,6 +374,36 @@ public class MainActivity extends AppCompatActivity {
         });
         return builder.create();
     }
+
+    //<editor-fold desc="onItemLongClickListener">
+    private AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+            alert.setTitle(getString(R.string.atencion));
+            alert.setMessage(getString(R.string.seguro_borrar_item));
+            alert.setPositiveButton(getString(R.string.si), new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    selectedProducts.remove(position);
+                    selectedProductsAdapter.notifyDataSetChanged();
+                    dialog.dismiss();
+                }
+            });
+            alert.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            alert.show();
+            return true;
+        }
+    };
+    //</editor-fold>
+
     //</editor-fold>
 
     //<editor-fold desc="Firebase Events">
@@ -377,10 +435,39 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private ValueEventListener getProd = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            GenericTypeIndicator<Map<String, Map<String, String>>> genin = new GenericTypeIndicator<Map<String, Map<String, String>>>() {};
+            Map<String, Map<String,String>> map = dataSnapshot.getValue(genin);
+            productos.clear();
+
+            if (map != null){
+                for (Map.Entry<String, Map<String, String>> entry : map.entrySet()){
+                    if (entry != null){
+                        HashMap value = (HashMap) entry.getValue();
+                        Producto p = new Atraccion();
+                        p.set_id((String)value.get(ID));
+                        p.set_titulo((String)value.get(TITULO));
+                        p.set_precio((String) value.get(PRECIO));
+                        productos.add(p);
+                    }
+                }
+            }
+            spinner_prod_adapter.notifyDataSetChanged();
+            products_spinner.setAdapter(spinner_prod_adapter);
+        }
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
     private ChildEventListener getColores = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             colores.add((String) dataSnapshot.getValue());
+            color_adpt.notifyDataSetChanged();
         }
 
         @Override
@@ -407,21 +494,33 @@ public class MainActivity extends AppCompatActivity {
     private ValueEventListener getIden = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            Map<String, Object> root = (HashMap<String, Object>)dataSnapshot.getValue();
+            HashMap root = (HashMap)dataSnapshot.getValue();
+
+            IdentificadorEntrada i = new IdentificadorEntrada();
+
             if (root != null){
-                identificador.set_id((String) root.get(ID));
-                identificador.set_fecha((String) root.get(FECHA));
+                Collection<Object> objects = root.values();
+                for (Object o : objects){
+                    if (o instanceof Map){
+                        HashMap<String, Object> map = (HashMap<String, Object>) o;
+                        i.set_id((String) map.get(ID));
+                        i.set_fecha((String) map.get(FECHA));
 
-                HashMap<String, String> map_atracciones = (HashMap<String, String>) root.get(ATRACCIONES_ID);
-                if (map_atracciones != null){
-                    identificador.set_atraccionesID(map_atracciones);
-                }
+                        HashMap<String, String> map_atracciones = (HashMap<String, String>) map.get(ATRACCIONES_ID);
+                        if (map_atracciones != null){
+                            i.set_atraccionesID(map_atracciones);
+                        }
 
-                HashMap<String, String> lista_colores = (HashMap<String, String>) root.get(COLORES);
-                if (lista_colores != null){
-                    identificador.set_colores(new ArrayList<String>(lista_colores.values()));
+                        HashMap<String, String> lista_colores = (HashMap<String, String>) map.get(COLORES);
+                        if (lista_colores != null){
+                            i.set_colores(new ArrayList<>(lista_colores.values()));
+                        }
+                    }
                 }
+            } else {
+                //dialog.show();
             }
+
         }
 
         @Override
@@ -465,6 +564,14 @@ public class MainActivity extends AppCompatActivity {
     };
     //</editor-fold>
 
+    public void recyclerViewController(){
+        //Recycler view
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
     private void sortClientes() {
         Collections.sort(clientes, new Comparator<Cliente>() {
             @Override
@@ -472,5 +579,46 @@ public class MainActivity extends AppCompatActivity {
                 return o2.get_id().compareTo(o1.get_id());
             }
         });
+    }
+
+    public void increaseCounter(View view) {
+       if (!counterET.getText().toString().equals("")){
+           int actual = Integer.parseInt(counterET.getText().toString());
+           counterET.setText(String.valueOf(actual + 1));
+       }
+    }
+
+    public void decreaseCounter(View view) {
+        if (!counterET.getText().toString().equals("")){
+            int actual = Integer.parseInt(counterET.getText().toString());
+           if (actual > 0){
+               counterET.setText(String.valueOf(actual - 1));
+           }
+        }
+    }
+
+    public void addProduct(View view) {
+        boolean there = false;
+        int n = products_spinner.getSelectedItemPosition();
+        int cant = Integer.parseInt(counterET.getText().toString());
+        if  (cant > 0){
+            SelectedProduct newSelection = new SelectedProduct(cant, productos.get(n));
+            for (SelectedProduct s : selectedProducts){
+                if (s.get_producto().equals(newSelection.get_producto())){
+                    int pos = selectedProducts.indexOf(s);
+                    selectedProducts.get(pos).set_cantidad(cant);
+                    selectedProductsAdapter.notifyDataSetChanged();
+                    there = true;
+                    break;
+                }
+            }
+
+            if (!there){
+                selectedProducts.add(newSelection);
+                selectedProductsAdapter.notifyDataSetChanged();
+                added_products_list.setAdapter(selectedProductsAdapter);
+            }
+        }
+        counterET.setText("0");
     }
 }
