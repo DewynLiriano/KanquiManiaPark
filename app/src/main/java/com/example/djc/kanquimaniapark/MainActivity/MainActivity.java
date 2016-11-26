@@ -37,6 +37,7 @@ import com.example.djc.kanquimaniapark.Clases.Cliente;
 import com.example.djc.kanquimaniapark.Clases.IdentificadorEntrada;
 import com.example.djc.kanquimaniapark.Clases.Producto;
 import com.example.djc.kanquimaniapark.Clases.SelectedProduct;
+import com.example.djc.kanquimaniapark.Eventos.AddAtracctionsEvent;
 import com.example.djc.kanquimaniapark.MainActivity.ClientsList.ClientRecyclerAdapter;
 import com.example.djc.kanquimaniapark.CrearClientes.CrearCliente;
 import com.example.djc.kanquimaniapark.R;
@@ -587,10 +588,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-            } else {
-                //dialog.show();
             }
-
         }
 
         @Override

@@ -2,7 +2,6 @@ package com.example.djc.kanquimaniapark.MainActivity.ClientsList;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,13 +14,12 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.djc.kanquimaniapark.Clases.Atraccion;
 import com.example.djc.kanquimaniapark.Clases.Cliente;
 import com.example.djc.kanquimaniapark.Helpers.ItemClickListener;
-import com.example.djc.kanquimaniapark.MainActivity.AddAtracctionsEvent;
+import com.example.djc.kanquimaniapark.Eventos.AddAtracctionsEvent;
 import com.example.djc.kanquimaniapark.R;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DataSnapshot;
@@ -31,10 +29,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;

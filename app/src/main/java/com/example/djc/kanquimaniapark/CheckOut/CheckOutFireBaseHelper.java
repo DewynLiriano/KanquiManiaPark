@@ -71,14 +71,13 @@ public class CheckOutFireBaseHelper {
     public void createAttractionsManager(List<SelectedAttraction> selectedAttractions){
         for (SelectedAttraction sa : selectedAttractions){
             if (!sa.getAtraccion().get_tiempo().equals("Ilimitado")){
-            factRef = FirebaseDatabase.getInstance().getReference(CONTROL_ATRACCIONES).push();
-            factRef.child(ID).setValue(factRef.getKey());
-            factRef.child(CLIENTE_ID).setValue(sa.getClient().get_id());
-            factRef.child(ATRACCION_ID).setValue(sa.getAtraccion().get_id());
+                factRef = FirebaseDatabase.getInstance().getReference(CONTROL_ATRACCIONES).push();
+                factRef.child(ID).setValue(factRef.getKey());
+                factRef.child(CLIENTE_ID).setValue(sa.getClient().get_id());
+                factRef.child(ATRACCION_ID).setValue(sa.getAtraccion().get_id());
 
-            SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT, Locale.getDefault());
-            factRef.child(HORA_ENTRADA).setValue(sdf.format(Calendar.getInstance().getTimeInMillis()));
-
+                SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT, Locale.getDefault());
+                factRef.child(HORA_ENTRADA).setValue(sdf.format(Calendar.getInstance().getTimeInMillis()));
                 Calendar cal = Calendar.getInstance();
                 cal.add(Calendar.MINUTE, Integer.valueOf(sa.getAtraccion().get_tiempo()));
                 factRef.child(HORA_SALIDA).setValue(sdf.format(cal.getTime()));

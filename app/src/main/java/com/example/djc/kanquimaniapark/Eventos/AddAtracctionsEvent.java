@@ -1,4 +1,4 @@
-package com.example.djc.kanquimaniapark.MainActivity;
+package com.example.djc.kanquimaniapark.Eventos;
 
 import com.example.djc.kanquimaniapark.Clases.Atraccion;
 import com.example.djc.kanquimaniapark.Clases.Cliente;

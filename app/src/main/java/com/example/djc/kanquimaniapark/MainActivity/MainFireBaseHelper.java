@@ -78,9 +78,9 @@ public class MainFireBaseHelper {
         dataRef.child(ID).setValue(dataRef.getKey());
         dataRef.child(FECHA).setValue(iden.get_fecha());
 
-        for (String p : iden.get_colores()){
+        /*for (String p : iden.get_colores()){
             dataRef.child(COLORES).push().setValue(p);
-        }
+        }*/
 
         for (HashMap.Entry<String, String> o : iden.get_atracciones().entrySet()){
             dataRef.child(ATRACCIONES).child(o.getKey()).setValue(o.getValue());
