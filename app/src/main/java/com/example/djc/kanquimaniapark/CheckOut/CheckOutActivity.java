@@ -100,7 +100,6 @@ public class CheckOutActivity extends AppCompatActivity {
     private float total_descontado = 0f;
     //</editor-fold>
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

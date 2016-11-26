@@ -153,7 +153,8 @@
             android:id="@+id/registrarClienteBN"
             android:layout_marginTop="50dp"
             android:layout_gravity="center"
-            android:onClick="registrarCliente"/>
+            android:onClick="registrarCliente"
+            android:background="@drawable/custom_border"/>
 
     </LinearLayout>
 

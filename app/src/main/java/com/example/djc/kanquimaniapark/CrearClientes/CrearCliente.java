@@ -121,19 +121,11 @@ public class CrearCliente extends AppCompatActivity {
         boolean cancel = false;
         String nombre, apellido, correo, cumple, numero;
 
-
-         progressDialog.show();
-
         //CONTROL DE ENTRADA DE DATOS
         if (!DateValidator.isDateValid(cumpleET.getText().toString(), DATEFORMAT)) {
             //NOTIFICACION ERROR
             cumpleET.setError(getString(R.string.fechaInvalida));
             focusView = cumpleET;
-            cancel = true;
-        }
-        else if (!correoET.getText().toString().contains("@")) {
-            correoET.setError(getString(R.string.correoInvalido));
-            focusView = correoET;
             cancel = true;
         } else if(Objects.equals(nombreET.getText().toString(), "")){
             nombreET.setError(getString(R.string.vacio) + getString(R.string.nombre));
@@ -149,16 +141,12 @@ public class CrearCliente extends AppCompatActivity {
         } else if (uriFoto == null){
             photo_alertBuilder().show();
             cancel = true;
-        } else if (numeroET.getText().toString().length() < 10) {
-            numeroET.setError(getString(R.string.numeroInvalido));
-            focusView = numeroET;
-            cancel = true;
         }
-
 
         if (cancel) {
             focusView.requestFocus();
         } else {
+            progressDialog.show();
             nombre = nombreET.getText().toString();
             apellido = apellidoET.getText().toString();
             correo = correoET.getText().toString();
