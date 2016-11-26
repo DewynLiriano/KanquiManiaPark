@@ -47,7 +47,7 @@ public class SelectedProductsAdapter extends BaseAdapter {
         TextView pCount = (TextView)v.findViewById(R.id.hashmap_list_item_count);
 
         pName.setText(selected_products.get(position).get_producto().get_titulo());
-        pCount.setText(String.valueOf(selected_products.get(position).get_cantidad()));
+        pCount.setText("x" + String.valueOf(selected_products.get(position).get_cantidad()));
 
         return v;
     }

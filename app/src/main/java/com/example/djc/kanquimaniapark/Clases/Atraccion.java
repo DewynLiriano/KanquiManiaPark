@@ -1,10 +1,12 @@
 package com.example.djc.kanquimaniapark.Clases;
 
+import java.io.Serializable;
+
 /**
  * Created by dewyn on 10/26/2016.
  */
 
-public class Atraccion extends Producto {
+public class Atraccion extends Producto implements Serializable {
 
     private String _tiempo;
 
@@ -23,4 +25,8 @@ public class Atraccion extends Producto {
 
     public Atraccion(){}
 
+    @Override
+    public String toString(){
+        return this.get_titulo() + " - " + this.get_tiempo() + " mins.";
+    }
 }

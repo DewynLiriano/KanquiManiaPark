@@ -1,10 +1,12 @@
 package com.example.djc.kanquimaniapark.Clases;
 
+import java.io.Serializable;
+
 /**
  * Created by dewyn on 10/11/2016.
  */
 
-public class Persona {
+public class Persona implements Serializable {
     private String _id;
     private String _nombre;
     private String _apellido;

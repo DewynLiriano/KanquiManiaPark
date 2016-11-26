@@ -3,6 +3,8 @@ package com.example.djc.kanquimaniapark.Clases;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import java.io.Serializable;
+
 /**
  * Created by dewyn on 9/26/2016.
  */

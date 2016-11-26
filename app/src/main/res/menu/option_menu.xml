@@ -19,8 +19,4 @@
         android:title="@string/admin"
         app:showAsAction="never"/>
 
-    <item android:id="@+id/menu_identificador"
-        android:title="@string/identificar_boletas"
-        app:showAsAction="never"/>
-
 </menu>

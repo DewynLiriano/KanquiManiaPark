@@ -54,6 +54,7 @@ public class CrearCliente extends AppCompatActivity {
         EventBus.getDefault().register(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Guardando Cliente");

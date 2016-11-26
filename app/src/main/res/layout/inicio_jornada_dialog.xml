@@ -105,7 +105,9 @@
                 android:layout_height="wrap_content"
                 android:text="@string/aceptar"
                 android:id="@+id/setting_accept_idnt_button"
-                android:layout_gravity="bottom|center"/>
+                android:layout_gravity="bottom|center"
+                android:background="@drawable/custom_border"
+                android:layout_marginTop="10dp"/>
 
         </LinearLayout>
     </LinearLayout>

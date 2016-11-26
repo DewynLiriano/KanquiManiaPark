@@ -2,13 +2,14 @@ package com.example.djc.kanquimaniapark.Clases;
 
 import android.content.Intent;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by dewyn on 9/26/2016.
  */
 
-public class Producto {
+public class Producto implements Serializable {
     private String _id;
     private String _titulo;
     private String _precio;

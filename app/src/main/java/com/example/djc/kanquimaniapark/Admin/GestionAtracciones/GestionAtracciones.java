@@ -116,7 +116,7 @@ public class GestionAtracciones extends Fragment {
             }
 
             for (Atraccion a : atracciones){
-                    if (a.get_titulo().equals(tituloET.getText().toString())){
+                    if (a.get_titulo().equals(tituloET.getText().toString()) && a.get_tiempo().equals(tiempoET.getText().toString())){
                         cancel = true;
                         tituloET.setError(getString(R.string.nombre_existe));
                         focusView = tituloET;

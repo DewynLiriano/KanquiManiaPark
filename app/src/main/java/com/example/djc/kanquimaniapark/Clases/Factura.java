@@ -1,7 +1,4 @@
 package com.example.djc.kanquimaniapark.Clases;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -9,53 +6,52 @@ import java.util.List;
  */
 
 public class Factura {
-    private int _id;
-    private List<Producto> _productos;
-    private List<ControlAtraccion> _controlAtracciones;
-    private Date _fechaEmision;
-    private List<Especial> _especiales;
+    private String _id;
+    private List<String> _productosSeleccionados;
+    private List<String> _atraccionesSeleccionadas;
+    private String _fechaEmision;
+    private List<String> _especialesID;
     private double _totalDescontado;
     private double _totalFinal;
-    private double _devuelta;
 
-    public int get_id() {
+    public String get_id() {
         return _id;
     }
 
-    public void set_id(int _id) {
+    public void set_id(String _id) {
         this._id = _id;
     }
 
-    public List<Producto> get_productos() {
-        return _productos;
+    public List<String> get_productos() {
+        return _productosSeleccionados;
     }
 
-    public void set_productos(List<Producto> _productos) {
-        this._productos = _productos;
+    public void set_productosSeleccionados(List<String> _productosSeleccionados) {
+        this._productosSeleccionados = _productosSeleccionados;
     }
 
-    public List<ControlAtraccion> get_controlAtracciones() {
-        return _controlAtracciones;
+    public List<String> get_atraccionesSeleccionadas() {
+        return _atraccionesSeleccionadas;
     }
 
-    public void set_controlAtracciones(List<ControlAtraccion> _controlAtracciones) {
-        this._controlAtracciones = _controlAtracciones;
+    public void set_atraccionesSeleccionadas(List<String> _atraccionesSeleccionadas) {
+        this._atraccionesSeleccionadas = _atraccionesSeleccionadas;
     }
 
-    public Date get_fechaEmision() {
+    public String get_fechaEmision() {
         return _fechaEmision;
     }
 
-    public void set_fechaEmision(Date _fechaEmision) {
+    public void set_fechaEmision(String _fechaEmision) {
         this._fechaEmision = _fechaEmision;
     }
 
-    public List<Especial> get_especiales() {
-        return _especiales;
+    public List<String> get_especialesID() {
+        return _especialesID;
     }
 
-    public void set_especiales(List<Especial> _especiales) {
-        this._especiales = _especiales;
+    public void set_especialesID(List<String> _especialesID) {
+        this._especialesID = _especialesID;
     }
 
     public double get_totalDescontado() {
@@ -74,25 +70,17 @@ public class Factura {
         this._totalFinal = _totalFinal;
     }
 
-    public double get_devuelta() {
-        return _devuelta;
-    }
-
-    public void set_devuelta(double _devuelta) {
-        this._devuelta = _devuelta;
-    }
-
-    public Factura(int _id, List<Producto> _productos, List<ControlAtraccion> _controlAtracciones,
-                   Date _fechaEmision, List<Especial> _especiales, double _totalDescontado,
-                   double _totalFinal, double _devuelta) {
+    public Factura(String _id, List<String> _productosSeleccionados, List<String> _atraccionesSeleccionadas,
+                   String _fechaEmision, List<String> _especialesID, double _totalDescontado,
+                   double _totalFinal) {
         set_id(_id);
-        set_productos(_productos);
-        set_controlAtracciones(_controlAtracciones);
+        set_productosSeleccionados(_productosSeleccionados);
+        set_atraccionesSeleccionadas(_atraccionesSeleccionadas);
         set_fechaEmision(_fechaEmision);
-        set_especiales(_especiales);
+        set_especialesID(_especialesID);
         set_totalDescontado(_totalDescontado);
         set_totalFinal(_totalFinal);
-        set_devuelta(_devuelta);
     }
+
     public Factura(){}
 }

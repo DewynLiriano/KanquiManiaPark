@@ -1,6 +1,7 @@
 package com.example.djc.kanquimaniapark.MainActivity;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +30,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.djc.kanquimaniapark.Admin.SimpleTabsActivity;
+import com.example.djc.kanquimaniapark.CheckOut.CheckOutActivity;
+import com.example.djc.kanquimaniapark.CheckOut.CloseActivityEvent;
 import com.example.djc.kanquimaniapark.Clases.Atraccion;
 import com.example.djc.kanquimaniapark.Clases.Cliente;
 import com.example.djc.kanquimaniapark.Clases.IdentificadorEntrada;
@@ -46,6 +49,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -93,14 +100,18 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<Producto> spinner_prod_adapter;
     private ArrayAdapter<String> color_adpt;
 
+    private List<SelectedAttraction> selectedAttractions;
     private List<SelectedProduct> selectedProducts;
     private SelectedProductsAdapter selectedProductsAdapter;
+    private SelectedAttractionsAdapter selectedAttractionsAdapter;
     //</editor-fold>
 
     private MainFireBaseHelper mainHelper;
     private RecyclerView recyclerView;
     private View focused = null;
     private DatabaseReference mRef, colorRef, atrRef, prodRef, clientRef;
+
+    private ProgressDialog progressDialog;
 
     private Spinner products_spinner;
     private EditText counterET;
@@ -113,6 +124,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        EventBus.getDefault().register(this);
+
+        progressDialog = new ProgressDialog(this);
 
         //<editor-fold desc="Inicializando">
         clientes = new ArrayList<>();
@@ -121,12 +135,16 @@ public class MainActivity extends AppCompatActivity {
         atracciones = new ArrayList<>();
         productos = new ArrayList<>();
         selectedProducts = new ArrayList<>();
+        selectedAttractions = new ArrayList<>();
         atr_adapter =  new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, atracciones);
         spinner_prod_adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, productos);
         color_adpt = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, colores);
         color_adpt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         selectedProductsAdapter = new SelectedProductsAdapter(MainActivity.this, selectedProducts);
+        selectedAttractionsAdapter = new SelectedAttractionsAdapter(MainActivity.this, selectedAttractions);
+
+
         //</editor-fold>
 
         //<editor-fold desc="Firebase References">
@@ -159,7 +177,13 @@ public class MainActivity extends AppCompatActivity {
 
         counterET = (EditText)findViewById(R.id.facturacion_products_counter);
         added_products_list = (ListView)findViewById(R.id.facturacion_products_list);
-        added_products_list.setOnItemLongClickListener(onItemLongClickListener);
+        added_products_list.setOnItemLongClickListener(onProductsLongClickListener);
+        //</editor-fold>
+
+        //<editor-fold desc="Facturacion Atracciones">
+        added_tickets_list = (ListView)findViewById(R.id.facturacion_attractions_list);
+        added_tickets_list.setAdapter(selectedAttractionsAdapter);
+        added_tickets_list.setOnItemLongClickListener(onAttractionsLongClickListener);
         //</editor-fold>
 
         mainHelper = new MainFireBaseHelper();
@@ -174,6 +198,21 @@ public class MainActivity extends AppCompatActivity {
             dialog.show();
         }
     }
+
+    @Subscribe
+    public void onEvent(AddAtracctionsEvent event){
+        addAttraction(new SelectedAttraction(event.getAtraccion(), event.getCliente()));
+    }
+
+    @Subscribe
+    public void onEvent(CloseActivityEvent event){
+        Toast.makeText(MainActivity.this, "Factura Creada", Toast.LENGTH_SHORT).show();
+        selectedProducts.clear();
+        selectedAttractions.clear();
+        selectedProductsAdapter.notifyDataSetChanged();
+        selectedAttractionsAdapter.notifyDataSetChanged();
+    }
+
 
     private boolean isFirstLaunch() {
         boolean isFirstLaunch;
@@ -223,9 +262,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.crear_producto:
                 logIn_alertBuilder().show();
                 return true;
-            case R.id.menu_identificador:
-                set_colors().show();
-                return true;
             case R.id.menu_add_cliente:
                 Intent intent = new Intent(getApplicationContext(), CrearCliente.class);
                 startActivity(intent);
@@ -240,13 +276,12 @@ public class MainActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.inicio_jornada_dialog);
         dialog.setTitle("Inicio de Jornada");
         dialog.setCancelable(false);
-        ListView list_atr = (ListView) dialog.findViewById(R.id.setting_lista_boletas);
+        final ListView list_atr = (ListView) dialog.findViewById(R.id.setting_lista_boletas);
         list_atr.setAdapter(atr_adapter);
         list_atr.setSelected(true);
 
         final Button acceptCol = (Button)dialog.findViewById(R.id.setting_color_button);
         final Button dismissButton = (Button)dialog.findViewById(R.id.setting_accept_idnt_button);
-
 
         final HashMap<String, Atraccion> sel_atr= new HashMap<>();
         final List<String> sel_col= new ArrayList<>();
@@ -279,12 +314,18 @@ public class MainActivity extends AppCompatActivity {
                     sel_col.add(s);
                     color_adpt.remove(s);
                     color_adpt.notifyDataSetChanged();
+
+                    atr_adapter.remove(atracciones.get(posAtr[0]));
+                    atr_adapter.notifyDataSetChanged();
+                    list_atr.setAdapter(atr_adapter);
+
                     focused.setBackgroundColor(getColor(R.color.silver));
                     focused.setEnabled(false);
                     focused.setClickable(false);
 
-                    if (sel_atr.size() == atracciones.size()){
+                    if (atracciones.size() == 0){
                         dismissButton.setEnabled(true);
+                        acceptCol.setEnabled(false);
                     }
                 }
             }
@@ -376,7 +417,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //<editor-fold desc="onItemLongClickListener">
-    private AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
+    private AdapterView.OnItemLongClickListener onProductsLongClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
             AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
@@ -388,6 +429,33 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     selectedProducts.remove(position);
                     selectedProductsAdapter.notifyDataSetChanged();
+                    dialog.dismiss();
+                }
+            });
+            alert.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            alert.show();
+            return true;
+        }
+    };
+
+    private AdapterView.OnItemLongClickListener onAttractionsLongClickListener = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+            alert.setTitle(getString(R.string.atencion));
+            alert.setMessage(getString(R.string.seguro_borrar_item));
+            alert.setPositiveButton(getString(R.string.si), new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    selectedAttractions.remove(position);
+                    selectedAttractionsAdapter.notifyDataSetChanged();
                     dialog.dismiss();
                 }
             });
@@ -440,6 +508,7 @@ public class MainActivity extends AppCompatActivity {
         public void onDataChange(DataSnapshot dataSnapshot) {
             GenericTypeIndicator<Map<String, Map<String, String>>> genin = new GenericTypeIndicator<Map<String, Map<String, String>>>() {};
             Map<String, Map<String,String>> map = dataSnapshot.getValue(genin);
+            progressDialog.show();
             productos.clear();
 
             if (map != null){
@@ -456,6 +525,7 @@ public class MainActivity extends AppCompatActivity {
             }
             spinner_prod_adapter.notifyDataSetChanged();
             products_spinner.setAdapter(spinner_prod_adapter);
+            progressDialog.dismiss();
         }
         @Override
         public void onCancelled(DatabaseError databaseError) {
@@ -533,6 +603,7 @@ public class MainActivity extends AppCompatActivity {
     private ValueEventListener getClients = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+
             clientes.clear();
             HashMap rootMap = (HashMap) dataSnapshot.getValue();
 
@@ -620,5 +691,59 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         counterET.setText("0");
+    }
+
+    private void addAttraction(SelectedAttraction selectedAttraction){
+        boolean there = false;
+
+        for (SelectedAttraction s : selectedAttractions){
+            if (s.getClient().equals(selectedAttraction.getClient())){
+                if (s.getAtraccion().get_titulo().equals(selectedAttraction.getAtraccion().get_titulo())){
+                    Toast.makeText(this, "Esta atracción ya se ha registrado", Toast.LENGTH_SHORT).show();
+                    there = true;
+                    break;
+                }
+            }
+        }
+
+        if (!there){
+            selectedAttractions.add(selectedAttraction);
+            selectedAttractionsAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void doCheckOut(View view) {
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+        alertDialog.setTitle(getString(R.string.atencion));
+        alertDialog.setMessage(getString(R.string.proceder_checkout));
+        alertDialog.setPositiveButton(getString(R.string.aceptar), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                if (selectedAttractions.size() != 0 || selectedProducts.size() != 0){
+                    Bundle selectedAtrBundle = new Bundle();
+                    selectedAtrBundle.putSerializable("SelectedAtr", (Serializable) selectedAttractions);
+
+                    Bundle selectedProdBundle = new Bundle();
+                    selectedProdBundle.putSerializable("SelectedProd", (Serializable) selectedProducts);
+
+                    Intent intent = new Intent(MainActivity.this, CheckOutActivity.class);
+                    intent.putExtras(selectedAtrBundle);
+                    intent.putExtras(selectedProdBundle);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(MainActivity.this, getString(R.string.elegir_algo), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        alertDialog.setNegativeButton(getString(R.string.cancelar), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        alertDialog.create().show();
     }
 }

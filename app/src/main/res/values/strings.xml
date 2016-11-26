@@ -105,4 +105,13 @@
 
     <string name="info_cliente">Información del Cliente</string>
     <string name="seleccione_tipo_ticket">Seleccione tipo de ticket:</string>
+    <string name="proceder_checkout">Segura que proceder a facturar?</string>
+    <string name="title_activity_check_out">CheckOutActivity</string>
+    <string name="sub_total">SubTotal:</string>
+    <string name="total">Total:</string>
+    <string name="recibido">Recibido:</string>
+    <string name="devuelta">Devuelta:</string>
+    <string name="elegir_algo">Debe seleccionar al menos un elemento</string>
+    <string name="dinero_no_suficiente">El monto no es suficiente</string>
+    <string name="desea_realizar_pedido">Desea confirmar la compra?</string>
 </resources>

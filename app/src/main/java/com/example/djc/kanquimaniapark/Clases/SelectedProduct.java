@@ -1,10 +1,12 @@
 package com.example.djc.kanquimaniapark.Clases;
 
+import java.io.Serializable;
+
 /**
  * Created by dewyn on 11/22/2016.
  */
 
-public class SelectedProduct {
+public class SelectedProduct implements Serializable {
     private int _cantidad;
     private Producto _producto;
 
