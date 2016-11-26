@@ -307,6 +307,8 @@ public class CheckOutActivity extends AppCompatActivity {
 
                 CheckOutFireBaseHelper checkOutFirebaseHelper = new CheckOutFireBaseHelper();
                 checkOutFirebaseHelper.addFactura(factura);
+                checkOutFirebaseHelper.createAttractionsManager(gottenAttractions);
+
                 EventBus.getDefault().post(new CloseActivityEvent());
                 dialog.dismiss();
                 finish();
