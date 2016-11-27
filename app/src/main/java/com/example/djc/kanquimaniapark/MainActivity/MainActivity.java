@@ -1,6 +1,7 @@
 package com.example.djc.kanquimaniapark.MainActivity;
 
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -267,6 +268,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), CrearCliente.class);
                 startActivity(intent);
                 return true;
+            case R.id.generar_reporte:
+                DialogFragment reportsDatePicker = new ReportsDatePickerFragment();
+                reportsDatePicker.show(getFragmentManager(), "Reports DatePicker");
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -337,14 +341,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 IdentificadorEntrada ie = new IdentificadorEntrada();
                 ie.set_id("");
-                ie.set_colores(sel_col);
 
                 HashMap<String, String> ids = new HashMap<String, String>();
                 for (HashMap.Entry<String, Atraccion> o : sel_atr.entrySet()){
                     ids.put(o.getKey(), o.getValue().get_id());
                 }
-
-                ie.set_atraccionesID(ids);
+                ie.set_atraccion_color(ids);
 
                 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 Calendar calendar = Calendar.getInstance();
@@ -579,12 +581,7 @@ public class MainActivity extends AppCompatActivity {
 
                         HashMap<String, String> map_atracciones = (HashMap<String, String>) map.get(ATRACCIONES_ID);
                         if (map_atracciones != null){
-                            i.set_atraccionesID(map_atracciones);
-                        }
-
-                        HashMap<String, String> lista_colores = (HashMap<String, String>) map.get(COLORES);
-                        if (lista_colores != null){
-                            i.set_colores(new ArrayList<>(lista_colores.values()));
+                            i.set_atraccion_color(map_atracciones);
                         }
                     }
                 }

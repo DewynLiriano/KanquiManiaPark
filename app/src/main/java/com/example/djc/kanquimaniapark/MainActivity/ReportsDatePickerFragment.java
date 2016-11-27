@@ -1,25 +1,21 @@
-package com.example.djc.kanquimaniapark.Admin.GeneraReportes;
+package com.example.djc.kanquimaniapark.MainActivity;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Environment;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import android.widget.DatePicker;
+import android.widget.EditText;
 
 import com.example.djc.kanquimaniapark.Clases.Atraccion;
 import com.example.djc.kanquimaniapark.Clases.Factura;
 import com.example.djc.kanquimaniapark.Clases.IdentificadorEntrada;
 import com.example.djc.kanquimaniapark.Clases.Producto;
+import com.example.djc.kanquimaniapark.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,27 +23,39 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StreamDownloadTask;
-import com.itextpdf.text.*;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import com.example.djc.kanquimaniapark.R;
-
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
+/**
+ * Created by dewyn on 9/28/2016.
+ */
 
-public class GenerarReporte extends Fragment {
+public class ReportsDatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
+    //<editor-fold desc="Constantes">
     private static final String ID = "ID";
     private static final String NOMBRE = "Nombre";
     private static final String TIEMPO = "Tiempo";
@@ -57,7 +65,6 @@ public class GenerarReporte extends Fragment {
     private static final String IDENTIFICADORES = "Identificadores";
     private static final String PRODUCTOS = "Productos";
     private static final String COLORES = "Colores";
-
     private static final String FACTURAS = "Facturas";
     private static final String FECHA_EMISION = "Fecha_Emision";
     private static final String TOTAL_DESCONTADO = "Total_Descontado";
@@ -65,72 +72,64 @@ public class GenerarReporte extends Fragment {
     private static final String PRODUCTOS_SELECCIONADOS = "Productos_Seleccionados";
     private static final String ATRACCIONES_SELECCIONADAS = "Atracciones_Seleccionadas";
     private static final String ESPECIALES_APLICADOS = "Especiales_Aplicados";
-    private static final String DATEFORMAT = "dd/MM/yyyy HH:mm";
     private static final String FECHA = "Fecha";
+    //</editor-fold>
 
-
-    File root = Environment.getExternalStorageDirectory();
-    String path = "/Reporte.pdf";
-    File file = new File(root, path);
-    String fullVIP;
-    String patinajeL;
-    String patinajeI;
-    String inflableL;
-    String inflableI;
-
-    private DatabaseReference colorsRef, atrRef, identRef, prodRef, factRef;
-
+    //<editor-fold desc="Listas">
     private ArrayList<Atraccion> atracciones;
     private ArrayList<Producto> productos;
     private ArrayList<Factura> facturas;
     private ArrayList<String> colores;
-    private IdentificadorEntrada identificador;
+    private ArrayList<IdentificadorEntrada> identificadores;
+    //</editor-fold>
 
-    public GenerarReporte() {
-        // Required empty public constructor
-    }
+    private File root, file;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_reporte, container, false);
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        root = Environment.getExternalStorageDirectory();
 
         atracciones = new ArrayList<>();
         productos = new ArrayList<>();
         colores = new ArrayList<>();
         facturas = new ArrayList<>();
-        identificador = new IdentificadorEntrada();
+        identificadores = new ArrayList<>();
 
-        atrRef = FirebaseDatabase.getInstance().getReference(ATRACCIONES_ID);
-        identRef = FirebaseDatabase.getInstance().getReference(IDENTIFICADORES);
-        prodRef = FirebaseDatabase.getInstance().getReference(PRODUCTOS);
-        colorsRef = FirebaseDatabase.getInstance().getReference(COLORES);
-        factRef = FirebaseDatabase.getInstance().getReference(FACTURAS);
+        DatabaseReference atrRef = FirebaseDatabase.getInstance().getReference(ATRACCIONES_ID);
+        DatabaseReference identRef = FirebaseDatabase.getInstance().getReference(IDENTIFICADORES);
+        DatabaseReference prodRef = FirebaseDatabase.getInstance().getReference(PRODUCTOS);
+        DatabaseReference colorsRef = FirebaseDatabase.getInstance().getReference(COLORES);
+        DatabaseReference factRef = FirebaseDatabase.getInstance().getReference(FACTURAS);
 
         colorsRef.addChildEventListener(getColores);
         atrRef.addValueEventListener(getAtr);
-        identRef.limitToLast(1).addValueEventListener(getIden);
+        identRef.addValueEventListener(getIden);
         prodRef.addValueEventListener(getProd);
         factRef.addValueEventListener(getFact);
 
+        //INICIALIZA EL CALENDARIO CON LA FECHA ACTUAL
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
 
-        Button generarReporteButton = (Button) view.findViewById(R.id.generarReporte);
-        generarReporteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                generarReporte();
-            }
-        });
-        // Inflate the layout for this fragment
-        return view;
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), R.style.style_date_picker_dialog, this, year, month, day);
+        DatePicker picker = datePickerDialog.getDatePicker();
+        picker.setMaxDate(c.getTimeInMillis());
+
+        // CREA INSTANCIA DEL DIALOGO Y SE DEVUELVE
+        return datePickerDialog;
     }
 
-    private void generarReporte() {
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        String selectedDate = dayOfMonth + "/" + (month+1) + "/" + year;
+        String formatedDate = selectedDate.replace("/", "-");
+        String path = "/Reporte - " + formatedDate + ".pdf";
+        file = new File(root, path);
+        generarReporte(selectedDate);
+    }
+
+    private void generarReporte(String selectedDate) {
         try {
             file.createNewFile();
         } catch (IOException e) {
@@ -146,14 +145,14 @@ public class GenerarReporte extends Fragment {
 
         //Cambiar estilo de letras para crear parrafos(estilo y tamano)
         Font f=new Font(Font.FontFamily.TIMES_ROMAN,18.0f,Font.BOLD);
-        Paragraph TituloJornada = new Paragraph("Los Colores de la Jornada X Son:\n\n",f);
+        Paragraph TituloJornada = new Paragraph("Colores usados:\n\n",f);
 
         TituloJornada.setAlignment(1);
 
         //Llamar funcion para poner headers con titulo y logos
 
         try {
-            DrawLogos(document);
+            DrawLogos(document, selectedDate);
         } catch (DocumentException | IOException e) {
             e.printStackTrace();
         }
@@ -166,79 +165,29 @@ public class GenerarReporte extends Fragment {
         //Crear Tabla
         PdfPTable table = new PdfPTable(2);
         //---------------------------------------------------------------------------------------------------
-        PdfPCell cellOne = new PdfPCell(new Phrase("Full VIP"));
-        PdfPCell cellTwo = new PdfPCell();
-        try {
-            cellTwo = new PdfPCell(RetornarColorImagen(fullVIP));
-        } catch (IOException | BadElementException e) {
-            e.printStackTrace();
+        for (Atraccion a : atracciones) {
+            PdfPCell cellOne = new PdfPCell(new Phrase(a.get_titulo() + " -> " + a.get_tiempo() + " mins"));
+            PdfPCell cellTwo = new PdfPCell();
+            try {
+                for (IdentificadorEntrada i : identificadores){
+                    if(selectedDate.equals(i.get_fecha())) {
+                        for(Map.Entry Entry : i.get_atracciones().entrySet()) {
+                            if(Objects.equals(Entry.getValue(), a.get_id())) {
+                                cellTwo = new PdfPCell(RetornarColorImagen(String.valueOf(Entry.getKey())));
+                            }
+                        }
+                    }
+                }
+
+            } catch (IOException | BadElementException e) {
+                e.printStackTrace();
+            }
+
+            cellOne.setPadding(7);
+            cellTwo.setPadding(5);
+            table.addCell(cellOne);
+            table.addCell(cellTwo);
         }
-
-        //   cellOne.setBorder(Rectangle.NO_BORDER);
-        cellOne.setPadding(7);
-        //   cellTwo.setBorder(Rectangle.NO_BORDER);
-        cellTwo.setPadding(5);
-        table.addCell(cellOne);
-        table.addCell(cellTwo);
-        //---------------------------------------------------------------------------------------------------
-        cellOne = new PdfPCell(new Phrase("Patinaje Limitado"));
-        try {
-            cellTwo = new PdfPCell(RetornarColorImagen(patinajeL));
-        } catch (IOException | BadElementException e) {
-            e.printStackTrace();
-        }
-
-        //   cellOne.setBorder(Rectangle.NO_BORDER);
-        cellOne.setPadding(7);
-        //   cellTwo.setBorder(Rectangle.NO_BORDER);
-        cellTwo.setPadding(5);
-        table.addCell(cellOne);
-        table.addCell(cellTwo);
-        //---------------------------------------------------------------------------------------------------
-        cellOne = new PdfPCell(new Phrase("Patinaje Ilimitado"));
-        try {
-            cellTwo = new PdfPCell(RetornarColorImagen(patinajeI));
-        } catch (IOException | BadElementException e) {
-            e.printStackTrace();
-        }
-
-        //   cellOne.setBorder(Rectangle.NO_BORDER);
-        cellOne.setPadding(7);
-        //   cellTwo.setBorder(Rectangle.NO_BORDER);
-        cellTwo.setPadding(5);
-
-        table.addCell(cellOne);
-        table.addCell(cellTwo);
-        //---------------------------------------------------------------------------------------------------
-        cellOne = new PdfPCell(new Phrase("Inflables Ilimitado"));
-        try {
-            cellTwo = new PdfPCell(RetornarColorImagen(inflableI));
-        } catch (IOException | BadElementException e) {
-            e.printStackTrace();
-        }
-
-        //   cellOne.setBorder(Rectangle.NO_BORDER);
-        cellOne.setPadding(7);
-        //   cellTwo.setBorder(Rectangle.NO_BORDER);
-        cellTwo.setPadding(5);
-
-        table.addCell(cellOne);
-        table.addCell(cellTwo);
-        //---------------------------------------------------------------------------------------------------
-        cellOne = new PdfPCell(new Phrase("Inflables limitado"));
-        try {
-            cellTwo = new PdfPCell(RetornarColorImagen(inflableL));
-        } catch (IOException | BadElementException e) {
-            e.printStackTrace();
-        }
-
-        //   cellOne.setBorder(Rectangle.NO_BORDER);
-        cellOne.setPadding(7);
-        //   cellTwo.setBorder(Rectangle.NO_BORDER);
-        cellTwo.setPadding(5);
-
-        table.addCell(cellOne);
-        table.addCell(cellTwo);
         //---------------------------------------------------------------------------------------------------
         try {
             document.add(table);
@@ -251,7 +200,7 @@ public class GenerarReporte extends Fragment {
             e.printStackTrace();
         }
         try {
-            DatosReporte(document,1,1,1,1,1,1,1,1);
+            DatosReporte(document, selectedDate);
         } catch (DocumentException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -261,56 +210,56 @@ public class GenerarReporte extends Fragment {
         Uri uri = Uri.fromFile(file);
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("application/pdf");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"marcanosantanajm@hotmail.com", "facturacion.kanquipark@gmail.com"});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Test Subject");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "From My App");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"facturacion.kanquipark@gmail.com"});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Reporte - " + selectedDate);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Sistema de facturacion de KanquiMania Park");
         emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
         startActivity(Intent.createChooser(emailIntent, "Send mail..."));
     }
 
-    public static Image RetornarColorImagen(String Color) throws IOException, BadElementException{
+    public Image RetornarColorImagen(String Color) throws IOException, BadElementException{
         Image img;
-        if(Color == "Rojo"){
+        if(Color.equals("Rojo")){
             Image img2 = Image.getInstance(String.valueOf(Environment.getExternalStorageDirectory()) + "/Imagenes/red.png");
             img = img2;
         }
-        else if (Color =="Azul"){
+        else if (Color.equals("Azul")){
             Image img2 = Image.getInstance(String.valueOf(Environment.getExternalStorageDirectory()) + "/Imagenes/blue.png");
             img = img2;
         }
-        else if (Color =="Negro"){
+        else if (Color.equals("Negro")){
             Image img2 = Image.getInstance(String.valueOf(Environment.getExternalStorageDirectory()) + "/Imagenes/black.png");
             img = img2;
         }
-        else if (Color =="Blanco"){
+        else if (Color.equals("Blanco")){
             Image img2 = Image.getInstance(String.valueOf(Environment.getExternalStorageDirectory()) + "/Imagenes/white.png");
             img = img2;
         }
-        else if (Color =="Amarillo"){
+        else if (Color.equals("Amarillo")){
             Image img2 = Image.getInstance(String.valueOf(Environment.getExternalStorageDirectory()) + "/Imagenes/yellow.png");
             img = img2;
         }
-        else if (Color =="Azul Celeste"){
+        else if (Color.equals("Azul Celeste")){
             Image img2 = Image.getInstance(String.valueOf(Environment.getExternalStorageDirectory()) + "/Imagenes/cyan.png");
             img = img2;
         }
-        else if (Color =="Rosado"){
+        else if (Color.equals("Rosado")){
             Image img2 = Image.getInstance(String.valueOf(Environment.getExternalStorageDirectory()) + "/Imagenes/pink.png");
             img = img2;
         }
-        else if (Color =="Naranja"){
+        else if (Color.equals("Naranja")){
             Image img2 = Image.getInstance(String.valueOf(Environment.getExternalStorageDirectory()) + "/Imagenes/orange.png");
             img = img2;
         }
-        else if (Color =="Morado"){
+        else if (Color.equals("Morado")){
             Image img2 = Image.getInstance(String.valueOf(Environment.getExternalStorageDirectory()) + "/Imagenes/purple.png");
             img = img2;
         }
-        else if (Color =="Dorado"){
+        else if (Color.equals("Dorado")){
             Image img2 = Image.getInstance(String.valueOf(Environment.getExternalStorageDirectory()) + "/Imagenes/gold.png");
             img = img2;
         }
-        else if (Color =="Plateado"){
+        else if (Color.equals("Plateado")){
             Image img2 = Image.getInstance(String.valueOf(Environment.getExternalStorageDirectory()) + "/Imagenes/silver.png");
             img = img2;
         }
@@ -325,21 +274,15 @@ public class GenerarReporte extends Fragment {
         return img;
     }
 
-    //Funcion para definir la cabecera de los Reportes
-    public static void DrawLogos(Document doc) throws DocumentException, IOException{
+    public void DrawLogos(Document doc, String selectedDate) throws DocumentException, IOException{
 
         //Crear Tabla
         PdfPTable table = new PdfPTable(new float[] { 5, 3 });
         table.setWidthPercentage(100);
 
-        long ahora = System.currentTimeMillis();
-        Date fecha = new Date(ahora);
-        DateFormat df = new SimpleDateFormat("                                   dd/MM/yy", Locale.getDefault());
-        String Generado = df.format(fecha);
-
         Image Header = Image.getInstance(String.valueOf(Environment.getExternalStorageDirectory()) + "/Imagenes/KMPark.fw.png");
         Header.scaleAbsolute(150,130);
-        PdfPCell cellOne = new PdfPCell(new Paragraph(Generado));
+        PdfPCell cellOne = new PdfPCell(new Paragraph(selectedDate));
         PdfPCell CellLogo = new PdfPCell(Header);
         CellLogo.setBorder(Rectangle.NO_BORDER);
         cellOne.setBorder(Rectangle.NO_BORDER);
@@ -350,57 +293,35 @@ public class GenerarReporte extends Fragment {
         doc.add(new Paragraph("----------------------------------------------------------------------------------------------------------------------------------\n"));
     }
 
-    //Funcion Para Generar Datos para el reporte
-    public static void DatosReporte(Document doc, int inflableI, int inflablesL, int patinajeI,
-                                    int patinajeL, int fullVIP, int cantfacturas, int cantclientes,
-                                    int ingresos) throws DocumentException, IOException{
-
-        //Crear Tabla
+    public void DatosReporte(Document doc, String selectedDate) throws DocumentException, IOException{
+        float total = 0f;
         PdfPTable table = new PdfPTable(new float[] { 3, 1 });
         table.setWidthPercentage(100);
 
-        PdfPCell cellOne = new PdfPCell(new Paragraph("Cantidad de Boletas de Inflables Ilimitadas Vendidas:"));
-        cellOne.setPadding(5);
-        table.addCell(cellOne);
-        table.addCell(new Paragraph(String.valueOf(inflableI)));
-
-        cellOne = new PdfPCell(new Paragraph("Cantidad de Boletas de Inflables limitadas Vendidas:"));
-        cellOne.setPadding(5);
-        table.addCell(cellOne);
-        table.addCell(new Paragraph(String.valueOf(inflablesL)));
-
-        cellOne = new PdfPCell(new Paragraph("Cantidad de Boletas de Patinaje Ilimitadas Vendidas:"));
-        cellOne.setPadding(5);
-        table.addCell(cellOne);
-        table.addCell(new Paragraph(String.valueOf(patinajeI)));
-
-        cellOne = new PdfPCell(new Paragraph("Cantidad de Boletas de Patinaje limitadas Vendidas:"));
-        cellOne.setPadding(5);
-        table.addCell(cellOne);
-        table.addCell(new Paragraph(String.valueOf(patinajeL)));
-
-        cellOne = new PdfPCell(new Paragraph("Cantidad de Boletas Full VIP Vendidas:"));
-        cellOne.setPadding(5);
-        table.addCell(cellOne);
-        table.addCell(new Paragraph(String.valueOf(fullVIP)));
-
-        cellOne = new PdfPCell(new Paragraph("Cantidad de Facturas generadas:"));
-        cellOne.setPadding(5);
-        table.addCell(cellOne);
-        table.addCell(new Paragraph(String.valueOf(cantfacturas)));
-
-        cellOne = new PdfPCell(new Paragraph("Cantidad de Clientes en la Jornada:"));
-        cellOne.setPadding(5);
-        table.addCell(cellOne);
-        table.addCell(new Paragraph(String.valueOf(cantclientes)));
-
+        PdfPCell cellOne;
+        for (Atraccion a : atracciones) {
+            cellOne = new PdfPCell(new Paragraph(a.get_titulo() + " -> " + a.get_tiempo() + " mins"));
+            cellOne.setPadding(5);
+            table.addCell(cellOne);
+            int cant = 0;
+            for (Factura f : facturas) {
+                if(selectedDate.equals(f.get_fechaEmision())) {
+                    for (String b : f.get_atraccionesSeleccionadas()) {
+                        if(a.get_id().equals(b)) {
+                            cant += 1;
+                        }
+                    }
+                    total += Double.parseDouble(f.get_totalFinal());
+                }
+            }
+            table.addCell(new Paragraph(String.valueOf(cant)));
+        }
         cellOne = new PdfPCell(new Paragraph("Ingresos de la Jornada:"));
         cellOne.setPadding(5);
         table.addCell(cellOne);
-        table.addCell(new Paragraph(String.valueOf(ingresos)));
+        table.addCell(new Paragraph(String.valueOf(total)));
         doc.add(table);
     }
-
 
     private ValueEventListener getAtr = new ValueEventListener() {
         @Override
@@ -459,25 +380,23 @@ public class GenerarReporte extends Fragment {
     private ValueEventListener getIden = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            HashMap root = (HashMap)dataSnapshot.getValue();
+            GenericTypeIndicator<Map<String, Map<String, String>>> genin = new GenericTypeIndicator<Map<String, Map<String, String>>>() {};
+            Map<String, Object> map = (Map<String, Object>)dataSnapshot.getValue();
+            identificadores.clear();
 
-            if (root != null){
-                Collection<Object> objects = root.values();
-                for (Object o : objects){
-                    if (o instanceof Map){
-                        HashMap<String, Object> map = (HashMap<String, Object>) o;
-                        identificador.set_id((String) map.get(ID));
-                        identificador.set_fecha((String) map.get(FECHA));
+            if (map != null){
+                for (Map.Entry entry : map.entrySet()){
+                    if (entry != null){
+                        HashMap value = (HashMap) entry.getValue();
+                        IdentificadorEntrada i = new IdentificadorEntrada();
+                        i.set_id((String) value.get(ID));
+                        i.set_fecha((String)value.get(FECHA));
 
-                        HashMap<String, String> map_atracciones = (HashMap<String, String>) map.get(ATRACCIONES_ID);
-                        if (map_atracciones != null){
-                            identificador.set_atraccionesID(map_atracciones);
+                        HashMap<String, String> atraccionesHM = (HashMap<String, String>) value.get(ATRACCIONES_ID);
+                        if (atraccionesHM != null){
+                            i.set_atraccion_color(atraccionesHM);
                         }
-
-                        HashMap<String, String> lista_colores = (HashMap<String, String>) map.get(COLORES);
-                        if (lista_colores != null){
-                            identificador.set_colores(new ArrayList<>(lista_colores.values()));
-                        }
+                        identificadores.add(i);
                     }
                 }
             }
@@ -494,18 +413,18 @@ public class GenerarReporte extends Fragment {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             GenericTypeIndicator<Map<String, Map<String, String>>> genin = new GenericTypeIndicator<Map<String, Map<String, String>>>() {};
-            Map<String, Map<String,String>> map = dataSnapshot.getValue(genin);
+            Map<String, Object> map = (Map<String, Object>)dataSnapshot.getValue();
             facturas.clear();
 
             if (map != null){
-                for (Map.Entry<String, Map<String, String>> entry : map.entrySet()){
+                for (Map.Entry entry : map.entrySet()){
                     if (entry != null){
                         HashMap value = (HashMap) entry.getValue();
                         Factura f = new Factura();
                         f.set_id((String) value.get(ID));
                         f.set_fechaEmision((String)value.get(FECHA_EMISION));
-                        f.set_totalDescontado((double)value.get(TOTAL_DESCONTADO));
-                        f.set_totalFinal((double) value.get(TOTAL_FINAL));
+                        f.set_totalDescontado((String)value.get(TOTAL_DESCONTADO));
+                        f.set_totalFinal((String) value.get(TOTAL_FINAL));
 
                         HashMap<String, String> productos_seleccionados = (HashMap<String, String>) value.get(PRODUCTOS_SELECCIONADOS);
                         if (productos_seleccionados != null){
@@ -558,4 +477,5 @@ public class GenerarReporte extends Fragment {
 
         }
     };
+
 }

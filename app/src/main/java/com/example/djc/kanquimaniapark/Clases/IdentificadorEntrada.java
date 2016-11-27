@@ -9,8 +9,7 @@ import java.util.List;
 
 public class IdentificadorEntrada {
     private String _id;
-    private HashMap<String, String> _atraccionesID;
-    private List<String> _colores;
+    private HashMap<String, String> _atraccion_color;
     private String _fecha;
 
     public String get_id(){
@@ -22,19 +21,11 @@ public class IdentificadorEntrada {
     }
 
     public HashMap<String, String> get_atracciones() {
-        return _atraccionesID;
+        return _atraccion_color;
     }
 
-    public void set_atraccionesID(HashMap<String, String> _atraccionesID) {
-        this._atraccionesID = _atraccionesID;
-    }
-
-    public List<String> get_colores() {
-        return _colores;
-    }
-
-    public void set_colores(List<String> _color) {
-        this._colores = _color;
+    public void set_atraccion_color(HashMap<String, String> _atraccion_color) {
+        this._atraccion_color = _atraccion_color;
     }
 
     public String get_fecha() {
@@ -45,10 +36,9 @@ public class IdentificadorEntrada {
         this._fecha = _fecha;
     }
 
-    public IdentificadorEntrada(String _id, HashMap<String, String> _atraccionesID, List<String> _color, String _fecha) {
+    public IdentificadorEntrada(String _id, HashMap<String, String> _atraccion_color, String _fecha) {
         set_id(_id);
-        set_atraccionesID(_atraccionesID);
-        set_colores(_color);
+        set_atraccion_color(_atraccion_color);
         set_fecha(_fecha);
     }
 

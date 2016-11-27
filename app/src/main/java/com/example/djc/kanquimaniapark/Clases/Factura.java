@@ -11,8 +11,8 @@ public class Factura {
     private List<String> _atraccionesSeleccionadas;
     private String _fechaEmision;
     private List<String> _especialesID;
-    private double _totalDescontado;
-    private double _totalFinal;
+    private String _totalDescontado;
+    private String _totalFinal;
 
     public String get_id() {
         return _id;
@@ -54,25 +54,25 @@ public class Factura {
         this._especialesID = _especialesID;
     }
 
-    public double get_totalDescontado() {
+    public String get_totalDescontado() {
         return _totalDescontado;
     }
 
-    public void set_totalDescontado(double _totalDescontado) {
+    public void set_totalDescontado(String _totalDescontado) {
         this._totalDescontado = _totalDescontado;
     }
 
-    public double get_totalFinal() {
+    public String get_totalFinal() {
         return _totalFinal;
     }
 
-    public void set_totalFinal(double _totalFinal) {
+    public void set_totalFinal(String _totalFinal) {
         this._totalFinal = _totalFinal;
     }
 
     public Factura(String _id, List<String> _productosSeleccionados, List<String> _atraccionesSeleccionadas,
-                   String _fechaEmision, List<String> _especialesID, double _totalDescontado,
-                   double _totalFinal) {
+                   String _fechaEmision, List<String> _especialesID, String _totalDescontado,
+                   String _totalFinal) {
         set_id(_id);
         set_productosSeleccionados(_productosSeleccionados);
         set_atraccionesSeleccionadas(_atraccionesSeleccionadas);

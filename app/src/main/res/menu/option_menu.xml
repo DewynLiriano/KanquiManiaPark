@@ -19,4 +19,7 @@
         android:title="@string/admin"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/generar_reporte"
+        android:title="@string/generar_reporte"
+        app:showAsAction="never"/>
 </menu>

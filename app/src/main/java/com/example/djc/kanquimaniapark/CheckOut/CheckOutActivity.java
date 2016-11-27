@@ -302,8 +302,8 @@ public class CheckOutActivity extends AppCompatActivity {
                 SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT, Locale.getDefault());
                 String date = sdf.format(Calendar.getInstance().getTimeInMillis());
                 factura.set_fechaEmision(date);
-                factura.set_totalDescontado(total_descontado);
-                factura.set_totalFinal(total_final);
+                factura.set_totalDescontado(String.valueOf(total_descontado));
+                factura.set_totalFinal(String.valueOf(total_final));
 
                 CheckOutFireBaseHelper checkOutFirebaseHelper = new CheckOutFireBaseHelper();
                 checkOutFirebaseHelper.addFactura(factura);
