@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -42,7 +43,12 @@ import com.example.djc.kanquimaniapark.Eventos.AddAtracctionsEvent;
 import com.example.djc.kanquimaniapark.MainActivity.ClientsList.ClientRecyclerAdapter;
 import com.example.djc.kanquimaniapark.CrearClientes.CrearCliente;
 import com.example.djc.kanquimaniapark.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -126,9 +132,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        EventBus.getDefault().register(this);
 
         progressDialog = new ProgressDialog(this);
+
+        //<editor-fold desc="Authenticate App">
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signInWithEmailAndPassword("facturacion.kanquipark@gmail.com", "kanquipark1")
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d("Sign in Completed", task.toString());
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("Sign in error", e.getMessage());
+            }
+        });
+        //</editor-fold>
 
         //<editor-fold desc="Inicializando">
         clientes = new ArrayList<>();
@@ -195,6 +216,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+
         if (isFirstLaunch()){
             Dialog dialog = set_colors();
             dialog.show();
@@ -270,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.generar_reporte:
                 DialogFragment reportsDatePicker = new ReportsDatePickerFragment();
-                reportsDatePicker.show(getFragmentManager(), "Reports DatePicker");
+                reportsDatePicker.show(getFragmentManager(), "Report's DatePicker");
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -570,7 +595,6 @@ public class MainActivity extends AppCompatActivity {
             HashMap root = (HashMap)dataSnapshot.getValue();
 
             IdentificadorEntrada i = new IdentificadorEntrada();
-
             if (root != null){
                 Collection<Object> objects = root.values();
                 for (Object o : objects){
@@ -598,7 +622,6 @@ public class MainActivity extends AppCompatActivity {
     private ValueEventListener getClients = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-
             clientes.clear();
             HashMap rootMap = (HashMap) dataSnapshot.getValue();
 

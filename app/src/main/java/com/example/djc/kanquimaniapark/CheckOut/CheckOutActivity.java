@@ -80,6 +80,7 @@ public class CheckOutActivity extends AppCompatActivity {
     private TextView productsSubTotalTV;
     private TextView attractionsSubTotalTV;
     private TextView totalTV;
+    private TextView especialAplProd, especialAplAtr;
 
     private ListView products_listView, attractions_listView;
     private EditText receivedMoneyET;
@@ -168,6 +169,9 @@ public class CheckOutActivity extends AppCompatActivity {
         receivedMoneyET =(EditText) findViewById(R.id.check_out_received_money);
         devueltaTV = (TextView)findViewById(R.id.check_out_devuelta);
 
+        especialAplProd = (TextView)findViewById(R.id.check_out_especial_productos);
+        especialAplAtr = (TextView)findViewById(R.id.check_out_especial_attracciones);
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,55 +194,74 @@ public class CheckOutActivity extends AppCompatActivity {
 
     @Subscribe
     public void onEvent(UpdateTotalsEvent event){
+        boolean isProductsApplied = false, isAttractionsApplied = false;
+
         for (Especial e : event.getGottenEspecials()){
-            for (String s : e.get_productos()) {
-                for (SelectedProduct sp : gottenProducts){
-                    if (sp.get_producto().get_id().equals(s)){
-                        SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT, Locale.getDefault());
-                        try {
-                            Date fechaFin = sdf.parse(e.get_fechaFin());
-                            Date fechaHoy = sdf.parse(sdf.format(Calendar.getInstance().getTimeInMillis()));
-                            if (fechaHoy.before(fechaFin)){
-                                foundEspeciales.add(e.get_id());
-                                float porciento = 0f;
-                                porciento += Double.valueOf(e.get_porciento());
-                                porciento/=100f;
-                                float descuento = (products_sobtotal * porciento);
-                                total_descontado += descuento;
-                                products_sobtotal = products_sobtotal - descuento;
-                                productsSubTotalTV.setText(String.valueOf(products_sobtotal));
+            if (e.get_productos() != null) {
+                for (String s : e.get_productos()) {
+                    for (SelectedProduct sp : gottenProducts) {
+                        if (sp.get_producto().get_id().equals(s)) {
+                            SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT, Locale.getDefault());
+                            try {
+                                Date fechaFin = sdf.parse(e.get_fechaFin());
+                                Date fechaHoy = sdf.parse(sdf.format(Calendar.getInstance().getTimeInMillis()));
+                                if (fechaHoy.before(fechaFin) || fechaHoy.equals(fechaFin)) {
+                                    if (!isProductsApplied) {
+                                        foundEspeciales.add(e.get_id());
+                                        float porciento = 0f;
+                                        porciento += Double.valueOf(e.get_porciento());
+                                        porciento /= 100f;
+                                        float descuento = (products_sobtotal * porciento);
+                                        total_descontado += descuento;
+                                        products_sobtotal = products_sobtotal - descuento;
+                                        especialAplProd.setText(e.get_nombre());
+                                        productsSubTotalTV.setText(String.valueOf(products_sobtotal));
+                                        isProductsApplied = true;
+                                    }
+                                }
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
                             }
-                        } catch (ParseException e1) {
-                            e1.printStackTrace();
+                        }
+                        if (isProductsApplied){
+                            break;
                         }
                     }
                 }
             }
 
-            for (String s : e.get_atracciones()){
-                for (SelectedAttraction sa : gottenAttractions){
-                    if (sa.getAtraccion().get_id().equals(s)){
-                        SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT, Locale.getDefault());
-                        try {
-                            Date fechaFin = sdf.parse(e.get_fechaFin());
-                            Date fechaHoy = sdf.parse(sdf.format(Calendar.getInstance().getTimeInMillis()));
-                            if (fechaHoy.before(fechaFin)) {
-                                float porciento = 0f;
-                                porciento += Double.valueOf(e.get_porciento());
-                                porciento /= 100f;
-                                float descuento = (products_sobtotal * porciento);
-                                total_descontado += descuento;
-                                attractions_subtotal = attractions_subtotal - descuento;
-                                attractionsSubTotalTV.setText(String.valueOf(attractions_subtotal));
+            if (e.get_atracciones() != null) {
+                for (String s : e.get_atracciones()) {
+                    for (SelectedAttraction sa : gottenAttractions){
+                        if (sa.getAtraccion().get_id().equals(s)){
+                            SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT, Locale.getDefault());
+                            try {
+                                Date fechaFin = sdf.parse(e.get_fechaFin());
+                                Date fechaHoy = sdf.parse(sdf.format(Calendar.getInstance().getTimeInMillis()));
+                                if (fechaHoy.before(fechaFin) || fechaHoy.equals(fechaFin)) {
+                                    if (!isAttractionsApplied) {
+                                        float porciento = 0f;
+                                        porciento += Double.valueOf(e.get_porciento());
+                                        porciento /= 100f;
+                                        float descuento = (attractions_subtotal * porciento);
+                                        total_descontado += descuento;
+                                        attractions_subtotal = attractions_subtotal - descuento;
+                                        especialAplAtr.setText(e.get_nombre());
+                                        attractionsSubTotalTV.setText(String.valueOf(attractions_subtotal));
+                                        isAttractionsApplied = true;
+                                    }
+                                }
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
                             }
-                        } catch (ParseException e1) {
-                            e1.printStackTrace();
+                        }
+                        if (isAttractionsApplied){
+                            break;
                         }
                     }
                 }
             }
         }
-
         total_final = products_sobtotal + attractions_subtotal;
         totalTV.setText(String.valueOf(total_final));
     }
@@ -321,7 +344,7 @@ public class CheckOutActivity extends AppCompatActivity {
     private ValueEventListener getEsp = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            progressDialog.show();
+            //progressDialog.show();
             especiales.clear();
             Map<String, Object> rootMap = (Map<String, Object>)dataSnapshot.getValue();
             if (rootMap != null){
@@ -348,7 +371,7 @@ public class CheckOutActivity extends AppCompatActivity {
                     }
                 }
             }
-            progressDialog.dismiss();
+            //progressDialog.dismiss();
             EventBus.getDefault().post(new UpdateTotalsEvent(especiales));
             //adapter.notifyDataSetChanged();
         }

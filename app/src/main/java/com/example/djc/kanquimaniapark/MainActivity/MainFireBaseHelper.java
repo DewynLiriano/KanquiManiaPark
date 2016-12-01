@@ -61,7 +61,6 @@ public class MainFireBaseHelper {
             for (Map.Entry<String, Map<String, String>> entry : map.entrySet()){
                 if (entry != null){
                     HashMap value = (HashMap) entry.getValue();
-
                     if ((Objects.equals(value.get(NOMBRE), username))){
                         if (Objects.equals(value.get(CONTRASENA), contrasena)){
                             success = true;
@@ -77,10 +76,6 @@ public class MainFireBaseHelper {
         dataRef = FirebaseDatabase.getInstance().getReference(IDENTIFICADOR).push();
         dataRef.child(ID).setValue(dataRef.getKey());
         dataRef.child(FECHA).setValue(iden.get_fecha());
-
-        /*for (String p : iden.get_colores()){
-            dataRef.child(COLORES).push().setValue(p);
-        }*/
 
         for (HashMap.Entry<String, String> o : iden.get_atracciones().entrySet()){
             dataRef.child(ATRACCIONES).child(o.getKey()).setValue(o.getValue());

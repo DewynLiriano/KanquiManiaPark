@@ -114,4 +114,5 @@
     <string name="elegir_algo">Debe seleccionar al menos un elemento</string>
     <string name="dinero_no_suficiente">El monto no es suficiente</string>
     <string name="desea_realizar_pedido">Desea confirmar la compra?</string>
+    <string name="especial_aplicado">Especial aplicado:</string>
 </resources>

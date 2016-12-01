@@ -54,7 +54,7 @@ public class ClientRecyclerAdapter extends  RecyclerView.Adapter<ClientRecyclerV
 
     private ArrayAdapter<Atraccion> atraccionesAdapter;
 
-    public ClientRecyclerAdapter(Context context, List<Cliente> list) {
+    public ClientRecyclerAdapter(Context context, List<Cliente> list)   {
         this.context = context;
         this.list = list;
     }

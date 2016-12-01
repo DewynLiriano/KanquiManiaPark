@@ -37,7 +37,7 @@ public class FechaInicioDatePickerFragment extends DialogFragment implements Dat
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         EditText et = (EditText)getActivity().findViewById(R.id.fecha_inicio_especial);
         //CUANDO SE SELECCIONA UNA FECHA, SE ACTUALIZA EN EL EDITTEXT.
-        String FECHA = dayOfMonth + "/" + month + "/" + year;
+        String FECHA = dayOfMonth + "/" + String.valueOf((month+1)) + "/" + year;
         et.setText(FECHA);
         //et.setEnabled(false);
     }

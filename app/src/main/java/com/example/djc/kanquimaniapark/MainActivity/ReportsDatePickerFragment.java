@@ -201,12 +201,11 @@ public class ReportsDatePickerFragment extends DialogFragment implements DatePic
         }
         try {
             DatosReporte(document, selectedDate);
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (DocumentException | IOException e) {
             e.printStackTrace();
         }
         document.close();
+
         Uri uri = Uri.fromFile(file);
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("application/pdf");
@@ -306,9 +305,11 @@ public class ReportsDatePickerFragment extends DialogFragment implements DatePic
             int cant = 0;
             for (Factura f : facturas) {
                 if(selectedDate.equals(f.get_fechaEmision())) {
-                    for (String b : f.get_atraccionesSeleccionadas()) {
-                        if(a.get_id().equals(b)) {
-                            cant += 1;
+                    if (f.get_atraccionesSeleccionadas() != null) {
+                        for (String b : f.get_atraccionesSeleccionadas()) {
+                            if(a.get_id().equals(b)) {
+                                cant += 1;
+                            }
                         }
                     }
                     total += Double.parseDouble(f.get_totalFinal());

@@ -21,7 +21,7 @@ public class ClientDatePickerFragment extends DialogFragment implements DatePick
         //INICIALIZA EL CALENDARIO CON LA FECHA ACTUAL
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
+        int month = c.get(Calendar.MONTH) + 1;
         int day = c.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), R.style.style_date_picker_dialog, this, year, month, day);
@@ -37,7 +37,7 @@ public class ClientDatePickerFragment extends DialogFragment implements DatePick
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         EditText et = (EditText)getActivity().findViewById(R.id.cumpleET);
         //CUANDO SE SELECCIONA UNA FECHA, SE ACTUALIZA EN EL EDITTEXT.
-        String FECHA = dayOfMonth + "/" + month + "/" + year;
+        String FECHA = dayOfMonth + "/" + String.valueOf((month+1)) + "/" + year;
         et.setText(FECHA);
     }
 }
