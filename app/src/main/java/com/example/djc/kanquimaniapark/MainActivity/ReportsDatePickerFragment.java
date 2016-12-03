@@ -150,7 +150,6 @@ public class ReportsDatePickerFragment extends DialogFragment implements DatePic
         TituloJornada.setAlignment(1);
 
         //Llamar funcion para poner headers con titulo y logos
-
         try {
             DrawLogos(document, selectedDate);
         } catch (DocumentException | IOException e) {
