@@ -11,12 +11,15 @@ public class Persona implements Serializable {
     private String _nombre;
     private String _apellido;
     private String _sexo;
+    private String _fechaCumpleAnos;
 
-    public Persona(String _id, String _nombre, String _apellido, String _sexo) {
+
+    public Persona(String _id, String _nombre, String _apellido, String _sexo,  String _fechaCumpleAnos) {
         set_id(_id);
         set_nombre(_nombre);
         set_apellido(_apellido);
         set_sexo(_sexo);
+        set_fechaCumpleAnos(_fechaCumpleAnos);
     }
 
     public Persona() {}
@@ -51,5 +54,13 @@ public class Persona implements Serializable {
 
     public void set_sexo(String _sexo) {
         this._sexo = _sexo;
+    }
+
+    public String get_fechaCumpleAnos() {
+        return _fechaCumpleAnos;
+    }
+
+    public void set_fechaCumpleAnos(String _fechaCumpleAnos) {
+        this._fechaCumpleAnos = _fechaCumpleAnos;
     }
 }

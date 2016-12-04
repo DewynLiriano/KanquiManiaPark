@@ -10,7 +10,7 @@ public class Empleado extends Persona {
     private String _tipo;
 
     public Empleado(String _id, String _nombre, String _apellido, String _sexo, String _userName, String _contrasena, String _tipo) {
-        super(_id, _nombre, _apellido, _sexo);
+        super(_id, _nombre, _apellido, _sexo, "");
         set_userName(_userName);
         set_contrasena(_contrasena);
         set_tipo(_tipo);

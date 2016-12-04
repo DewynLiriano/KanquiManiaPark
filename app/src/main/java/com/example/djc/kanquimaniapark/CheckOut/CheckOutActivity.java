@@ -20,7 +20,7 @@ import com.example.djc.kanquimaniapark.Clases.Especial;
 import com.example.djc.kanquimaniapark.Clases.Factura;
 import com.example.djc.kanquimaniapark.Clases.Producto;
 import com.example.djc.kanquimaniapark.Clases.SelectedProduct;
-import com.example.djc.kanquimaniapark.MainActivity.SelectedAttraction;
+import com.example.djc.kanquimaniapark.Clases.SelectedAttraction;
 import com.example.djc.kanquimaniapark.MainActivity.SelectedAttractionsAdapter;
 import com.example.djc.kanquimaniapark.MainActivity.SelectedProductsAdapter;
 import com.example.djc.kanquimaniapark.R;

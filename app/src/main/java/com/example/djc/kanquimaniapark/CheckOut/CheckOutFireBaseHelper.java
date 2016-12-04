@@ -1,23 +1,14 @@
 package com.example.djc.kanquimaniapark.CheckOut;
 
-import android.content.Intent;
-import android.widget.Toast;
-
-import com.example.djc.kanquimaniapark.Clases.Atraccion;
-import com.example.djc.kanquimaniapark.Clases.Cliente;
 import com.example.djc.kanquimaniapark.Clases.Factura;
-import com.example.djc.kanquimaniapark.MainActivity.SelectedAttraction;
+import com.example.djc.kanquimaniapark.Clases.SelectedAttraction;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Created by dewyn on 11/26/2016.

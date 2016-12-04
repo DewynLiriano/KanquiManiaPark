@@ -1,27 +1,13 @@
 package com.example.djc.kanquimaniapark.Clases;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
-
-import java.io.Serializable;
-
 /**
  * Created by dewyn on 9/26/2016.
  */
 
 public class Cliente extends Persona {
     private String _correo;
-    private String _fechaCumpleAnos;
     private String _numero;
     //private Uri _uriFoto;
-
-    public String get_fechaCumpleAnos() {
-        return _fechaCumpleAnos;
-    }
-
-    public void set_fechaCumpleAnos(String _fechaCumpleAnos) {
-        this._fechaCumpleAnos = _fechaCumpleAnos;
-    }
 
     /*public Uri get_uriFoto() {
         return _uriFoto;
@@ -49,9 +35,8 @@ public class Cliente extends Persona {
 
     public Cliente(String _id, String _nombre, String _apellido, String _sexo, String _correo,
                    String _fechaCumpleAnos, String _numero) {
-        super(_id, _nombre, _apellido, _sexo);
+        super(_id, _nombre, _apellido, _sexo, _fechaCumpleAnos);
         set_correo(_correo);
-        set_fechaCumpleAnos(_fechaCumpleAnos);
         set_numero(_numero);
        // set_uriFoto(_uriFoto);
     }

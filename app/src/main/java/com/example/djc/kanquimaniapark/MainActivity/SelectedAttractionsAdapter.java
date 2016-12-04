@@ -6,8 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.djc.kanquimaniapark.Clases.Atraccion;
-import com.example.djc.kanquimaniapark.Clases.SelectedProduct;
+import com.example.djc.kanquimaniapark.Clases.SelectedAttraction;
 import com.example.djc.kanquimaniapark.R;
 
 import java.util.List;

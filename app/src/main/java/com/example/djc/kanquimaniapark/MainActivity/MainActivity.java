@@ -38,6 +38,7 @@ import com.example.djc.kanquimaniapark.Clases.Atraccion;
 import com.example.djc.kanquimaniapark.Clases.Cliente;
 import com.example.djc.kanquimaniapark.Clases.IdentificadorEntrada;
 import com.example.djc.kanquimaniapark.Clases.Producto;
+import com.example.djc.kanquimaniapark.Clases.SelectedAttraction;
 import com.example.djc.kanquimaniapark.Clases.SelectedProduct;
 import com.example.djc.kanquimaniapark.Eventos.AddAtracctionsEvent;
 import com.example.djc.kanquimaniapark.MainActivity.ClientsList.ClientRecyclerAdapter;
@@ -127,6 +128,9 @@ public class MainActivity extends AppCompatActivity {
     private ListView added_products_list, added_tickets_list;
 
     private int cantData = 0;
+    private boolean loading = true;
+    private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         progressDialog = new ProgressDialog(this);
-        cantData = 15;
+        cantData = 8;
 
         //<editor-fold desc="Authenticate App">
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -658,45 +662,37 @@ public class MainActivity extends AppCompatActivity {
 
     public void recyclerViewController(){
         //Recycler view
+        linearLayoutManager = new LinearLayoutManager(this);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-            }
 
-            @Override
-            public int hashCode() {
-                return super.hashCode();
-            }
+                if(dy > 0) //check for scroll down
+                {
+                    visibleItemCount = linearLayoutManager.getChildCount();
+                    totalItemCount = linearLayoutManager.getItemCount();
+                    pastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
 
-            @Override
-            public boolean equals(Object obj) {
-                return super.equals(obj);
-            }
+                    if (loading)
+                    {
+                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
+                        {
+                            //loading = false;
+                            Log.v("...", "Last Item Wow !");
+                            cantData += 15;
+                            clientRef.limitToLast(cantData);
 
-            @Override
-            protected Object clone() throws CloneNotSupportedException {
-                return super.clone();
-            }
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                }
 
-            @Override
-            public String toString() {
-                return super.toString();
-            }
-
-            @Override
-            protected void finalize() throws Throwable {
-                super.finalize();
             }
         });
 
@@ -805,5 +801,6 @@ public class MainActivity extends AppCompatActivity {
 
         alertDialog.create().show();
     }
+
 
 }
