@@ -1,8 +1,12 @@
 package com.example.djc.kanquimaniapark.CheckOut;
 
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
@@ -14,13 +18,17 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.RT_Printer.BluetoothPrinter.BLUETOOTH.BluetoothPrintDriver;
 import com.example.djc.kanquimaniapark.Clases.Atraccion;
+import com.example.djc.kanquimaniapark.Clases.Cliente;
 import com.example.djc.kanquimaniapark.Clases.Especial;
 import com.example.djc.kanquimaniapark.Clases.Factura;
 import com.example.djc.kanquimaniapark.Clases.Producto;
 import com.example.djc.kanquimaniapark.Clases.SelectedProduct;
 import com.example.djc.kanquimaniapark.Clases.SelectedAttraction;
+import com.example.djc.kanquimaniapark.MainActivity.MainActivity;
 import com.example.djc.kanquimaniapark.MainActivity.SelectedAttractionsAdapter;
 import com.example.djc.kanquimaniapark.MainActivity.SelectedProductsAdapter;
 import com.example.djc.kanquimaniapark.R;
@@ -44,6 +52,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
 
 public class CheckOutActivity extends AppCompatActivity {
 
@@ -101,6 +112,13 @@ public class CheckOutActivity extends AppCompatActivity {
     private float total_descontado = 0f;
     //</editor-fold>
 
+    private BluetoothAdapter mBluetoothAdapter = null;
+    private BluetoothPrintDriver mChatService = null;
+
+    // Intent request codes
+    private static final int REQUEST_ENABLE_BT = 2;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +131,8 @@ public class CheckOutActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Guardando Cliente");
+        progressDialog.setMessage("Guardando Cliente");
         progressDialog.setCancelable(false);
 
         //<editor-fold desc="Firebase database references">
@@ -172,6 +192,14 @@ public class CheckOutActivity extends AppCompatActivity {
         especialAplProd = (TextView)findViewById(R.id.check_out_especial_productos);
         especialAplAtr = (TextView)findViewById(R.id.check_out_especial_attracciones);
 
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,6 +209,38 @@ public class CheckOutActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart(){
+        super.onStart();
+        try {
+            if (mBluetoothAdapter.isEnabled()) {
+                mChatService = new BluetoothPrintDriver(this, new Handler());
+                BluetoothDevice device = mBluetoothAdapter.getRemoteDevice("00:0E:0E:0B:6B:F1");
+                mChatService.connect(device);
+            }
+        } finally {
+
+        }
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (mBluetoothAdapter.isEnabled()) {
+            if(BluetoothPrintDriver.IsNoConnection()){
+                mChatService = new BluetoothPrintDriver(this, mHandler);
+                BluetoothDevice device = mBluetoothAdapter.getRemoteDevice("00:0E:0E:0B:6B:F1");
+                mChatService.connect(device);
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if (mChatService != null){
+            mChatService.stop();
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -333,12 +393,105 @@ public class CheckOutActivity extends AppCompatActivity {
                 checkOutFirebaseHelper.addFactura(factura);
                 checkOutFirebaseHelper.createAttractionsManager(gottenAttractions);
 
-                EventBus.getDefault().post(new CloseActivityEvent());
+
+                if (BluetoothAdapter.getDefaultAdapter().isEnabled()){
+                    Calendar c = Calendar.getInstance();
+                    int hour = c.get(Calendar.HOUR_OF_DAY);
+                    int min = c.get(Calendar.MINUTE);
+                    int seg = c.get(Calendar.SECOND) + 5;
+
+                    String end = String.valueOf(hour + ":" + min + ":" + seg);
+                    SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:s", Locale.getDefault());
+
+                    progressDialog.show();
+                    if (BluetoothPrintDriver.IsNoConnection()) {
+                        while (true){
+                            if (sdf2.format(Calendar.getInstance().getTimeInMillis()).equals(end)){
+                                break;
+                            }
+                        }
+                    }
+                    progressDialog.dismiss();
+                    printFactura(factura);
+                }
+
+                Log.e("-----------factura", String.valueOf(factura.get_atraccionesSeleccionadas().size()));
                 dialog.dismiss();
+                EventBus.getDefault().post(new CloseActivityEvent());
+                Toast.makeText(CheckOutActivity.this, "Factura Creada", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
+
          builder.create().show();
+    }
+
+    private void printFactura(Factura factura) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        String date = sdf.format(Calendar.getInstance().getTimeInMillis());
+
+        String tmpString1 = "Factura KanquiMania Park";
+        String tmpString2 = "Fecha: " + date;
+        String tmpString4 = "Total: " + factura.get_totalFinal();
+        String tmpString3 = "Total Descontado: " + factura.get_totalDescontado();
+        String linea = "--------------------------------";
+
+        BluetoothPrintDriver.Begin();
+        BluetoothPrintDriver.SetBold((byte)0x01);
+        BluetoothPrintDriver.SetAlignMode((byte)1);//
+        BluetoothPrintDriver.SetLineSpacing((byte)50);
+        BluetoothPrintDriver.SetFontEnlarge((byte)0x09);//ߣ
+        BluetoothPrintDriver.BT_Write(tmpString1);
+        BluetoothPrintDriver.SetBold((byte)0);
+        BluetoothPrintDriver.LF();
+        BluetoothPrintDriver.SetAlignMode((byte)0);//
+        BluetoothPrintDriver.SetFontEnlarge((byte)0x00);//ĬϿȡĬϸ߶
+        BluetoothPrintDriver.BT_Write(tmpString2);
+        BluetoothPrintDriver.LF();
+        if (factura.get_productos().size() > 0) {
+            BluetoothPrintDriver.BT_Write("----------Productos-------------");
+            BluetoothPrintDriver.LF();
+            for(String P : factura.get_productos())
+            {
+               for (SelectedProduct sp : gottenProducts){
+                   if (P.equals(sp.get_producto().get_id())){
+                       BluetoothPrintDriver.BT_Write(String.valueOf(sp.get_cantidad()) +
+                               " " + sp.get_producto().get_titulo() + "  RD$" + sp.get_producto().get_precio());
+                       BluetoothPrintDriver.LF();
+                   }
+               }
+            }
+        }
+        if (factura.get_atraccionesSeleccionadas().size() > 0) {
+            BluetoothPrintDriver.BT_Write("----------Cintillos-------------");
+            BluetoothPrintDriver.LF();
+            for(String P : factura.get_atraccionesSeleccionadas()) {
+                for (SelectedAttraction a : gottenAttractions){
+                    if (P.equals(a.getAtraccion().get_id())){
+                        BluetoothPrintDriver.BT_Write(String.valueOf(a.getAtraccion().get_tiempo())
+                                + " mins " + a.getAtraccion().get_titulo() + "  RD$" + a.getAtraccion().get_precio());
+                        BluetoothPrintDriver.LF();
+                        gottenAttractions.remove(a);
+                        break;
+                    }
+                }
+            }
+        }
+        BluetoothPrintDriver.BT_Write(linea);
+        BluetoothPrintDriver.LF();
+        BluetoothPrintDriver.SetBold((byte)0x01);
+        BluetoothPrintDriver.SetFontEnlarge((byte)0x00);
+        BluetoothPrintDriver.BT_Write(tmpString3);
+        BluetoothPrintDriver.LF();
+        BluetoothPrintDriver.SetFontEnlarge((byte)0x00);
+        BluetoothPrintDriver.BT_Write(tmpString4);
+        BluetoothPrintDriver.SetBold((byte)0);
+        BluetoothPrintDriver.LF();
+        BluetoothPrintDriver.BT_Write(" ");
+        BluetoothPrintDriver.LF();
+        BluetoothPrintDriver.BT_Write(" ");
+        BluetoothPrintDriver.LF();
+        BluetoothPrintDriver.BT_Write(" ");
     }
 
     //<editor-fold desc="Value event listeners">
@@ -388,9 +541,8 @@ public class CheckOutActivity extends AppCompatActivity {
         public void onDataChange(DataSnapshot dataSnapshot) {
             GenericTypeIndicator<Map<String, Map<String, String>>> genin = new GenericTypeIndicator<Map<String, Map<String, String>>>() {};
             Map<String, Map<String,String>> map = dataSnapshot.getValue(genin);
-            progressDialog.show();
+            //progressDialog.show();
             productos.clear();
-
             if (map != null){
                 for (Map.Entry<String, Map<String, String>> entry : map.entrySet()){
                     if (entry != null){
@@ -403,11 +555,11 @@ public class CheckOutActivity extends AppCompatActivity {
                     }
                 }
             }
-            progressDialog.dismiss();
+            //progressDialog.dismiss();
         }
         @Override
         public void onCancelled(DatabaseError databaseError) {
-
+            Log.e("Error", databaseError.getMessage());
         }
     };
 
@@ -441,5 +593,7 @@ public class CheckOutActivity extends AppCompatActivity {
         }
     };
     //</editor-fold>
+
+    private final Handler mHandler = new Handler() {};
 
 }

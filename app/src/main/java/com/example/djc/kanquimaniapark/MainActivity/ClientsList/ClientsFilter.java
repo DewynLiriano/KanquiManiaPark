@@ -127,7 +127,7 @@ public class ClientsFilter extends Filter {
                 for (Object o : objects){
                     if (o instanceof Map){
                         HashMap<String, Object> map = (HashMap<String, Object>) o;
-                        if (String.valueOf(map.get(NOMBRE)).contains(cons)){
+                        if (String.valueOf(map.get(NOMBRE)).toUpperCase().contains(cons.toUpperCase())){
                             final Cliente c = new Cliente();
                             c.set_id( (String) map.get(ID));
                             c.set_nombre((String) map.get(NOMBRE));

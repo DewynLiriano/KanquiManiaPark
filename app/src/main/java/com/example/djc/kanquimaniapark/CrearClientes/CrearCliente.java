@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.example.djc.kanquimaniapark.CheckOut.CloseActivityEvent;
 import com.example.djc.kanquimaniapark.Clases.Cliente;
 import com.example.djc.kanquimaniapark.Helpers.DateValidator;
 import com.example.djc.kanquimaniapark.R;
@@ -56,10 +57,12 @@ public class CrearCliente extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        EventBus.getDefault().post(new CloseActivityEvent());
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Guardando Cliente");
         progressDialog.setMessage("Guardando Cliente");
-        progressDialog.setCancelable(false);
+        progressDialog.setCancelable(true);
 
         clientFirebaseHelper = new ClientFirebaseHelper();
 
@@ -88,6 +91,7 @@ public class CrearCliente extends AppCompatActivity {
         switch (item.getItemId()){
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -120,15 +124,14 @@ public class CrearCliente extends AppCompatActivity {
 
     public void registrarCliente(View v) {
         boolean cancel = false;
-        String nombre, apellido, correo, cumple, numero;
 
         //CONTROL DE ENTRADA DE DATOS
-        if (!DateValidator.isDateValid(cumpleET.getText().toString(), DATEFORMAT)) {
+        /*if (!DateValidator.isDateValid(cumpleET.getText().toString(), DATEFORMAT)) {
             //NOTIFICACION ERROR
             cumpleET.setError(getString(R.string.fechaInvalida));
             focusView = cumpleET;
             cancel = true;
-        } else if(Objects.equals(nombreET.getText().toString(), "")){
+        } else*/ if(Objects.equals(nombreET.getText().toString(), "")){
             nombreET.setError(getString(R.string.vacio) + getString(R.string.nombre));
             focusView = nombreET;
             cancel = true;
@@ -148,11 +151,11 @@ public class CrearCliente extends AppCompatActivity {
             focusView.requestFocus();
         } else {
             progressDialog.show();
-            nombre = nombreET.getText().toString();
-            apellido = apellidoET.getText().toString();
-            correo = correoET.getText().toString();
-            cumple = cumpleET.getText().toString();
-            numero = numeroET.getText().toString();
+            String nombre = nombreET.getText().toString();
+            String apellido = apellidoET.getText().toString();
+            String correo = correoET.getText().toString();
+            String cumple = cumpleET.getText().toString();
+            String numero = numeroET.getText().toString();
 
             Cliente cliente = new Cliente(formatID() , nombre, apellido,
                     sexo, correo, cumple, numero);
@@ -179,7 +182,7 @@ public class CrearCliente extends AppCompatActivity {
 
     public AlertDialog.Builder sex_alertBuilder(){
 
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this)
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(CrearCliente.this)
                 .setTitle(getString(R.string.error))
                 .setMessage(getString(R.string.sexo_invalido));
 
@@ -200,7 +203,7 @@ public class CrearCliente extends AppCompatActivity {
     }
 
     private String formatID(){
-        String s = String.format(Locale.getDefault(), "%05d", clientFirebaseHelper.count + 1);
+        String s = String.format(Locale.getDefault(), "%04d", clientFirebaseHelper.count + 1);
         return "KPC" + String.valueOf(s);
     }
 }

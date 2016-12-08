@@ -1,11 +1,12 @@
 package com.example.djc.kanquimaniapark.Clases;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by dewyn on 9/26/2016.
  */
 
-public class Factura {
+public class Factura implements Serializable {
     private String _id;
     private List<String> _productosSeleccionados;
     private List<String> _atraccionesSeleccionadas;

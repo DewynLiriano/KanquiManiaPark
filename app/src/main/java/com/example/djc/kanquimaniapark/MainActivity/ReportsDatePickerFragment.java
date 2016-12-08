@@ -122,7 +122,15 @@ public class ReportsDatePickerFragment extends DialogFragment implements DatePic
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        String selectedDate = dayOfMonth + "/" + (month+1) + "/" + year;
+        String formatedDay;
+
+        if (dayOfMonth < 10){
+            formatedDay = String.valueOf("0" + dayOfMonth);
+        } else {
+            formatedDay = String.valueOf(dayOfMonth);
+        }
+
+        String selectedDate = formatedDay + "/" + (month+1) + "/" + year;
         String formatedDate = selectedDate.replace("/", "-");
         String path = "/Reporte - " + formatedDate + ".pdf";
         file = new File(root, path);
@@ -303,6 +311,7 @@ public class ReportsDatePickerFragment extends DialogFragment implements DatePic
             table.addCell(cellOne);
             int cant = 0;
             for (Factura f : facturas) {
+                Log.e("facturas size", String.valueOf(facturas.size()));
                 if(selectedDate.equals(f.get_fechaEmision())) {
                     if (f.get_atraccionesSeleccionadas() != null) {
                         for (String b : f.get_atraccionesSeleccionadas()) {
@@ -323,6 +332,7 @@ public class ReportsDatePickerFragment extends DialogFragment implements DatePic
         doc.add(table);
     }
 
+    //<editor-fold desc="Firebase events">
     private ValueEventListener getAtr = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -438,7 +448,7 @@ public class ReportsDatePickerFragment extends DialogFragment implements DatePic
 
                         HashMap<String, String> especiales_aplicados = (HashMap<String, String>) value.get(ESPECIALES_APLICADOS);
                         if (especiales_aplicados != null){
-                            f.set_especialesID(new ArrayList<String>(especiales_aplicados.values()));
+                            f.set_especialesID(new ArrayList<>(especiales_aplicados.values()));
                         }
                         facturas.add(f);
                     }
@@ -477,5 +487,6 @@ public class ReportsDatePickerFragment extends DialogFragment implements DatePic
 
         }
     };
+    //</editor-fold>
 
 }

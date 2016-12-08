@@ -135,6 +135,7 @@ public class GestionAtracciones extends Fragment {
                 tituloET.setText("");
                 precioET.setText("");
                 tiempoET.setText("");
+                tiempoET.setEnabled(true);
                 checkIlimitado.setChecked(false);
                 focusView = tituloET;
                 focusView.requestFocus();

@@ -140,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         progressDialog = new ProgressDialog(this);
-        cantData = 8;
 
         //<editor-fold desc="Authenticate App">
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -182,18 +181,18 @@ public class MainActivity extends AppCompatActivity {
         atrRef.addValueEventListener(getAtr);
 
         colorRef = FirebaseDatabase.getInstance().getReference(COLORES);
-        colorRef.limitToLast(cantData).addChildEventListener(getColores);
+        colorRef.addChildEventListener(getColores);
 
         mRef = FirebaseDatabase.getInstance().getReference(INDICADORES);
         mRef.limitToLast(1).addValueEventListener(getIden);
         mRef.keepSynced(true);
 
         clientRef = FirebaseDatabase.getInstance().getReference(CLIENTES);
-        clientRef.limitToLast(cantData).addValueEventListener(getClients);
+        clientRef.limitToLast(15).addValueEventListener(getClients);
         clientRef.keepSynced(true);
 
         prodRef = FirebaseDatabase.getInstance().getReference(PRODUCTOS);
-        prodRef.limitToLast(cantData).addValueEventListener(getProd);
+        prodRef.addValueEventListener(getProd);
         prodRef.keepSynced(true);
 
         if (FirebaseApp.getApps(this).isEmpty()) {
@@ -240,7 +239,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe
     public void onEvent(CloseActivityEvent event){
-        Toast.makeText(MainActivity.this, "Factura Creada", Toast.LENGTH_SHORT).show();
         selectedProducts.clear();
         selectedAttractions.clear();
         selectedProductsAdapter.notifyDataSetChanged();
@@ -543,7 +541,7 @@ public class MainActivity extends AppCompatActivity {
         public void onDataChange(DataSnapshot dataSnapshot) {
             GenericTypeIndicator<Map<String, Map<String, String>>> genin = new GenericTypeIndicator<Map<String, Map<String, String>>>() {};
             Map<String, Map<String,String>> map = dataSnapshot.getValue(genin);
-            progressDialog.show();
+            //progressDialog.show();
             productos.clear();
 
             if (map != null){
@@ -560,7 +558,7 @@ public class MainActivity extends AppCompatActivity {
             }
             spinner_prod_adapter.notifyDataSetChanged();
             products_spinner.setAdapter(spinner_prod_adapter);
-            progressDialog.dismiss();
+            //progressDialog.dismiss();
         }
         @Override
         public void onCancelled(DatabaseError databaseError) {
