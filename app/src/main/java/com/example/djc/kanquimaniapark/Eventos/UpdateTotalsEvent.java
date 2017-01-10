@@ -1,4 +1,4 @@
-package com.example.djc.kanquimaniapark.CheckOut;
+package com.example.djc.kanquimaniapark.Eventos;
 
 import com.example.djc.kanquimaniapark.Clases.Especial;
 

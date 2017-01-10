@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -22,13 +21,13 @@ import android.widget.Toast;
 
 import com.RT_Printer.BluetoothPrinter.BLUETOOTH.BluetoothPrintDriver;
 import com.example.djc.kanquimaniapark.Clases.Atraccion;
-import com.example.djc.kanquimaniapark.Clases.Cliente;
 import com.example.djc.kanquimaniapark.Clases.Especial;
 import com.example.djc.kanquimaniapark.Clases.Factura;
 import com.example.djc.kanquimaniapark.Clases.Producto;
 import com.example.djc.kanquimaniapark.Clases.SelectedProduct;
 import com.example.djc.kanquimaniapark.Clases.SelectedAttraction;
-import com.example.djc.kanquimaniapark.MainActivity.MainActivity;
+import com.example.djc.kanquimaniapark.Eventos.CloseActivityEvent;
+import com.example.djc.kanquimaniapark.Eventos.UpdateTotalsEvent;
 import com.example.djc.kanquimaniapark.MainActivity.SelectedAttractionsAdapter;
 import com.example.djc.kanquimaniapark.MainActivity.SelectedProductsAdapter;
 import com.example.djc.kanquimaniapark.R;
@@ -52,9 +51,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.ExecutionException;
 
 public class CheckOutActivity extends AppCompatActivity {
 
@@ -114,10 +110,9 @@ public class CheckOutActivity extends AppCompatActivity {
 
     private BluetoothAdapter mBluetoothAdapter = null;
     private BluetoothPrintDriver mChatService = null;
-
+    private final Handler mHandler = new Handler() {};
     // Intent request codes
     private static final int REQUEST_ENABLE_BT = 2;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,7 +194,6 @@ public class CheckOutActivity extends AppCompatActivity {
             return;
         }
 
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,7 +213,7 @@ public class CheckOutActivity extends AppCompatActivity {
                 mChatService.connect(device);
             }
         } finally {
-
+            Log.e("-------ON START--------", String.valueOf(BluetoothAdapter.getDefaultAdapter().isEnabled()));
         }
     }
     @Override
@@ -427,29 +421,32 @@ public class CheckOutActivity extends AppCompatActivity {
     }
 
     private void printFactura(Factura factura) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy h:mm a", Locale.getDefault());
         String date = sdf.format(Calendar.getInstance().getTimeInMillis());
 
-        String tmpString1 = "Factura KanquiMania Park";
-        String tmpString2 = "Fecha: " + date;
-        String tmpString4 = "Total: " + factura.get_totalFinal();
-        String tmpString3 = "Total Descontado: " + factura.get_totalDescontado();
+        String titulo = "KanquiMania Park";
+        String fecha = "Fecha: " + date;
+        String total_impreso = "Total: RD$" + factura.get_totalFinal();
+        String total_descontado_impreso = "Total Descontado: RD$" + factura.get_totalDescontado();
         String linea = "--------------------------------";
 
         BluetoothPrintDriver.Begin();
         BluetoothPrintDriver.SetBold((byte)0x01);
-        BluetoothPrintDriver.SetAlignMode((byte)1);//
+        BluetoothPrintDriver.SetAlignMode((byte)1);
         BluetoothPrintDriver.SetLineSpacing((byte)50);
-        BluetoothPrintDriver.SetFontEnlarge((byte)0x09);//ߣ
-        BluetoothPrintDriver.BT_Write(tmpString1);
+        BluetoothPrintDriver.SetFontEnlarge((byte)0x10);
+        BluetoothPrintDriver.BT_Write(titulo);
         BluetoothPrintDriver.SetBold((byte)0);
         BluetoothPrintDriver.LF();
-        BluetoothPrintDriver.SetAlignMode((byte)0);//
-        BluetoothPrintDriver.SetFontEnlarge((byte)0x00);//ĬϿȡĬϸ߶
-        BluetoothPrintDriver.BT_Write(tmpString2);
+        BluetoothPrintDriver.SetAlignMode((byte)0);
+        BluetoothPrintDriver.SetFontEnlarge((byte)0x00);
+        BluetoothPrintDriver.SetAlignMode((byte)1);
+        BluetoothPrintDriver.BT_Write(fecha);
         BluetoothPrintDriver.LF();
+        BluetoothPrintDriver.SetAlignMode((byte)0);
+
         if (factura.get_productos().size() > 0) {
-            BluetoothPrintDriver.BT_Write("----------Productos-------------");
+            BluetoothPrintDriver.BT_Write("------------Productos-----------");
             BluetoothPrintDriver.LF();
             for(String P : factura.get_productos())
             {
@@ -463,7 +460,7 @@ public class CheckOutActivity extends AppCompatActivity {
             }
         }
         if (factura.get_atraccionesSeleccionadas().size() > 0) {
-            BluetoothPrintDriver.BT_Write("----------Cintillos-------------");
+            BluetoothPrintDriver.BT_Write("------------Cintillos-----------");
             BluetoothPrintDriver.LF();
             for(String P : factura.get_atraccionesSeleccionadas()) {
                 for (SelectedAttraction a : gottenAttractions){
@@ -481,10 +478,10 @@ public class CheckOutActivity extends AppCompatActivity {
         BluetoothPrintDriver.LF();
         BluetoothPrintDriver.SetBold((byte)0x01);
         BluetoothPrintDriver.SetFontEnlarge((byte)0x00);
-        BluetoothPrintDriver.BT_Write(tmpString3);
+        BluetoothPrintDriver.BT_Write(total_descontado_impreso);
         BluetoothPrintDriver.LF();
         BluetoothPrintDriver.SetFontEnlarge((byte)0x00);
-        BluetoothPrintDriver.BT_Write(tmpString4);
+        BluetoothPrintDriver.BT_Write(total_impreso);
         BluetoothPrintDriver.SetBold((byte)0);
         BluetoothPrintDriver.LF();
         BluetoothPrintDriver.BT_Write(" ");
@@ -568,7 +565,7 @@ public class CheckOutActivity extends AppCompatActivity {
         public void onDataChange(DataSnapshot dataSnapshot) {
             GenericTypeIndicator<Map<String, Map<String, String>>> genin = new GenericTypeIndicator<Map<String, Map<String, String>>>() {};
             Map<String, Map<String,String>> map = dataSnapshot.getValue(genin);
-            progressDialog.show();
+//            progressDialog.show();
             atracciones.clear();
 
             if (map != null){
@@ -585,7 +582,7 @@ public class CheckOutActivity extends AppCompatActivity {
                 }
             }
 
-            progressDialog.dismiss();
+           // progressDialog.dismiss();
         }
         @Override
         public void onCancelled(DatabaseError databaseError) {
@@ -593,7 +590,4 @@ public class CheckOutActivity extends AppCompatActivity {
         }
     };
     //</editor-fold>
-
-    private final Handler mHandler = new Handler() {};
-
 }

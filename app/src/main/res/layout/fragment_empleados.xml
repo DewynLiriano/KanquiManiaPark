@@ -35,7 +35,8 @@
                      android:layout_width="match_parent"
                      android:layout_height="match_parent"
                      android:hint="@string/nombre"
-                     android:layout_marginTop="10dp"/>
+                     android:layout_marginTop="10dp"
+                     android:inputType="textCapSentences"/>
              </android.support.design.widget.TextInputLayout>
 
              <android.support.design.widget.TextInputLayout
@@ -45,7 +46,8 @@
                      android:id="@+id/empleado_apellido"
                      android:layout_width="match_parent"
                      android:layout_height="match_parent"
-                     android:hint="@string/apellido"/>
+                     android:hint="@string/apellido"
+                     android:inputType="textCapSentences"/>
              </android.support.design.widget.TextInputLayout>
          </LinearLayout>
 

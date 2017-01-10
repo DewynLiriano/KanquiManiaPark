@@ -7,8 +7,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
@@ -33,7 +36,7 @@ import android.widget.Toast;
 
 import com.example.djc.kanquimaniapark.Admin.SimpleTabsActivity;
 import com.example.djc.kanquimaniapark.CheckOut.CheckOutActivity;
-import com.example.djc.kanquimaniapark.CheckOut.CloseActivityEvent;
+import com.example.djc.kanquimaniapark.Eventos.CloseActivityEvent;
 import com.example.djc.kanquimaniapark.Clases.Atraccion;
 import com.example.djc.kanquimaniapark.Clases.Cliente;
 import com.example.djc.kanquimaniapark.Clases.IdentificadorEntrada;
@@ -74,6 +77,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
@@ -132,6 +137,9 @@ public class MainActivity extends AppCompatActivity {
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager linearLayoutManager;
 
+    private AlertDialog dialog;
+    private Handler handler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,20 +147,26 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        handler = new Handler();
+        Timer timer = new Timer();
+        timer.schedule(timerTask, 1000, 5000);
+
         progressDialog = new ProgressDialog(this);
+        dialog = changeStatus();
 
         //<editor-fold desc="Authenticate App">
+        Log.e("===========", "Antes de autenticar");
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signInWithEmailAndPassword("facturacion.kanquipark@gmail.com", "kanquipark1")
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("Sign in Completed", task.toString());
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+                .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                Log.e("=======SIGN IN", task.toString());
+            }
+        }).addOnFailureListener(this, new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e("Sign in error", e.getMessage());
+                Log.e("=======SIGN IN", e.getMessage());
             }
         });
         //</editor-fold>
@@ -245,6 +259,22 @@ public class MainActivity extends AppCompatActivity {
         selectedAttractionsAdapter.notifyDataSetChanged();
     }
 
+    @Subscribe
+    public void onEvent(ConnectivityEvent event){
+        if (!event.connected){
+            dialog.show();
+        } else {
+            dialog.dismiss();
+        }
+    }
+
+    private AlertDialog changeStatus() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(getString(R.string.error));
+        builder.setMessage(getString(R.string.not_internet));
+        builder.setCancelable(false);
+        return builder.create();
+    }
 
     private boolean isFirstLaunch() {
         boolean isFirstLaunch;
@@ -405,13 +435,11 @@ public class MainActivity extends AppCompatActivity {
         final LayoutInflater inflater = LayoutInflater.from(context);
         final View view = inflater.inflate(R.layout.login_dialog, null, false);
 
-
         builder.setView(view)
                 .setTitle(getString(R.string.login_title))
                 .setCancelable(false)
                 .setMessage(getString(R.string.login_info))
                 .setNegativeButton(getString(R.string.cancelar), null);
-
 
         builder.setPositiveButton(getString(R.string.login_title), new DialogInterface.OnClickListener() {
             @Override
@@ -471,7 +499,6 @@ public class MainActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
             });
-
             alert.show();
             return true;
         }
@@ -541,7 +568,6 @@ public class MainActivity extends AppCompatActivity {
         public void onDataChange(DataSnapshot dataSnapshot) {
             GenericTypeIndicator<Map<String, Map<String, String>>> genin = new GenericTypeIndicator<Map<String, Map<String, String>>>() {};
             Map<String, Map<String,String>> map = dataSnapshot.getValue(genin);
-            //progressDialog.show();
             productos.clear();
 
             if (map != null){
@@ -558,7 +584,6 @@ public class MainActivity extends AppCompatActivity {
             }
             spinner_prod_adapter.notifyDataSetChanged();
             products_spinner.setAdapter(spinner_prod_adapter);
-            //progressDialog.dismiss();
         }
         @Override
         public void onCancelled(DatabaseError databaseError) {
@@ -665,35 +690,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                if(dy > 0) //check for scroll down
-                {
-                    visibleItemCount = linearLayoutManager.getChildCount();
-                    totalItemCount = linearLayoutManager.getItemCount();
-                    pastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
-
-                    if (loading)
-                    {
-                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                        {
-                            //loading = false;
-                            Log.v("...", "Last Item Wow !");
-                            cantData += 15;
-                            clientRef.limitToLast(cantData);
-
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-
-            }
-        });
-
     }
 
     private void sortClientes() {
@@ -800,5 +796,27 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.create().show();
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private TimerTask timerTask = new TimerTask() {
+        public void run() {
+            //use a handler to run a toast that shows the current timestamp
+            handler.post(new Runnable() {
+                public void run() {
+                    Log.w("------Task", "Corriendo");
+                    if (isNetworkAvailable()){
+                        EventBus.getDefault().post(new ConnectivityEvent(true));
+                    } else {
+                        EventBus.getDefault().post(new ConnectivityEvent(false));
+                    }
+                }
+            });
+        }
+    };
 
 }

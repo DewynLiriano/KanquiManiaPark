@@ -216,14 +216,14 @@ public class ReportsDatePickerFragment extends DialogFragment implements DatePic
         Uri uri = Uri.fromFile(file);
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("application/pdf");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"facturacion.kanquipark@gmail.com"});
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"facturacion.kanquipark@gmail.com", "c.albizu22@gmail.com"});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Reporte - " + selectedDate);
         emailIntent.putExtra(Intent.EXTRA_TEXT, "Sistema de facturacion de KanquiMania Park");
         emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
         startActivity(Intent.createChooser(emailIntent, "Send mail..."));
     }
 
-    public Image RetornarColorImagen(String Color) throws IOException, BadElementException{
+    public Image RetornarColorImagen(String Color) throws IOException, BadElementException {
         Image img;
         if(Color.equals("Rojo")){
             Image img2 = Image.getInstance(String.valueOf(Environment.getExternalStorageDirectory()) + "/Imagenes/red.png");
@@ -317,10 +317,11 @@ public class ReportsDatePickerFragment extends DialogFragment implements DatePic
                         for (String b : f.get_atraccionesSeleccionadas()) {
                             if(a.get_id().equals(b)) {
                                 cant += 1;
+                                total += Double.parseDouble(f.get_totalFinal());
                             }
                         }
                     }
-                    total += Double.parseDouble(f.get_totalFinal());
+
                 }
             }
             table.addCell(new Paragraph(String.valueOf(cant)));
@@ -328,7 +329,7 @@ public class ReportsDatePickerFragment extends DialogFragment implements DatePic
         cellOne = new PdfPCell(new Paragraph("Ingresos de la Jornada:"));
         cellOne.setPadding(5);
         table.addCell(cellOne);
-        table.addCell(new Paragraph(String.valueOf(total)));
+        table.addCell(new Paragraph("RD$" + String.valueOf(total)));
         doc.add(table);
     }
 
