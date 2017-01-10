@@ -136,7 +136,7 @@ public class ClientsFilter extends Filter {
                             c.set_sexo((String) map.get(SEXO));
                             c.set_numero((String) map.get(NUMERO));
                             c.set_correo((String) map.get(CORREO));
-                            Log.i("------Cliente nombre", c.get_nombre());
+                            //Log.i("------Cliente nombre", c.get_nombre());
                             clientsName.add(c);
                         }
                     }

@@ -75,7 +75,7 @@ public class CrearCliente extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         //progressDialog.setTitle("Guardando Cliente");
         progressDialog.setMessage("Guardando Cliente");
-        progressDialog.setCancelable(true);
+        progressDialog.setCancelable(false);
 
         clientFirebaseHelper = new ClientFirebaseHelper();
 
