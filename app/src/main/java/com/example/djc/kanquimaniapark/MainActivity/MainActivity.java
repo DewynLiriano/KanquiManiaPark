@@ -155,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
         dialog = changeStatus();
 
         //<editor-fold desc="Authenticate App">
-        Log.e("===========", "Antes de autenticar");
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signInWithEmailAndPassword("facturacion.kanquipark@gmail.com", "kanquipark1")
                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
@@ -423,7 +422,6 @@ public class MainActivity extends AppCompatActivity {
     //</editor-fold>
 
     //<editor-fold desc="On Clicks">
-
     private AlertDialog logIn_alertBuilder(){
         final View[] focusView = {null};
         final String[] usuario = new String[1];
@@ -531,7 +529,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
     //</editor-fold>
-
     //</editor-fold>
 
     //<editor-fold desc="Firebase Events">
@@ -559,7 +556,7 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         public void onCancelled(DatabaseError databaseError) {
-
+            Log.e(TAG, databaseError.getMessage());
         }
     };
 
@@ -587,7 +584,7 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         public void onCancelled(DatabaseError databaseError) {
-
+            Log.e(TAG, databaseError.getMessage());
         }
     };
 
@@ -644,8 +641,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            Log.v("Error", databaseError.getMessage());
-
+            Log.v(TAG, databaseError.getMessage());
         }
     };
 
@@ -744,7 +740,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void addAttraction(SelectedAttraction selectedAttraction){
         boolean there = false;
-
         for (SelectedAttraction s : selectedAttractions){
             if (s.getClient().equals(selectedAttraction.getClient())){
                 if (s.getAtraccion().get_titulo().equals(selectedAttraction.getAtraccion().get_titulo())){
@@ -768,7 +763,6 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.setPositiveButton(getString(R.string.aceptar), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
                 if (selectedAttractions.size() != 0 || selectedProducts.size() != 0){
                     Bundle selectedAtrBundle = new Bundle();
                     selectedAtrBundle.putSerializable("SelectedAtr", (Serializable) selectedAttractions);

@@ -67,7 +67,7 @@ public class ClientRecyclerAdapter extends  RecyclerView.Adapter<ClientRecyclerV
 
     @Override
     public void onBindViewHolder(ClientRecyclerViewHolder holder, final int position) {
-        holder.tv1.setText(list.get(position).get_nombre());
+        holder.tv1.setText(list.get(position).get_nombre() + " " + list.get(position).get_apellido());
         holder.tv2.setText(list.get(position).get_id());
         Glide.with(context)
                 .using(new FirebaseImageLoader())
